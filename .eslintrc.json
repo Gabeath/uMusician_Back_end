@@ -1,0 +1,68 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "variable-name": 0,
+    "import-name": 0,
+    "max-len": [
+      2,
+      100,
+      2
+    ],
+    "@typescript-eslint/array-type": [
+      2,
+      {"array-type": "generic"}
+    ],
+    "@typescript-eslint/no-unsafe-member-access": 0,
+    "object-literal-sort-keys": 0,
+    "sort-imports": 2,
+    "@typescript-eslint/indent": [
+      2,
+      2
+    ],
+    "eofline": 0,
+    "max-classes-per-file": [
+      2,
+      1
+    ],
+    "no-duplicate-imports": 2,
+    "ordered-imports": 0,
+    "@typescript-eslint/semi": [
+      2,
+      "always"
+    ],
+    "no-console": [
+      0
+    ],
+    "no-empty": [2],
+    "@typescript-eslint/no-empty-interface": 2,
+    "no-return-await": 2,
+    "@typescript-eslint/quotes": [
+      2,
+      "single"
+    ],
+    "@typescript-eslint/typedef": [
+      2,
+      {
+        "typedef": [
+          "arrow-call-signature",
+          "arrow-parameter",
+          "call-signature",
+          "member-variable-declaration",
+          "parameter",
+          "property-declaration",
+          "variable-declaration"
+        ]
+      }
+    ],
+    "@typescript-eslint/no-useless-constructor": 2
+  }
+}

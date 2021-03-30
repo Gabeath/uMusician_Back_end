@@ -1,0 +1,6 @@
+{
+  "cli": {
+    "entitiesDir": "src/core/src/entities",
+    "migrationsDir": "src/core/src/migrations"
+  }
+}
