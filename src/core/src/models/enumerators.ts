@@ -38,4 +38,5 @@ export enum ClassificaçãoEspecialidade {
   BAIXO = 7,
   BARÍTONO = 8,
   MEZZO_SOPRANO = 9,
+  OUTROS = 10,
 }

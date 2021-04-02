@@ -29,6 +29,7 @@ export class Especialidade1617392834341 implements MigrationInterface {
           }, {
             name: 'iconeUrl',
             type: 'varchar',
+            isNullable: true,
           }, {
             name: 'createdBy',
             type: 'varchar',
