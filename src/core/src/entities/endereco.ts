@@ -1,0 +1,43 @@
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ObjectType,
+  OneToOne,
+} from 'typeorm';
+import Base from './base';
+import EntidadeServico from './servico';
+
+@Entity('endereco')
+export default class EntidadeEndereco extends Base {
+  @Column({ type: 'uuid' })
+  public idServico!: string;
+
+  @OneToOne((): ObjectType<EntidadeServico> => EntidadeServico)
+  @JoinColumn({ name : 'idServico', referencedColumnName: 'id' })
+  public servico?: EntidadeServico;
+
+  @Column()
+  public cep: string;
+
+  @Column()
+  public pais: string;
+
+  @Column()
+  public estado: string;
+
+  @Column()
+  public cidade: string;
+
+  @Column()
+  public bairro: string;
+
+  @Column()
+  public rua: string;
+
+  @Column()
+  public numero: string;
+
+  @Column()
+  public complemento?: string;
+}

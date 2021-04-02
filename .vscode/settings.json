@@ -2,5 +2,6 @@
   "typescript.validate.enable": true,
   "typescript.tsserver.log": "terse",
   "typescript.tsdk": "node_modules\\typescript\\lib",
+  "editor.detectIndentation": false,
   "editor.tabSize": 2
 }

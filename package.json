@@ -10,6 +10,11 @@
         "cp:files": "cp -R ./src/app/src/mail-templates ./dist/app/src/mail-templates",
         "start:dev": "git checkout -- .; git pull; pm2 delete 'uMusician API';npm run build; npx pm2 start ecosystem.config.js --env development; npm run cp:files"
     },
+    "husky": {
+      "hooks": {
+        "pre-commit": "yarn run lint; yarn run build"
+      }
+    },
     "dependencies": {
         "@types/compression": "^1.7.0",
         "@types/cors": "^2.8.10",
@@ -25,12 +30,14 @@
         "pg": "^8.5.1",
         "pm2": "^4.5.5",
         "reflect-metadata": "^0.1.13",
+        "ts-custom-error": "^3.2.0",
         "typeorm": "^0.2.32"
     },
     "devDependencies": {
         "@types/node": "^14.14.37",
-        "@typescript-eslint/eslint-plugin": "^4.19.0",
-        "@typescript-eslint/parser": "^4.19.0",
+        "@typescript-eslint/eslint-plugin": "^4.20.0",
+        "@typescript-eslint/parser": "^4.20.0",
+        "eslint": "^7.23.0",
         "ts-node": "^9.1.1",
         "typescript": "^4.2.3",
         "typescript-module-alias": "^1.0.2"
