@@ -29,13 +29,13 @@ export enum PopularidadeEspecialidade {
 }
 
 export enum ClassificaçãoEspecialidade {
-CORDA = 1,
-PERCUSSÃO = 2,
-SOPRO = 3,
-SOPRANO = 4,
-CONTRALTO = 5,
-TENOR = 6,
-BAIXO = 7,
-BARÍTONO = 8,
-MEZZO_SOPRANO = 9,
+  CORDA = 1,
+  PERCUSSÃO = 2,
+  SOPRO = 3,
+  SOPRANO = 4,
+  CONTRALTO = 5,
+  TENOR = 6,
+  BAIXO = 7,
+  BARÍTONO = 8,
+  MEZZO_SOPRANO = 9,
 }

@@ -21,9 +21,6 @@ export class GeneroMusical1617392368504 implements MigrationInterface {
             name: 'nome',
             type: 'varchar',
           }, {
-            name: 'url',
-            type: 'varchar',
-          }, {
             name: 'popularidade',
             type: 'int4',
           }, {
