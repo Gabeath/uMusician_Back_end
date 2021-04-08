@@ -11,9 +11,9 @@
         "start:dev": "git checkout -- .; git pull; pm2 delete 'uMusician API';npm run build; npx pm2 start ecosystem.config.js --env development; npm run cp:files"
     },
     "husky": {
-      "hooks": {
-        "pre-commit": "yarn run lint; yarn run build"
-      }
+        "hooks": {
+            "pre-commit": "yarn run lint; yarn run build"
+        }
     },
     "dependencies": {
         "@types/compression": "^1.7.0",
