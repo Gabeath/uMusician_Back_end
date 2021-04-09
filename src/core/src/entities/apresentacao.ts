@@ -20,7 +20,7 @@ export default class EntidadeApresentacao extends Base {
   public valorHora!: number;
 
   @Column({ type: 'uuid' })
-  public idPerfil!: string;
+  public idPerfil?: string;
 
   @Column({ type: 'uuid' })
   public idEspecialidade!: string;

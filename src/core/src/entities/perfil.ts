@@ -18,7 +18,7 @@ import EntidadeUsuario from './usuario';
 @Entity('perfil')
 export default class EntidadePerfil extends Base {
   @Column({ type: 'int4' })
-  public situacao!: number;
+  public situacao?: number;
 
   @Column({ type: 'int4' })
   public categoria!: number;
@@ -33,7 +33,7 @@ export default class EntidadePerfil extends Base {
   public biografia?: string;
 
   @Column({ type: 'uuid' })
-  public idUsuario!: string;
+  public idUsuario?: string;
 
   @ManyToOne(
     (): ObjectType<EntidadeUsuario> => EntidadeUsuario,

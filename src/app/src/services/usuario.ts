@@ -14,7 +14,7 @@ export class ServiceUsuario implements IServiceUsuario {
     this.repositoryUsuario = repositoryUsuario;
   }
 
-  async create(usuario: EntidadeUsuario): Promise<EntidadeUsuario> {
-    console.log('hello world');
+  async criarUsuarioPerfil(usuario: EntidadeUsuario): Promise<EntidadeUsuario> {
+    return usuario;
   }
 }

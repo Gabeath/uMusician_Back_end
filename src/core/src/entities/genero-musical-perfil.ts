@@ -15,7 +15,7 @@ export default class EntidadeGeneroMusicalPerfil extends Base {
   public ano!: string;
 
   @Column({ type: 'uuid' })
-  public idPerfil!: string;
+  public idPerfil?: string;
 
   @Column({ type: 'uuid' })
   public idGeneroMusical!: string;

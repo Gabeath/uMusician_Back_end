@@ -1,3 +1,8 @@
+export enum CategoriaPerfil {
+  CONTRATANTE = 1,
+  MUSICO = 2,
+}
+
 export enum SituaçãoPerfil {
   ATIVO = 1,
   BLOQUEADO = 2,
