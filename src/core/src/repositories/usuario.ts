@@ -10,4 +10,13 @@ export class RepositoryUsuario implements IRepositoryUsuario {
   async create(usuario: EntidadeUsuario): Promise<EntidadeUsuario> {
     return this.repositoryUsuario.save(usuario);
   }
+
+  async getByEmail(email: string): Promise<EntidadeUsuario>{
+    return this.repositoryUsuario.findOne({
+      where: {
+        email
+      },
+      relations: ['perfis']
+    });
+  }
 }
