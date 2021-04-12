@@ -29,13 +29,11 @@ const handleError: (err: any, req: Request, res: Response) => void =
       res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: err.message });
     } else if (err.isUnauthorizedError || err.name === 'TokenExpiredError') {
       res.sendStatus(httpStatus.UNAUTHORIZED);
+    } else if (err.isForbiddenError) {
+      res.sendStatus(httpStatus.FORBIDDEN);
     } else {
-      if (getEnv().env !== 'production') {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR)
-          .json({ stack: err.stack, message: err.message, ...err });
-      } else {
-        res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
-      }
+      res.status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ stack: err.stack, message: err.message, ...err });
     }
   };
 

@@ -16,5 +16,8 @@ export default function errorHandler(err: any, req: Request, res: Response): voi
     res.sendStatus(httpStatus.UNAUTHORIZED);
   } else if (err.isForbiddenError) {
     res.sendStatus(httpStatus.FORBIDDEN);
+  } else {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ stack: err.stack, message: err.message, ...err });
   }
 }
