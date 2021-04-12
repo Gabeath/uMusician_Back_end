@@ -19,4 +19,31 @@ export class RepositoryUsuario implements IRepositoryUsuario {
       relations: ['perfis']
     });
   }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    const usuario = await this.repositoryUsuario.findOne({
+      where: {
+        email
+      },
+      select: ['email']
+    });
+
+    if(!usuario)
+      return false;
+    
+    return true;
+  }
+  async existsByCPF(cpf: string): Promise<boolean> {
+    const usuario = await this.repositoryUsuario.findOne({
+      where: {
+        cpf
+      },
+      select: ['email']
+    });
+
+    if(!usuario)
+      return false;
+    
+    return true;
+  }
 }

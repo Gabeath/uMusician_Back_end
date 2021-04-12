@@ -18,18 +18,26 @@ export class ServiceUsuario implements IServiceUsuario {
     return usuario;
   }
 
-  async buscarUsuario(email: string, senha: string, tipoPerfil: Number): Promise<EntidadeUsuario>{
+  async buscarUsuario(email: string, senha: string, tipoPerfil: number): Promise<EntidadeUsuario>{
     const usuario = await this.repositoryUsuario.getByEmail(email);
 
     if(!usuario)
-      throw new Error("Usuário não encontrado");
+      throw new Error('Usuário não encontrado');
       
     if(usuario.senha !== senha)
-      throw new Error("Senha incorreta");
+      throw new Error('Senha incorreta');
 
     if(usuario.perfis.filter(perfil => perfil.categoria === tipoPerfil).length === 0)
-      throw new Error("Usuário não possui o perfil selecionado");
+      throw new Error('Usuário não possui o perfil selecionado');
 
     return usuario;
+  }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    return this.repositoryUsuario.existsByEmail(email);
+  }
+  
+  async existsByCPF(cpf: string): Promise<boolean> {
+    return this.repositoryUsuario.existsByCPF(cpf);
   }
 }
