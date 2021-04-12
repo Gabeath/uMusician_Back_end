@@ -4,7 +4,7 @@
     "main": "index.js",
     "private": true,
     "scripts": {
-        "lint": "eslint -c .eslintrc.js --ext .ts 'src/**/*.ts'",
+        "lint": "eslint -c tsconfig.json './src/**/*.ts'",
         "build": "npx tsc",
         "start": "cd ./dist/app && node index.js",
         "cp:files": "cp -R ./src/app/src/mail-templates ./dist/app/src/mail-templates",
