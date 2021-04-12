@@ -24,6 +24,7 @@
       "env": {
         "DEBUG": "true",
         "NODE_ENV": "development",
+        "SECRET_KEY": "dW11c2ljaWFuX1NlY3JldF9wYXNz",
         "API_PORT": "4546",
       }
     },
