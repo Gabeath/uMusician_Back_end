@@ -1,22 +1,12 @@
-import { Request, Response, NextFunction } from 'express'
-import {CategoriaPerfil} from '../../../core/src/models/enumerators'
+import { NextFunction, Request, Response } from 'express';
+import { CategoriaPerfil } from '@core/models/enumerators';
+import ForbiddenError from '@core/errors/forbidden';
 
-export const isPerfilContratante = async (req: Request, res: Response, next: NextFunction) => {
-  
-  if(res.locals.user.profileType !== CategoriaPerfil.CONTRATANTE)
-    return res.status(403).json({
-      "message": "Acesso negado"
-    });
+function isPerfilPermitido(perfil: CategoriaPerfil) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (req.session.profileType !== perfil)
+      throw new ForbiddenError();
 
-  return next();
-}
-
-export const isPerfilMusico = async (req: Request, res: Response, next: NextFunction) => {
-  
-  if(res.locals.user.profileType !== CategoriaPerfil.MUSICO)
-    return res.status(403).json({
-      "message": "Acesso negado"
-    });
-
-  return next();
+    return next();
+  };
 }

@@ -1,24 +1,28 @@
-import { Request, Response, NextFunction } from 'express'
-import { verifyToken } from '../utils/tokens'
+import { NextFunction, Request, Response } from 'express';
+import { Payload } from '@core/models';
+import UnauthorizedError from '@core/errors/unauthorized';
+import errorHandler from '@app/middlewares/error-handler';
+import { verifyToken } from '../utils/tokens';
 
-export const autenticado = async (req: Request, res: Response, next: NextFunction) => {
-  const { authorization } = req.headers
+function autenticado (req: Request, res: Response, next: NextFunction): void {
+  const { authorization } = req.headers;
 
   try {
-    const token = authorization.split(' ')
+    const token = authorization.split(' ');
 
     if (token[0].toLowerCase() !== 'bearer' || token.length !== 2)
-      throw new Error();
+      throw new UnauthorizedError();
 
-    const payload = verifyToken(token[1])
+    const payload = verifyToken(token[1]) as Payload;
     
-    res.locals.user = payload;
+    req.session = {
+      userID: payload.userID,
+      profileType: payload.profileType,
+    };
 
     return next();
   }
   catch (err) {
-    return res.status(401).json({
-      message: "Acesso restrito"
-    })
+    return errorHandler(err, req, res);
   }
 }
