@@ -3,9 +3,15 @@ import * as bodyParser from 'body-parser';
 import * as httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'inversify';
+import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
+import {
+  IRepositoryGeneroMusicalPerfil
+} from '@core/repositories/interfaces/genero-musical-perfil';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import { InversifyExpressServer } from 'inversify-express-utils';
+import { RepositoryApresentacao } from '@core/repositories/apresentacao';
+import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
@@ -26,7 +32,10 @@ const handleError: (err: any, req: Request, res: Response) => void =
       });
 
     } else if (err.isIntegrationError) {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: err.message });
+      res.status(httpStatus.BAD_REQUEST).json({ error: err.message });
+    } else if (err.isPersistentError) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ stack: err.stack, message: err.message, ...err });
     } else if (err.isUnauthorizedError || err.name === 'TokenExpiredError') {
       res.sendStatus(httpStatus.UNAUTHORIZED);
     } else if (err.isForbiddenError) {
@@ -45,6 +54,12 @@ export class Server {
   }
 
   configDependencies(): void {
+    container.bind<IRepositoryApresentacao>(TYPES.RepositoryApresentacao)
+      .to(RepositoryApresentacao);
+
+    container.bind<IRepositoryGeneroMusicalPerfil>(TYPES.RepositoryGeneroMusicalPerfil)
+      .to(RepositoryGeneroMusicalPerfil);
+
     container.bind<IServiceUsuario>(TYPES.ServiceUsuario)
       .to(ServiceUsuario);
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
