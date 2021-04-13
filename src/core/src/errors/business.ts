@@ -13,6 +13,6 @@ export default class BusinessError extends CustomError {
 }
 
 export const ErrorCodes: Record<string, string> = {
-  CONTA_JA_CRIADA: 'conta_ja_criada',
   ENTIDADE_NAO_ENCONTRADA: 'entidade_não_encontrada',
+  USUARIO_JA_CADASTRADO: 'usuario_ja_cadastrado',
 };

@@ -63,6 +63,8 @@
         ]
       }
     ],
-    "@typescript-eslint/no-useless-constructor": 2
+    "@typescript-eslint/no-useless-constructor": 2,
+    "@typescript-eslint/no-unsafe-assignment": 1,
+    "@typescript-eslint/no-unsafe-call": 1
   }
 }
