@@ -10,3 +10,5 @@ function isPerfilPermitido(perfil: CategoriaPerfil) {
     return next();
   };
 }
+
+export default isPerfilPermitido;
