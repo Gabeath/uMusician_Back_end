@@ -90,25 +90,31 @@ export class ServiceUsuario implements IServiceUsuario {
   }
 
   async buscarUsuario(email: string, senha: string, tipoPerfil: number): Promise<EntidadeUsuario>{
-    const usuario = await this.repositoryUsuario.getByEmail(email);
+    const usuario = await this.repositoryUsuario.selectByEmail(email);
 
-    if(!usuario)
-      throw new Error('Usuário não encontrado');
-      
-    if(usuario.senha !== senha)
-      throw new Error('Senha incorreta');
+    if(!usuario || usuario.senha !== senha)
+      throw new BusinessError(ErrorCodes.DADOS_LOGIN_INVALIDOS);
 
     if(usuario.perfis.filter(perfil => perfil.categoria === tipoPerfil).length === 0)
-      throw new Error('Usuário não possui o perfil selecionado');
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
 
     return usuario;
   }
 
-  async existsByEmail(email: string): Promise<boolean> {
-    return this.repositoryUsuario.existsByEmail(email);
-  }
-  
-  async existsByCPF(cpf: string): Promise<boolean> {
-    return this.repositoryUsuario.existsByCPF(cpf);
+  async validaUsuarioExistente(email: string, cpf: string):
+  Promise<{ valido: boolean, mensagem?: string }> {
+    const existeEmail: EntidadeUsuario = await this.repositoryUsuario.selectByEmail(email);
+
+    if (existeEmail) {
+      return { valido: false, mensagem: 'email_em_uso' };
+    }
+
+    const existeCpf: EntidadeUsuario = await this.repositoryUsuario.selectByCpf(cpf);
+
+    if (existeCpf) {
+      return { valido: false, mensagem: 'cpf_em_uso' };
+    }
+
+    return { valido: true, mensagem: null };
   }
 }

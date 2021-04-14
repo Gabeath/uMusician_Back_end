@@ -5,7 +5,6 @@ export interface IRepositoryUsuario {
   criarUsuarioPerfil(usuario: EntidadeUsuario, perfil: EntidadePerfil):
   Promise<EntidadeUsuario>;
   selectByEmailOrCpf(email: string, cpf: string): Promise<EntidadeUsuario | null>;
-  getByEmail(email: string): Promise<EntidadeUsuario>;
-  existsByEmail(email: string): Promise<boolean>;
-  existsByCPF(cpf: string): Promise<boolean>;
+  selectByEmail(email: string): Promise<EntidadeUsuario | null>;
+  selectByCpf(cpf: string): Promise<EntidadeUsuario | null>;
 }

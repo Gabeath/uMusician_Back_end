@@ -55,39 +55,25 @@ export class RepositoryUsuario implements IRepositoryUsuario {
     });
   }
 
-  async getByEmail(email: string): Promise<EntidadeUsuario>{
+  async selectByEmail(email: string): Promise<EntidadeUsuario | null> {
     return this.repositoryUsuario.findOne({
       where: {
         email
       },
-      relations: ['perfis']
+      join: {
+        alias: 'usuario',
+        leftJoinAndSelect: {
+          perfis: 'usuario.perfis',
+        },
+      },
     });
   }
 
-  async existsByEmail(email: string): Promise<boolean> {
-    const usuario = await this.repositoryUsuario.findOne({
+  async selectByCpf(cpf: string): Promise<EntidadeUsuario | null> {
+    return this.repositoryUsuario.findOne({
       where: {
-        email
+        cpf,
       },
-      select: ['email']
     });
-
-    if(!usuario)
-      return false;
-    
-    return true;
-  }
-  async existsByCPF(cpf: string): Promise<boolean> {
-    const usuario = await this.repositoryUsuario.findOne({
-      where: {
-        cpf
-      },
-      select: ['email']
-    });
-
-    if(!usuario)
-      return false;
-    
-    return true;
   }
 }
