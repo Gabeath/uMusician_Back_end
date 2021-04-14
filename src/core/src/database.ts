@@ -1,7 +1,6 @@
-import { createConnection } from 'typeorm';
 import * as path from 'path';
-
-import { getEnv, Constants } from '@core/constants';
+import { Constants, getEnv } from '@core/constants';
+import { createConnection } from 'typeorm';
 
 const ConstantsEnv: Constants = getEnv();
 
@@ -22,4 +21,4 @@ export async function initializeDatabase(): Promise<void> {
 
     migrationsRun: true,
   });
-};
+}

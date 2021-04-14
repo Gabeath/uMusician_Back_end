@@ -16,6 +16,13 @@ export class Constants {
     },
   };
 
+  credential: {
+    secret: string,
+    iterations: number,
+    keylen: number,
+    digest: string,
+  };
+
   constructor(props: any) {
     this.env = props.NODE_ENV;
     this.appName = 'uMusician Back-end';
@@ -35,6 +42,12 @@ export class Constants {
       },
     };
 
+    this.credential = {
+      secret: 'dcdec30a-518c-4fab-9121-e11d6306fba6',
+      iterations: 1000,
+      keylen: 64,
+      digest: 'sha512',
+    };
   }
 }
 
