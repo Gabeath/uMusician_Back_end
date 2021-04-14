@@ -24,6 +24,12 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
     this.serviceUsuario = serviceUsuario;
   }
 
+  @httpPost('/valida-email-cpf')
+  private validaEmailCpf(req: Request): Promise<{ valido: boolean, mensagem?: string }> {
+    const { email, cpf } = req.body as { email: string, cpf: string };
+    return this.serviceUsuario.validaUsuarioExistente(email, cpf);
+  }
+
   @httpPost('/')
   private criarUsuarioPerfil(req: Request): Promise<EntidadeUsuario> {
     const usuario: EntidadeUsuario = {

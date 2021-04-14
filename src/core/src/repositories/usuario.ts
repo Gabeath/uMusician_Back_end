@@ -55,12 +55,25 @@ export class RepositoryUsuario implements IRepositoryUsuario {
     });
   }
 
-  async getByEmail(email: string): Promise<EntidadeUsuario>{
+  async selectByEmail(email: string): Promise<EntidadeUsuario | null> {
     return this.repositoryUsuario.findOne({
       where: {
         email
       },
-      relations: ['perfis']
+      join: {
+        alias: 'usuario',
+        leftJoinAndSelect: {
+          perfis: 'usuario.perfis',
+        },
+      },
+    });
+  }
+
+  async selectByCpf(cpf: string): Promise<EntidadeUsuario | null> {
+    return this.repositoryUsuario.findOne({
+      where: {
+        cpf,
+      },
     });
   }
 }
