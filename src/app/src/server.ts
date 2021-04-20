@@ -7,12 +7,16 @@ import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresenta
 import {
   IRepositoryGeneroMusicalPerfil
 } from '@core/repositories/interfaces/genero-musical-perfil';
+import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
+import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacao } from '@core/repositories/apresentacao';
 import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
+import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryUsuario } from '@core/repositories/usuario';
+import { ServicePerfil } from './services/perfil';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
 import compress from 'compression';
@@ -20,10 +24,6 @@ import cors from 'cors';
 import { getEnv } from '@app/constants';
 import helmet from 'helmet';
 import { v4 } from 'uuid';
-import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
-import { RepositoryPerfil } from '@core/repositories/perfil';
-import { IServicePerfil } from './services/interfaces/perfil';
-import { ServicePerfil } from './services/perfil';
 
 const container: Container = new Container();
 
@@ -68,6 +68,7 @@ export class Server {
       .to(ServiceUsuario);
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
       .to(RepositoryUsuario);
+
     container.bind<IRepositoryPerfil>(TYPES.RepositoryPerfil)
       .to(RepositoryPerfil);
     container.bind<IServicePerfil>(TYPES.ServicePerfil)
