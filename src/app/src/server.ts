@@ -20,6 +20,10 @@ import cors from 'cors';
 import { getEnv } from '@app/constants';
 import helmet from 'helmet';
 import { v4 } from 'uuid';
+import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
+import { RepositoryPerfil } from '@core/repositories/perfil';
+import { IServicePerfil } from './services/interfaces/perfil';
+import { ServicePerfil } from './services/perfil';
 
 const container: Container = new Container();
 
@@ -64,6 +68,10 @@ export class Server {
       .to(ServiceUsuario);
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
       .to(RepositoryUsuario);
+    container.bind<IRepositoryPerfil>(TYPES.RepositoryPerfil)
+      .to(RepositoryPerfil);
+    container.bind<IServicePerfil>(TYPES.ServicePerfil)
+      .to(ServicePerfil);
   }
 
   createServer(): void {
