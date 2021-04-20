@@ -4,8 +4,18 @@ export type Pagination<T> = {
 };
 
 export type SearchParameterBase = {
-  offset: number;
-  orderBy: string;
-  isDESC: boolean;
-  limit: number;
+  offset?: number;
+  orderBy?: string;
+  isDESC?: boolean;
+  limit?: number;
 };
+
+export interface IPerfilSearchParameter extends SearchParameterBase {
+  generoMusical?: string;
+  especialidade?: string;
+  cidade?: string;
+  estado?: string;
+  valorMinimo?: number;
+  valorMaximo?: number;
+  pontuacaoAvaliacao?: number;
+}
