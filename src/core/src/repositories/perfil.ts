@@ -59,7 +59,7 @@ export class RepositoryPerfil implements IRepositoryPerfil {
       .find({
         where: {
           ...(idsPerfis.length > 0 && { idPerfil: In(idsPerfis) }),
-          ...(searchParameter.generoMusical && { id: searchParameter.generoMusical }),
+          ...(searchParameter.generoMusical && { idGeneroMusical: searchParameter.generoMusical }),
         },
       });
 
@@ -68,12 +68,13 @@ export class RepositoryPerfil implements IRepositoryPerfil {
     });
 
     idsPerfis = idsPerfisGenerosMusicais;
-
+    
     const apresentacoes: EntidadeApresentacao[] = await this.repositoryApresentacao.find({
       where: {
         idPerfil: In(idsPerfis),
-        ...(searchParameter.especialidade && { id: searchParameter.especialidade }),
-        ...(searchParameter.valorMinimo && searchParameter.valorMaximo &&
+        ...(searchParameter.especialidade && { idEspecialidade: searchParameter.especialidade }),
+        ...(searchParameter.valorMinimo !== undefined &&
+          searchParameter.valorMaximo !== undefined &&
           { valorHora: Between(searchParameter.valorMinimo, searchParameter.valorMaximo) }),
       },
     });
