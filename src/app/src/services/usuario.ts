@@ -47,6 +47,7 @@ export class ServiceUsuario implements IServiceUsuario {
       cpf: usuario.cpf,
       genero: usuario.genero,
       dataNascimento: usuario.dataNascimento,
+      fotoUrl: usuario.fotoUrl
     };
 
     const perfilToSave: EntidadePerfil = {

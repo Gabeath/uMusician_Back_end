@@ -13,6 +13,7 @@ import TYPES from '@core/types';
 import { inject } from 'inversify';
 import {uparArquivoNaNuvem, dadosArquivo} from '../utils/uploads';
 import reqFormData from '../middlewares/reqFormData';
+import {generateJWT} from '../utils/tokens'
 
 @controller('/usuario')
 export class ControllerUsuario extends BaseHttpController implements interfaces.Controller {
@@ -33,7 +34,7 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
   }
 
   @httpPost('/')
-  private criarUsuarioPerfil(req: Request): Promise<EntidadeUsuario> {
+  private async criarUsuarioPerfil(req: Request, res: Response): Promise<EntidadeUsuario> {
     const usuario: EntidadeUsuario = {
       email: req.body.usuario.email as string,
       senha: req.body.usuario.senha as string,
@@ -41,6 +42,7 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
       cpf: req.body.usuario.cpf as string,
       genero: req.body.usuario.genero as number,
       dataNascimento: req.body.usuario.dataNascimento as string,
+      fotoUrl: req.body.usuario.fotoUrl as string,
       perfis: [{
         categoria: req.body.usuario.perfil.categoria as number,
         cidade: req.body.usuario.perfil.cidade as string,
@@ -51,7 +53,17 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
       }]
     };
 
-    return this.serviceUsuario.criarUsuarioPerfil(usuario);
+    const user =  await this.serviceUsuario.criarUsuarioPerfil(usuario);
+
+    const token = generateJWT({
+      userID: user.id,
+      profileType: usuario.perfis[0].categoria
+    });
+
+    res.setHeader('authorization', 'Bearer '+ token);
+    user.senha = undefined;
+
+    return user;
   }
 
   @httpPost('/fotoPerfil', reqFormData.single('imagem'))
