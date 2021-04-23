@@ -4,18 +4,22 @@ import * as httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'inversify';
 import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
+import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
 import {
   IRepositoryGeneroMusicalPerfil
 } from '@core/repositories/interfaces/genero-musical-perfil';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
+import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
 import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacao } from '@core/repositories/apresentacao';
+import { RepositoryEspecialidade } from '@core/repositories/especialidade';
 import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryUsuario } from '@core/repositories/usuario';
+import { ServiceEspecialidade } from '@app/services/especialidade';
 import { ServicePerfil } from './services/perfil';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
@@ -64,15 +68,20 @@ export class Server {
     container.bind<IRepositoryGeneroMusicalPerfil>(TYPES.RepositoryGeneroMusicalPerfil)
       .to(RepositoryGeneroMusicalPerfil);
 
-    container.bind<IServiceUsuario>(TYPES.ServiceUsuario)
-      .to(ServiceUsuario);
-    container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
-      .to(RepositoryUsuario);
+    container.bind<IRepositoryEspecialidade>(TYPES.RepositoryEspecialidade)
+      .to(RepositoryEspecialidade);
+    container.bind<IServiceEspecialidade>(TYPES.ServiceEspecialidade)
+      .to(ServiceEspecialidade);
 
     container.bind<IRepositoryPerfil>(TYPES.RepositoryPerfil)
       .to(RepositoryPerfil);
     container.bind<IServicePerfil>(TYPES.ServicePerfil)
       .to(ServicePerfil);
+        
+    container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
+      .to(RepositoryUsuario);
+    container.bind<IServiceUsuario>(TYPES.ServiceUsuario)
+      .to(ServiceUsuario);
   }
 
   createServer(): void {
