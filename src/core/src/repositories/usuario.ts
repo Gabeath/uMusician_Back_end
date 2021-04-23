@@ -76,4 +76,14 @@ export class RepositoryUsuario implements IRepositoryUsuario {
       },
     });
   }
+
+  async updatePassword(id: string, senha: string): Promise<void>{
+    const usuario = await this.repositoryUsuario.findOne({
+      where: {
+        id
+      }
+    });
+    usuario.senha = senha;
+    await this.repositoryUsuario.save(usuario);
+  }
 }

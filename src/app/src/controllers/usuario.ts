@@ -11,16 +11,17 @@ import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import { Request, Response } from 'express';
 import TYPES from '@core/types';
 import { inject } from 'inversify';
-import {uparArquivoNaNuvem, dadosArquivo} from '../utils/uploads';
+import { uparArquivoNaNuvem, dadosArquivo } from '../utils/uploads';
 import reqFormData from '../middlewares/reqFormData';
-import {generateJWT} from '../utils/tokens'
+import autenticado from '../middlewares/autenticado'
+import { generateJWT } from '../utils/tokens'
 
 @controller('/usuario')
 export class ControllerUsuario extends BaseHttpController implements interfaces.Controller {
   private serviceUsuario: IServiceUsuario;
 
   constructor(
-  @inject(TYPES.ServiceUsuario) serviceUsuario: IServiceUsuario,
+    @inject(TYPES.ServiceUsuario) serviceUsuario: IServiceUsuario,
   ) {
     super();
 
@@ -53,21 +54,21 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
       }]
     };
 
-    const user =  await this.serviceUsuario.criarUsuarioPerfil(usuario);
+    const user = await this.serviceUsuario.criarUsuarioPerfil(usuario);
 
     const token = generateJWT({
       userID: user.id,
       profileType: usuario.perfis[0].categoria
     });
 
-    res.setHeader('authorization', 'Bearer '+ token);
+    res.setHeader('authorization', 'Bearer ' + token);
     user.senha = undefined;
 
     return user;
   }
 
   @httpPost('/fotoPerfil', reqFormData.single('imagem'))
-  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response>{
+  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response> {
     try {
       return await uparArquivoNaNuvem(req.file.filename, 'perfil');
     } catch (error) {
@@ -75,6 +76,21 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
         'message': error.message
       });
     }
+
+  }
+
+  @httpPost('/atualizarSenha', autenticado)
+  private async atualizarSenha(req: Request, res: Response): Promise<Response | void> {
+
+    const { senha } = req.body as { senha: string };
+
+    if (!senha)
+      return res.status(400).json({
+        'message': 'argumentos ausentes'
+      });
+
+    await this.serviceUsuario.alterarSenha(senha, req.session.userID);
     
+    return res.status(204).send();
   }
 }
