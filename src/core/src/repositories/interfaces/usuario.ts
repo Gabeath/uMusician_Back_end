@@ -7,4 +7,5 @@ export interface IRepositoryUsuario {
   selectByEmailOrCpf(email: string, cpf: string): Promise<EntidadeUsuario | null>;
   selectByEmail(email: string): Promise<EntidadeUsuario | null>;
   selectByCpf(cpf: string): Promise<EntidadeUsuario | null>;
+  updatePassword(id: string, senha: string): Promise<void>;
 }

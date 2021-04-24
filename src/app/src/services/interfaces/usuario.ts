@@ -5,4 +5,5 @@ export interface IServiceUsuario {
   buscarUsuario(email: string, senha: string, tipoPerfil: number): Promise<EntidadeUsuario>;
   validaUsuarioExistente(email: string, cpf: string):
   Promise<{ valido: boolean, mensagem?: string }>;
+  alterarSenha(senha: string, user_id: string): Promise<void>;
 }

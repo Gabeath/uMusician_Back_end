@@ -11,6 +11,8 @@ import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
 import EntidadeUsuario from '@core/entities/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import TYPES from '@core/types';
+import autenticado from '@app/middlewares/autenticado';
+import { generateJWT } from '@app/utils/tokens';
 import { inject } from 'inversify';
 import reqFormData from '@app/middlewares/reqFormData';
 
@@ -33,7 +35,7 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
   }
 
   @httpPost('/')
-  private criarUsuarioPerfil(req: Request): Promise<EntidadeUsuario> {
+  private async criarUsuarioPerfil(req: Request, res: Response): Promise<EntidadeUsuario> {
     const usuario: EntidadeUsuario = {
       email: req.body.usuario.email as string,
       senha: req.body.usuario.senha as string,
@@ -41,6 +43,7 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
       cpf: req.body.usuario.cpf as string,
       genero: req.body.usuario.genero as number,
       dataNascimento: req.body.usuario.dataNascimento as string,
+      fotoUrl: req.body.usuario.fotoUrl as string,
       perfis: [{
         categoria: req.body.usuario.perfil.categoria as number,
         cidade: req.body.usuario.perfil.cidade as string,
@@ -51,11 +54,21 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
       }]
     };
 
-    return this.serviceUsuario.criarUsuarioPerfil(usuario);
+    const user = await this.serviceUsuario.criarUsuarioPerfil(usuario);
+
+    const token = generateJWT({
+      userID: user.id,
+      profileType: usuario.perfis[0].categoria
+    });
+
+    res.setHeader('authorization', 'Bearer ' + token);
+    user.senha = undefined;
+
+    return user;
   }
 
   @httpPost('/fotoPerfil', reqFormData.single('imagem'))
-  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response>{
+  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response> {
     try {
       return await uparArquivoNaNuvem(req.file.filename, 'perfil');
     } catch (error) {
@@ -63,6 +76,12 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
         'message': error.message
       });
     }
-    
+
+  }
+
+  @httpPost('/atualizarSenha', autenticado)
+  private async atualizarSenha(req: Request): Promise<void> {
+    const { senha } = req.body as { senha: string };
+    await this.serviceUsuario.alterarSenha(senha, req.session.userID);
   }
 }

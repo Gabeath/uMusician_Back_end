@@ -47,6 +47,7 @@ export class ServiceUsuario implements IServiceUsuario {
       cpf: usuario.cpf,
       genero: usuario.genero,
       dataNascimento: usuario.dataNascimento,
+      fotoUrl: usuario.fotoUrl
     };
 
     const perfilToSave: EntidadePerfil = {
@@ -117,5 +118,14 @@ export class ServiceUsuario implements IServiceUsuario {
     }
 
     return { valido: true, mensagem: null };
+  }
+
+  async alterarSenha(senha: string, user_id: string): Promise<void>{
+    if (!senha) {
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+    }
+
+    const senhaCriptografada = cryptToken(senha);
+    await this.repositoryUsuario.updatePassword(user_id, senhaCriptografada);
   }
 }
