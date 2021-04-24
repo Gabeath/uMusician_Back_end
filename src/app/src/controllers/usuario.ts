@@ -8,9 +8,11 @@ import EntidadeApresentacao from '@core/entities/apresentacao';
 import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
 import EntidadeUsuario from '@core/entities/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import TYPES from '@core/types';
 import { inject } from 'inversify';
+import {uparArquivoNaNuvem, dadosArquivo} from '../utils/uploads';
+import reqFormData from '../middlewares/reqFormData';
 
 @controller('/usuario')
 export class ControllerUsuario extends BaseHttpController implements interfaces.Controller {
@@ -50,5 +52,17 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
     };
 
     return this.serviceUsuario.criarUsuarioPerfil(usuario);
+  }
+
+  @httpPost('/fotoPerfil', reqFormData.single('imagem'))
+  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response>{
+    try {
+      return await uparArquivoNaNuvem(req.file.filename, 'perfil');
+    } catch (error) {
+      return res.status(500).json({
+        'message': error.message
+      });
+    }
+    
   }
 }

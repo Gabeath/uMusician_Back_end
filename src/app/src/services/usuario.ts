@@ -91,8 +91,9 @@ export class ServiceUsuario implements IServiceUsuario {
 
   async buscarUsuario(email: string, senha: string, tipoPerfil: number): Promise<EntidadeUsuario>{
     const usuario = await this.repositoryUsuario.selectByEmail(email);
+    const senhaCriptografada = cryptToken(senha);
 
-    if(!usuario || usuario.senha !== senha)
+    if(!usuario || usuario.senha !== senhaCriptografada)
       throw new BusinessError(ErrorCodes.DADOS_LOGIN_INVALIDOS);
 
     if(usuario.perfis.filter(perfil => perfil.categoria === tipoPerfil).length === 0)
