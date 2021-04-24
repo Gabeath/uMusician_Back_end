@@ -1,10 +1,9 @@
 import { IPerfilSearchParameter, Pagination } from '@core/models';
 import { inject, injectable } from 'inversify';
 import EntidadePerfil from '@core/entities/perfil';
-import { IRepositoryPerfil } from '../../../core/src/repositories/interfaces/perfil';
-import { IServicePerfil } from './interfaces/perfil';
+import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
+import { IServicePerfil } from '@app/services/interfaces/perfil';
 import TYPES from '@core/types';
-
 
 @injectable()
 export class ServicePerfil implements IServicePerfil {
@@ -20,6 +19,4 @@ export class ServicePerfil implements IServicePerfil {
   Promise<Pagination<EntidadePerfil>> {
     return this.repositoryPerfil.getMusicosWithSearchParameters(searchParameter);
   }
-
-
 }
