@@ -13,6 +13,7 @@ export default class BusinessError extends CustomError {
 }
 
 export const ErrorCodes: Record<string, string> = {
+  ARGUMENTOS_AUSENTES: 'Argumentos ausentes',
   DADOS_LOGIN_INVALIDOS: 'Dados de login inválidos',
   PERFIL_NAO_ENCONTRADO: 'Perfil não encontrado',
   USUARIO_JA_CADASTRADO: 'Usuário não encontrado',

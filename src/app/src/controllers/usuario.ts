@@ -80,17 +80,8 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
   }
 
   @httpPost('/atualizarSenha', autenticado)
-  private async atualizarSenha(req: Request, res: Response): Promise<Response | void> {
-
+  private async atualizarSenha(req: Request): Promise<void> {
     const { senha } = req.body as { senha: string };
-
-    if (!senha)
-      return res.status(400).json({
-        'message': 'argumentos ausentes'
-      });
-
     await this.serviceUsuario.alterarSenha(senha, req.session.userID);
-    
-    return res.status(204).send();
   }
 }

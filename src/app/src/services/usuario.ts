@@ -121,8 +121,11 @@ export class ServiceUsuario implements IServiceUsuario {
   }
 
   async alterarSenha(senha: string, user_id: string): Promise<void>{
-    const senhaCriptografada = cryptToken(senha);
+    if (!senha) {
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+    }
 
+    const senhaCriptografada = cryptToken(senha);
     await this.repositoryUsuario.updatePassword(user_id, senhaCriptografada);
   }
 }
