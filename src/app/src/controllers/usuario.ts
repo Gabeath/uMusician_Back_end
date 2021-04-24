@@ -4,24 +4,24 @@ import {
   httpPost,
   interfaces,
 } from 'inversify-express-utils';
+import { Request, Response } from 'express';
+import { dadosArquivo, uparArquivoNaNuvem } from '@app/utils/uploads';
 import EntidadeApresentacao from '@core/entities/apresentacao';
 import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
 import EntidadeUsuario from '@core/entities/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
-import { Request, Response } from 'express';
 import TYPES from '@core/types';
+import autenticado from '@app/middlewares/autenticado';
+import { generateJWT } from '@app/utils/tokens';
 import { inject } from 'inversify';
-import { uparArquivoNaNuvem, dadosArquivo } from '../utils/uploads';
-import reqFormData from '../middlewares/reqFormData';
-import autenticado from '../middlewares/autenticado'
-import { generateJWT } from '../utils/tokens'
+import reqFormData from '@app/middlewares/reqFormData';
 
 @controller('/usuario')
 export class ControllerUsuario extends BaseHttpController implements interfaces.Controller {
   private serviceUsuario: IServiceUsuario;
 
   constructor(
-    @inject(TYPES.ServiceUsuario) serviceUsuario: IServiceUsuario,
+  @inject(TYPES.ServiceUsuario) serviceUsuario: IServiceUsuario,
   ) {
     super();
 
