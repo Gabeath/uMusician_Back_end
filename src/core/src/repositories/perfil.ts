@@ -73,8 +73,8 @@ export class RepositoryPerfil implements IRepositoryPerfil {
       where: {
         idPerfil: In(idsPerfis),
         ...(searchParameter.especialidade && { idEspecialidade: searchParameter.especialidade }),
-        ...(searchParameter.valorMinimo !== undefined &&
-          searchParameter.valorMaximo !== undefined &&
+        ...((searchParameter.valorMinimo || searchParameter.valorMinimo == 0) &&
+          (searchParameter.valorMaximo || searchParameter.valorMaximo === 0) &&
           { valorHora: Between(searchParameter.valorMinimo, searchParameter.valorMaximo) }),
       },
     });
