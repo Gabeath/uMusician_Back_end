@@ -1,6 +1,7 @@
 import {
   BaseHttpController,
   controller,
+  httpGet,
   httpPost,
   interfaces,
 } from 'inversify-express-utils';
@@ -83,5 +84,13 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
   private async atualizarSenha(req: Request): Promise<void> {
     const { senha } = req.body as { senha: string };
     await this.serviceUsuario.alterarSenha(senha, req.session.userID);
+  }
+
+  @httpGet('/buscarMeuUsuario', autenticado)
+  private async buscarMeuUsuario(req: Request): Promise<EntidadeUsuario> {
+    const { id } = req.query as { id: string };
+    const user = await this.serviceUsuario.buscarMeuUsuario(id);
+
+    return user;
   }
 }

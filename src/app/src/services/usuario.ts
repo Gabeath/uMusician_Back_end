@@ -128,4 +128,10 @@ export class ServiceUsuario implements IServiceUsuario {
     const senhaCriptografada = cryptToken(senha);
     await this.repositoryUsuario.updatePassword(user_id, senhaCriptografada);
   }
+
+  async buscarMeuUsuario(id: string): Promise<EntidadeUsuario>{
+    const usuario = await this.repositoryUsuario.getMe(id);
+    
+    return usuario;
+  }
 }
