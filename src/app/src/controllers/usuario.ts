@@ -3,6 +3,7 @@ import {
   controller,
   httpGet,
   httpPost,
+  httpPut,
   interfaces,
 } from 'inversify-express-utils';
 import { Request, Response } from 'express';
@@ -27,6 +28,24 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
     super();
 
     this.serviceUsuario = serviceUsuario;
+  }
+
+  @httpPost('/fotoPerfil', reqFormData.single('imagem'))
+  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response> {
+    try {
+      return await uparArquivoNaNuvem(req.file.filename, 'perfil');
+    } catch (error) {
+      return res.status(500).json({
+        'message': error.message
+      });
+    }
+
+  }
+
+  @httpPost('/atualizarSenha', autenticado)
+  private async atualizarSenha(req: Request): Promise<void> {
+    const { senha } = req.body as { senha: string };
+    await this.serviceUsuario.alterarSenha(senha, req.session.userID);
   }
 
   @httpPost('/valida-email-cpf')
@@ -68,29 +87,15 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
     return user;
   }
 
-  @httpPost('/fotoPerfil', reqFormData.single('imagem'))
-  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response> {
-    try {
-      return await uparArquivoNaNuvem(req.file.filename, 'perfil');
-    } catch (error) {
-      return res.status(500).json({
-        'message': error.message
-      });
-    }
-
-  }
-
-  @httpPost('/atualizarSenha', autenticado)
-  private async atualizarSenha(req: Request): Promise<void> {
-    const { senha } = req.body as { senha: string };
-    await this.serviceUsuario.alterarSenha(senha, req.session.userID);
-  }
-
-  @httpGet('/buscarMeuUsuario', autenticado)
+  @httpGet('/me', autenticado)
   private async buscarMeuUsuario(req: Request): Promise<EntidadeUsuario> {
-    const { id } = req.query as { id: string };
-    const user = await this.serviceUsuario.buscarMeuUsuario(id);
+    return this.serviceUsuario.buscarMeuUsuario(req.session.userID);
+  }
 
-    return user;
+  @httpPut('/', autenticado)
+  private async updateUsuario(req: Request): Promise<void> {
+    const usuario = req.body.usuario as EntidadeUsuario;
+
+    await this.serviceUsuario.updateUsuario(req.session.userID, usuario);
   }
 }

@@ -12,9 +12,10 @@ export default class BusinessError extends CustomError {
   }
 }
 
-export const ErrorCodes: Record<string, string> = {
+export const ErrorCodes = {
   ARGUMENTOS_AUSENTES: 'Argumentos ausentes',
   DADOS_LOGIN_INVALIDOS: 'Dados de login inválidos',
   PERFIL_NAO_ENCONTRADO: 'Perfil não encontrado',
-  USUARIO_JA_CADASTRADO: 'Usuário não encontrado',
+  USUARIO_JA_CADASTRADO: 'Usuário já cadastrado',
+  USUARIO_NAO_ENCONTRADO: 'Usuário não encontrado',
 };

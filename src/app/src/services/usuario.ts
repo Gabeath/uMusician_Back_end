@@ -1,6 +1,7 @@
 import BusinessError, { ErrorCodes } from  '@core/errors/business';
 import { CategoriaPerfil, SituaçãoPerfil } from '@core/models/enumerators';
 import { inject, injectable } from 'inversify';
+import { DateTime } from 'luxon';
 import EntidadeApresentacao from '@core/entities/apresentacao';
 import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
 import EntidadePerfil from '@core/entities/perfil';
@@ -130,8 +131,29 @@ export class ServiceUsuario implements IServiceUsuario {
   }
 
   async buscarMeuUsuario(id: string): Promise<EntidadeUsuario>{
-    const usuario = await this.repositoryUsuario.getMe(id);
+    const usuario = await this.repositoryUsuario.selectByIdWithProfiles(id);
+    usuario.senha = undefined;
     
     return usuario;
+  }
+
+  async updateUsuario(idUsuario: string, usuario: EntidadeUsuario): Promise<void> {
+    const usuarioSaved: EntidadeUsuario = await this.repositoryUsuario.selectById(idUsuario);
+
+    if (!usuarioSaved) {
+      throw new BusinessError(ErrorCodes.USUARIO_NAO_ENCONTRADO);
+    }
+
+    const usuarioToSave = {
+      ...(usuario.nome && { nome: usuario.nome }),
+      ...(usuario.genero && { genero: usuario.genero }),
+      ...(usuario.dataNascimento && { dataNascimento: usuario.dataNascimento }),
+    } as EntidadeUsuario;
+
+    await this.repositoryUsuario.updateById(usuarioSaved.id, {
+      ...usuarioToSave,
+      updatedAt: DateTime.local().toString(),
+      updatedBy: usuarioSaved.id,
+    });
   }
 }
