@@ -86,4 +86,13 @@ export class RepositoryUsuario implements IRepositoryUsuario {
     usuario.senha = senha;
     await this.repositoryUsuario.save(usuario);
   }
+
+  async getMe(id: string): Promise<EntidadeUsuario | null> {
+    return this.repositoryUsuario.findOne({
+      select: ['nome', 'email', 'cpf','genero','dataNascimento','fotoUrl'],
+      where: {
+        id,
+      },
+    });
+  }
 }
