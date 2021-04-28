@@ -87,12 +87,29 @@ export class RepositoryUsuario implements IRepositoryUsuario {
     await this.repositoryUsuario.save(usuario);
   }
 
-  async getMe(id: string): Promise<EntidadeUsuario | null> {
+  async selectById(id: string): Promise<EntidadeUsuario | null> {
     return this.repositoryUsuario.findOne({
-      select: ['nome', 'email', 'cpf','genero','dataNascimento','fotoUrl'],
       where: {
         id,
       },
     });
+  }
+
+  async selectByIdWithProfiles(id: string): Promise<EntidadeUsuario | null> {
+    return this.repositoryUsuario.findOne({
+      where: {
+        id,
+      },
+      join: {
+        alias: 'usuario',
+        leftJoinAndSelect: {
+          perfis: 'usuario.perfis',
+        },
+      },
+    });
+  }
+
+  async updateById(id: string, usuario: EntidadeUsuario): Promise<void> {
+    await this.repositoryUsuario.update(id, usuario);
   }
 }
