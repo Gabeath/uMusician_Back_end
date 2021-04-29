@@ -23,6 +23,7 @@ export class ControllerEspecialidade extends BaseHttpController implements inter
   }
 
   @httpGet('/seletor')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private getAllEspecialidades(req: Request): Promise<EntidadeEspecialidade[]> {
     return this.serviceEspecialidade.getAll();
   }

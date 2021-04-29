@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { Payload } from '@core/models';
 import UnauthorizedError from '@core/errors/unauthorized';
 import errorHandler from '@app/middlewares/error-handler';
 import { verifyToken } from '../utils/tokens';
@@ -17,7 +16,7 @@ export default function autenticado (req: Request, res: Response, next: NextFunc
     if (token[0].toLowerCase() !== 'bearer' || token.length !== 2)
       throw new UnauthorizedError();
 
-    const payload = verifyToken(token[1]) as Payload;
+    const payload = verifyToken(token[1]);
     
     req.session = {
       userID: payload.userID,

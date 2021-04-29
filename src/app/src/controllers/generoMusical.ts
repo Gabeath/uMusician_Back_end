@@ -23,6 +23,7 @@ export class ControllerGeneroMusical extends BaseHttpController implements inter
   }
 
   @httpGet('/seletor')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private getAllGenerosMusicais(req: Request): Promise<EntidadeGeneroMusical[]> {
     return this.serviceGeneroMusical.getAll();
   }

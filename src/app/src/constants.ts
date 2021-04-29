@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Constants,
   initializeEnv as initializeEnvCore,
- } from '@core/constants';
+} from '@core/constants';
 
 class ConstantsClassAPP extends Constants {
   port: number;

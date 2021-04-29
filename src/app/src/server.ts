@@ -1,3 +1,4 @@
+/* eslint-disable */
 import '@app/controllers';
 import * as bodyParser from 'body-parser';
 import * as httpStatus from 'http-status';

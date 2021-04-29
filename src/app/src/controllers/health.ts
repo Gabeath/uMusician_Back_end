@@ -21,6 +21,7 @@ export class HealthController extends BaseHttpController implements interfaces.C
   }
 
   @httpGet('/status')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private searchDocument(req: Request): { app: string, uptime: number, now: string} {
     return {
       app: getEnv().appName,

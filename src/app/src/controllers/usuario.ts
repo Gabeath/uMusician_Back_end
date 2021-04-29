@@ -36,7 +36,7 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
       return await uparArquivoNaNuvem(req.file.filename, 'perfil');
     } catch (error) {
       return res.status(500).json({
-        'message': error.message
+        'message': error.message as string,
       });
     }
 

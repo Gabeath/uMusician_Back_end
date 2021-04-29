@@ -49,7 +49,7 @@ export class LoginController extends BaseHttpController implements interfaces.Co
       return res.json(usuario);
     } catch (err){
       return res.status(400).json({
-        'message': err.message,
+        'message': err.message as string,
       });
     }
   }

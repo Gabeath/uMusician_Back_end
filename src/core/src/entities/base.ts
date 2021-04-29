@@ -1,10 +1,10 @@
 import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn,
-  Column,
 } from 'typeorm';
 
 @Entity('account')
