@@ -7,7 +7,8 @@ import {
 import {
   CategoriaPerfil,
   IPerfilSearchParameter,
-  Pagination
+  Pagination,
+  SituaçãoPerfil,
 } from '@core/models';
 import EntidadeApresentacao from '@core/entities/apresentacao';
 import EntidadeAvaliacao from '@core/entities/avaliacao';
@@ -99,10 +100,12 @@ export class RepositoryPerfil implements IRepositoryPerfil {
     });
 
     const perfis: EntidadePerfil[] = await this.repositoryPerfil.find({
+      select: ['id', 'cidade', 'estado', 'idUsuario'],
       where: {
         id: In(idsPerfis),
         idUsuario: In(idsUsuarios),
         categoria: CategoriaPerfil.MUSICO,
+        situacao: SituaçãoPerfil.ATIVO,
         ...(searchParameter.cidade && { cidade: searchParameter.cidade }),
         ...(searchParameter.estado && { estado: searchParameter.estado }),
       },
@@ -110,10 +113,6 @@ export class RepositoryPerfil implements IRepositoryPerfil {
 
     perfis.forEach((perfil) => {
       perfil.usuario = usuarios.find((usuario) => usuario.id === perfil.idUsuario);
-      perfil.generosMusicais = generosMusicais
-        .filter((generoMusical) => generoMusical.idPerfil === perfil.id);
-      perfil.apresentacoes = apresentacoes
-        .filter((apresentacao) => apresentacao.idPerfil === perfil.id);
       perfil.avaliacoes = avaliacoes
         .filter((avaliacao) => avaliacao.idPerfil === perfil.id);
       if (perfil.avaliacoes.length === 0) {

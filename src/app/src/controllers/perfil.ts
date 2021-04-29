@@ -9,6 +9,7 @@ import EntidadePerfil from '@core/entities/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import { Request } from 'express';
 import TYPES from '@core/types';
+import autenticado from '@app/middlewares/autenticado';
 import { inject } from 'inversify';
 
 @controller('/perfil')
@@ -23,7 +24,7 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
     this.servicePerfil = servicePerfil;
   }
 
-  @httpGet('/musicos')
+  @httpGet('/musicos', autenticado)
   private getMusicos(req: Request): Promise<Pagination<EntidadePerfil>> {
     const searchParameter: IPerfilSearchParameter = {
       generoMusical: req.query.generoMusical as string,
