@@ -9,6 +9,7 @@ import EntidadePerfil from '@core/entities/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import { Request } from 'express';
 import TYPES from '@core/types';
+import autenticado from '@app/middlewares/autenticado';
 import { inject } from 'inversify';
 
 @controller('/perfil')
@@ -39,4 +40,8 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
     return this.servicePerfil.getMusicosWithSearchParameters(searchParameter);
   }
 
+  @httpGet('/:id', autenticado)
+  private getById(req: Request): Promise<EntidadePerfil> {
+    return this.servicePerfil.getById(req.params.id);
+  }
 }
