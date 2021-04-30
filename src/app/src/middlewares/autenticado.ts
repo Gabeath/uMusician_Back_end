@@ -21,6 +21,7 @@ export default function autenticado (req: Request, res: Response, next: NextFunc
     req.session = {
       userID: payload.userID,
       profileType: payload.profileType,
+      profileID: payload.profileID
     };
 
     return next();
