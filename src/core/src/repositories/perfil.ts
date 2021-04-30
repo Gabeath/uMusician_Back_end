@@ -31,25 +31,18 @@ export class RepositoryPerfil implements IRepositoryPerfil {
   async getMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter):
   Promise<Pagination<EntidadePerfil>> {
     let idsPerfis: string[] = [];
-    const medias: { idPerfil: string, media: string }[] = await this.repositoryAvaliacao
+    let medias: { idPerfil: string, media: string }[] = await this.repositoryAvaliacao
       .createQueryBuilder('avaliacao')
       .select('AVG(avaliacao.pontuacao)', 'media')
       .addSelect('avaliacao.idPerfil', 'idPerfil')
       .groupBy('avaliacao.idPerfil')
       .getRawMany();
 
-    let avaliacoes: EntidadeAvaliacao[] = medias.map((avaliacao) => {
-      return {
-        idPerfil: avaliacao.idPerfil,
-        pontuacao: parseFloat(avaliacao.media),
-      } as EntidadeAvaliacao;
-    });
-
     if (searchParameter.pontuacaoAvaliacao) {
-      avaliacoes = avaliacoes
-        .filter((avaliacao) => avaliacao.pontuacao >= searchParameter.pontuacaoAvaliacao);
+      medias = medias
+        .filter((avaliacao) => parseFloat(avaliacao.media) >= searchParameter.pontuacaoAvaliacao);
 
-      const idsPerfisAvaliacoes = avaliacoes.map((avaliacao) => {
+      const idsPerfisAvaliacoes = medias.map((avaliacao) => {
         return avaliacao.idPerfil;
       });
 
@@ -113,14 +106,10 @@ export class RepositoryPerfil implements IRepositoryPerfil {
 
     perfis.forEach((perfil) => {
       perfil.usuario = usuarios.find((usuario) => usuario.id === perfil.idUsuario);
-      perfil.avaliacoes = avaliacoes
-        .filter((avaliacao) => avaliacao.idPerfil === perfil.id);
-      if (perfil.avaliacoes.length === 0) {
-        perfil.avaliacoes.push({
-          idPerfil: perfil.id,
-          pontuacao: 0,
-        } as EntidadeAvaliacao);
-      }
+      const avaliacaoMedia = medias
+        .find((avaliacao) => avaliacao.idPerfil === perfil.id);
+      perfil.avaliacaoMedia = avaliacaoMedia ? parseFloat(avaliacaoMedia.media) : 0;
+      perfil.idUsuario = undefined;
     });
 
     return {

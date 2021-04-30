@@ -72,6 +72,8 @@ export default class EntidadePerfil extends Base {
   )
   avaliacoes?: EntidadeAvaliacao[];
 
+  avaliacaoMedia?: number;
+
   @OneToMany(
     (): ObjectType<EntidadeServico> => EntidadeServico,
     (servico: EntidadeServico): EntidadePerfil => servico.contratante,
