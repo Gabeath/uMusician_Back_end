@@ -32,14 +32,7 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
 
   @httpPost('/fotoPerfil', reqFormData.single('imagem'))
   private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response> {
-    try {
-      return await uparArquivoNaNuvem(req.file.filename, 'perfil');
-    } catch (error) {
-      return res.status(500).json({
-        'message': error.message as string,
-      });
-    }
-
+    return uparArquivoNaNuvem(req.file.filename, 'perfil');
   }
 
   @httpPost('/atualizarSenha', autenticado)

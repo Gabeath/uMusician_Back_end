@@ -6,7 +6,7 @@ import path from 'path';
 //Desta forma, podemos enviar o arquivo pra nuvem, e depois excluí-lo
 const config = {
   storage: multer.diskStorage({
-    destination: path.resolve(__dirname, '..', '..', '..', 'temp'),
+    destination: path.resolve(__dirname, '..', '..', '..', '..', 'temp'),
     filename: (req, file, callback) => {
       const fileName = `${crypto.randomBytes(8).toString('hex')}-${file.originalname}`;
       callback(null, fileName);

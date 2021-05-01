@@ -1,4 +1,5 @@
-import cloudinary from '../../config/cloudinary';
+import IntegrationError from '@core/errors/integration';
+import cloudinary from '@app/config/cloudinary';
 import fs from 'fs';
 import path from 'path';
 
@@ -16,19 +17,17 @@ export type dadosArquivo = {
 const uparArquivoNaNuvem = async(nomeArquivo: string, pastaDestinoCloudinary: string) : 
 Promise<dadosArquivo> => 
 { 
-  try {
-    const {secure_url} = await cloudinary.uploader.upload(
-      path.resolve(__dirname, '..', '..', '..','..', 'temp', nomeArquivo), {
-        folder: pastaDestinoCloudinary,
-      }
-    );
+  const {secure_url} = await cloudinary.uploader.upload(
+    path.resolve(__dirname, '..', '..', '..','..', 'temp', nomeArquivo), {
+      folder: pastaDestinoCloudinary,
+    }
+  ).catch((error) => {
+    excluirArquivoTemporario(nomeArquivo);
+    throw new IntegrationError('cloudinary', error);
+  });
 
-    excluirArquivoTemporario(nomeArquivo);
-    return {url: secure_url};
-  } catch (error) {
-    excluirArquivoTemporario(nomeArquivo);
-    throw new Error('Falha ao realizar upload de Arquivo');
-  } 
+  excluirArquivoTemporario(nomeArquivo);
+  return {url: secure_url};
 };
 
 /**
@@ -58,4 +57,4 @@ const excluirArquivoTemporario = (nomeArquivo:string) : boolean =>{
   }
 };
 
-export {uparArquivoNaNuvem, excluirArquivoDaNuvem, excluirArquivoTemporario};
+export { uparArquivoNaNuvem, excluirArquivoDaNuvem, excluirArquivoTemporario };
