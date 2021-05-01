@@ -13,8 +13,9 @@ import reqFormData from '@app/middlewares/reqFormData';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { CategoriaPerfil, TipoMídia } from '@core/models';
 import { uparArquivoNaNuvem, excluirArquivoTemporario } from '@app/utils/uploads';
-import EntidadeMidia from '@core/entities/midia'
+import EntidadeMidia from '@core/entities/midia';
 import isPerfilPermitido from '@app/middlewares/perfil';
+import {compressImage} from '@app/utils/comprimirImagem'
 
 @controller('/midia', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
 export class MidiaController extends BaseHttpController implements interfaces.Controller {
@@ -35,8 +36,11 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
       if (!req.file.filename || !ano || !titulo || !tipo)
         throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
 
-      if (Number(tipo) === TipoMídia.IMAGEM)
+      if (Number(tipo) === TipoMídia.IMAGEM){
         pastaDestino = 'imagens';
+        const newFileName = await compressImage(req.file);
+        req.file.filename = newFileName;
+      }
       else if (Number(tipo) === TipoMídia.VÍDEO)
         pastaDestino = 'videos';
       else if (Number(tipo) === TipoMídia.ÁUDIO)
