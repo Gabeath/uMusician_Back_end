@@ -135,7 +135,6 @@ export class RepositoryPerfil implements IRepositoryPerfil {
       where: { id },
       relations: [
         'usuario',
-        'avisos',
         'midias',
         'generosMusicais',
         'generosMusicais.generoMusical',
