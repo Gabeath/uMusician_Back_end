@@ -17,6 +17,7 @@ import autenticado from '@app/middlewares/autenticado';
 import { generateJWT } from '@app/utils/tokens';
 import { inject } from 'inversify';
 import reqFormData from '@app/middlewares/reqFormData';
+import { compressImage } from '@app/utils/comprimirImagem';
 
 @controller('/usuario')
 export class ControllerUsuario extends BaseHttpController implements interfaces.Controller {
@@ -32,7 +33,14 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
 
   @httpPost('/fotoPerfil', reqFormData.single('imagem'))
   private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response> {
-    return uparArquivoNaNuvem(req.file.filename, 'perfil');
+    try {
+      const newFileName = await compressImage(req.file);
+      return await uparArquivoNaNuvem(newFileName, 'perfil');
+    } catch (error) {
+      return res.status(500).json({
+        'message': error.message as string,
+      });
+    }
   }
 
   @httpPost('/atualizarSenha', autenticado)

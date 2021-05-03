@@ -12,10 +12,12 @@ import {
 } from '@core/repositories/interfaces/genero-musical-perfil';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
+import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
+import { IServiceMidia } from '@app/services/interfaces/midia';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacao } from '@core/repositories/apresentacao';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
@@ -23,10 +25,12 @@ import { RepositoryGeneroMusical } from '@core/repositories/genero-musical';
 import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryUsuario } from '@core/repositories/usuario';
+import { RepositoryMidia } from '@core/repositories/midia';
 import { ServiceEspecialidade } from '@app/services/especialidade';
 import { ServiceGeneroMusical } from '@app/services/generoMusical';
 import { ServicePerfil } from './services/perfil';
 import { ServiceUsuario } from '@app/services/usuario';
+import { ServiceMidia } from '@app/services/midia';
 import TYPES from '@core/types';
 import compress from 'compression';
 import cors from 'cors';
@@ -92,6 +96,11 @@ export class Server {
       .to(RepositoryUsuario);
     container.bind<IServiceUsuario>(TYPES.ServiceUsuario)
       .to(ServiceUsuario);
+
+    container.bind<IRepositoryMidia>(TYPES.RepositoryMidia)
+      .to(RepositoryMidia);
+    container.bind<IServiceMidia>(TYPES.ServiceMidia)
+      .to(ServiceMidia);
   }
 
   createServer(): void {
