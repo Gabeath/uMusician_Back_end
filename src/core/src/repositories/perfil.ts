@@ -28,7 +28,7 @@ export class RepositoryPerfil implements IRepositoryPerfil {
   getRepository(EntidadeGeneroMusicalPerfil);
   private repositoryUsuario: Repository<EntidadeUsuario> = getRepository(EntidadeUsuario);
 
-  async getMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter):
+  async selectMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter):
   Promise<Pagination<EntidadePerfil>> {
     let idsPerfis: string[] = [];
     let medias: { idPerfil: string, media: string }[] = await this.repositoryAvaliacao
@@ -116,5 +116,21 @@ export class RepositoryPerfil implements IRepositoryPerfil {
       rows: perfis,
       count: perfis.length,
     };
+  }
+
+  async selectById(id: string): Promise<EntidadePerfil> {
+    return this.repositoryPerfil.findOne({
+      where: { id },
+      relations: [
+        'usuario',
+        'midias',
+        'generosMusicais',
+        'generosMusicais.generoMusical',
+        'apresentacoes',
+        'apresentacoes.especialidade',
+        'avaliacoes',
+        'avaliacoes.servico',
+      ],
+    });
   }
 }

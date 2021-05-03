@@ -4,5 +4,5 @@ import EntidadePerfil from '@core/entities/perfil';
 export interface IServicePerfil {
   getMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter): 
   Promise<Pagination<EntidadePerfil>>;
-  
+  getById(id: string): Promise<EntidadePerfil>;
 }

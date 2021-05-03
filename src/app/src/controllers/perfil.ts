@@ -40,4 +40,8 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
     return this.servicePerfil.getMusicosWithSearchParameters(searchParameter);
   }
 
+  @httpGet('/:id', autenticado)
+  private getById(req: Request): Promise<EntidadePerfil> {
+    return this.servicePerfil.getById(req.params.id);
+  }
 }

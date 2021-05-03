@@ -17,6 +17,12 @@ export class ServicePerfil implements IServicePerfil {
 
   async getMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter):
   Promise<Pagination<EntidadePerfil>> {
-    return this.repositoryPerfil.getMusicosWithSearchParameters(searchParameter);
+    return this.repositoryPerfil.selectMusicosWithSearchParameters(searchParameter);
+  }
+
+  async getById(id: string): Promise<EntidadePerfil> {
+    const perfil: EntidadePerfil = await this.repositoryPerfil.selectById(id);
+    perfil.usuario.senha = undefined;
+    return perfil;
   }
 }

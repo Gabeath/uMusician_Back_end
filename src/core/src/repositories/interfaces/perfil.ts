@@ -2,7 +2,7 @@ import { IPerfilSearchParameter, Pagination } from '@core/models/pagination';
 import EntidadePerfil from '@core/entities/perfil';
 
 export interface IRepositoryPerfil {
-  getMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter): 
+  selectMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter): 
   Promise<Pagination<EntidadePerfil>>;
-  
+  selectById(id: string): Promise<EntidadePerfil>;
 }
