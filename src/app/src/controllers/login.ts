@@ -37,11 +37,9 @@ export class LoginController extends BaseHttpController implements interfaces.Co
     
     try {
       const usuario = await this.serviceUsuario.buscarUsuario(email, senha, tipoPerfil);
-      const perfil = usuario.perfis.filter(perfil => perfil.categoria === tipoPerfil)[0];
       const token = generateJWT({
         userID: usuario.id,
         profileType: tipoPerfil,
-        profileID: perfil.id
       });
 
       res.setHeader('authorization', 'Bearer '+ token);

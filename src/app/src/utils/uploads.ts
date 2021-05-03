@@ -16,15 +16,12 @@ export type dadosArquivo = {
  */
 const uparArquivoNaNuvem = async(nomeArquivo: string, pastaDestinoCloudinary: string) : 
 Promise<dadosArquivo> => 
-{
-  try {
-    const {secure_url} = await cloudinary.uploader.upload(
-      path.resolve(__dirname, '..', '..', '..','..', 'temp', nomeArquivo), {
-        folder: pastaDestinoCloudinary,
-        resource_type: 'auto'
-      }
-    );
-    
+{ 
+  const {secure_url} = await cloudinary.uploader.upload(
+    path.resolve(__dirname, '..', '..', '..','..', 'temp', nomeArquivo), {
+      folder: pastaDestinoCloudinary,
+    }
+  ).catch((error) => {
     excluirArquivoTemporario(nomeArquivo);
     throw new IntegrationError('cloudinary', error);
   });
