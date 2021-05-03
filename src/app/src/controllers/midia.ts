@@ -56,9 +56,9 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
         tipo,
         url,
         idPerfil: req.session.profileID,
-      } as EntidadeMidia;
+      } as unknown;
 
-      return await this.serviceMidia.createMidia(midia);
+      return await this.serviceMidia.createMidia(midia as EntidadeMidia);
     } catch (error) {
       excluirArquivoTemporario(req.file.filename);
     
