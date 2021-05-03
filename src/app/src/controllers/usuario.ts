@@ -14,6 +14,7 @@ import EntidadeUsuario from '@core/entities/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import TYPES from '@core/types';
 import autenticado from '@app/middlewares/autenticado';
+import { compressImage } from '@app/utils/comprimirImagem';
 import { generateJWT } from '@app/utils/tokens';
 import { inject } from 'inversify';
 import reqFormData from '@app/middlewares/reqFormData';
@@ -31,8 +32,9 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
   }
 
   @httpPost('/fotoPerfil', reqFormData.single('imagem'))
-  private async uploadFotoPerfil(req: Request, res: Response): Promise<dadosArquivo | Response> {
-    return uparArquivoNaNuvem(req.file.filename, 'perfil');
+  private async uploadFotoPerfil(req: Request): Promise<dadosArquivo | Response> {
+    const newFileName = await compressImage(req.file);
+    return uparArquivoNaNuvem(newFileName, 'perfil');
   }
 
   @httpPost('/atualizarSenha', autenticado)
@@ -71,7 +73,8 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
 
     const token = generateJWT({
       userID: user.id,
-      profileType: usuario.perfis[0].categoria
+      profileID: user.perfis[0].id,
+      profileType: usuario.perfis[0].categoria,
     });
 
     res.setHeader('authorization', 'Bearer ' + token);

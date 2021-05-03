@@ -20,6 +20,7 @@ Promise<dadosArquivo> =>
   const {secure_url} = await cloudinary.uploader.upload(
     path.resolve(__dirname, '..', '..', '..','..', 'temp', nomeArquivo), {
       folder: pastaDestinoCloudinary,
+      resource_type: 'auto'
     }
   ).catch((error) => {
     excluirArquivoTemporario(nomeArquivo);
