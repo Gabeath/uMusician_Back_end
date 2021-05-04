@@ -49,7 +49,7 @@ const handleError: (err: any, req: Request, res: Response) => void =
       });
 
     } else if (err.isIntegrationError) {
-      res.status(httpStatus.BAD_REQUEST).json({ error: err.message });
+      res.status(httpStatus.BAD_REQUEST).json({ error: err.message, service: err.service });
     } else if (err.isPersistentError) {
       res.status(httpStatus.INTERNAL_SERVER_ERROR)
         .json({ stack: err.stack, message: err.message, ...err });
