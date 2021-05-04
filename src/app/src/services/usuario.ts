@@ -148,6 +148,7 @@ export class ServiceUsuario implements IServiceUsuario {
       ...(usuario.nome && { nome: usuario.nome }),
       ...(usuario.genero && { genero: usuario.genero }),
       ...(usuario.dataNascimento && { dataNascimento: usuario.dataNascimento }),
+      ...(usuario.fotoUrl && { fotoUrl: usuario.fotoUrl }),
     } as EntidadeUsuario;
 
     await this.repositoryUsuario.updateById(usuarioSaved.id, {

@@ -1,3 +1,4 @@
+import IntegrationError from '@core/errors/integration';
 import fs from 'fs';
 import sharp from 'sharp';
 
@@ -9,7 +10,10 @@ export const compressImage = async(file: Express.Multer.File): Promise<string> =
   const data = await sharp(file.path)
     .resize(640)
     .jpeg({ quality: 80 })
-    .toBuffer();
+    .toBuffer()
+    .catch((err) => {
+      throw new IntegrationError('sharp', err);
+    });
 
   //Exclui o arquivo original
   fs.access(file.path, (err) => {
