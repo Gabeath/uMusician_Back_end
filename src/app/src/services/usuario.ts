@@ -109,13 +109,13 @@ export class ServiceUsuario implements IServiceUsuario {
     const existeEmail: EntidadeUsuario = await this.repositoryUsuario.selectByEmail(email);
 
     if (existeEmail) {
-      return { valido: false, mensagem: 'email_em_uso' };
+      return { valido: false, mensagem: 'E-mail em uso' };
     }
 
     const existeCpf: EntidadeUsuario = await this.repositoryUsuario.selectByCpf(cpf);
 
     if (existeCpf) {
-      return { valido: false, mensagem: 'cpf_em_uso' };
+      return { valido: false, mensagem: 'CPF em uso' };
     }
 
     return { valido: true, mensagem: null };
