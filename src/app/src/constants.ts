@@ -9,7 +9,7 @@ class ConstantsClassAPP extends Constants {
   constructor(props: any) {
     super(props);
 
-    this.port = parseInt(props.API_PORT, 10);
+    this.port = parseInt(props.PORT, 10);
   }
 }
 
