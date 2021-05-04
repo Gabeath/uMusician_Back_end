@@ -4,8 +4,8 @@ import sharp from 'sharp';
 
 export const compressImage = async(file: Express.Multer.File): Promise<string> => {
 
-  const newPath = file.path.split('.')[0] + '.jpg';
-  const newFileName = file.filename.split('.')[0] + '.jpg';
+  const newPath = file.path.split('.')[0] + 'umusician.jpg';
+  const newFileName = file.filename.split('.')[0] + 'umusician.jpg';
 
   const data = await sharp(file.path)
     .resize(640)
