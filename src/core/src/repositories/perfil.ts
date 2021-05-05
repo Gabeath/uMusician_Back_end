@@ -133,4 +133,8 @@ export class RepositoryPerfil implements IRepositoryPerfil {
       ],
     });
   }
+
+  async updateById(id: string, perfil: EntidadePerfil): Promise<void> {
+    await this.repositoryPerfil.update(id, perfil);
+  }
 }
