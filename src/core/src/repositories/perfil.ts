@@ -128,8 +128,6 @@ export class RepositoryPerfil implements IRepositoryPerfil {
         'generosMusicais.generoMusical',
         'apresentacoes',
         'apresentacoes.especialidade',
-        'avaliacoes',
-        'avaliacoes.servico',
       ],
     });
   }

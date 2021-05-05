@@ -5,32 +5,36 @@ import * as httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'inversify';
 import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
+import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
 import { IRepositoryGeneroMusical } from '@core/repositories/interfaces/genero-musical';
 import {
   IRepositoryGeneroMusicalPerfil
 } from '@core/repositories/interfaces/genero-musical-perfil';
+import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
-import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
+import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
+import { IServiceMidia } from '@app/services/interfaces/midia';
 import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
-import { IServiceMidia } from '@app/services/interfaces/midia';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacao } from '@core/repositories/apresentacao';
+import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
 import { RepositoryGeneroMusical } from '@core/repositories/genero-musical';
 import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
+import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryUsuario } from '@core/repositories/usuario';
-import { RepositoryMidia } from '@core/repositories/midia';
+import { ServiceAvaliacao } from '@app/services/avaliacao';
 import { ServiceEspecialidade } from '@app/services/especialidade';
 import { ServiceGeneroMusical } from '@app/services/generoMusical';
+import { ServiceMidia } from '@app/services/midia';
 import { ServicePerfil } from './services/perfil';
 import { ServiceUsuario } from '@app/services/usuario';
-import { ServiceMidia } from '@app/services/midia';
 import TYPES from '@core/types';
 import compress from 'compression';
 import cors from 'cors';
@@ -74,8 +78,10 @@ export class Server {
     container.bind<IRepositoryApresentacao>(TYPES.RepositoryApresentacao)
       .to(RepositoryApresentacao);
 
-    container.bind<IRepositoryGeneroMusicalPerfil>(TYPES.RepositoryGeneroMusicalPerfil)
-      .to(RepositoryGeneroMusicalPerfil);
+    container.bind<IRepositoryAvaliacao>(TYPES.RepositoryAvaliacao)
+      .to(RepositoryAvaliacao);
+    container.bind<IServiceAvaliacao>(TYPES.ServiceAvaliacao)
+      .to(ServiceAvaliacao);
 
     container.bind<IRepositoryEspecialidade>(TYPES.RepositoryEspecialidade)
       .to(RepositoryEspecialidade);
@@ -87,6 +93,14 @@ export class Server {
     container.bind<IServiceGeneroMusical>(TYPES.ServiceGeneroMusical)
       .to(ServiceGeneroMusical);
 
+    container.bind<IRepositoryGeneroMusicalPerfil>(TYPES.RepositoryGeneroMusicalPerfil)
+      .to(RepositoryGeneroMusicalPerfil);
+
+    container.bind<IRepositoryMidia>(TYPES.RepositoryMidia)
+      .to(RepositoryMidia);
+    container.bind<IServiceMidia>(TYPES.ServiceMidia)
+      .to(ServiceMidia);
+
     container.bind<IRepositoryPerfil>(TYPES.RepositoryPerfil)
       .to(RepositoryPerfil);
     container.bind<IServicePerfil>(TYPES.ServicePerfil)
@@ -96,11 +110,6 @@ export class Server {
       .to(RepositoryUsuario);
     container.bind<IServiceUsuario>(TYPES.ServiceUsuario)
       .to(ServiceUsuario);
-
-    container.bind<IRepositoryMidia>(TYPES.RepositoryMidia)
-      .to(RepositoryMidia);
-    container.bind<IServiceMidia>(TYPES.ServiceMidia)
-      .to(ServiceMidia);
   }
 
   createServer(): void {
