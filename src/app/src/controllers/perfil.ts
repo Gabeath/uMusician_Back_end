@@ -2,15 +2,18 @@ import {
   BaseHttpController,
   controller,
   httpGet,
+  httpPut,
   interfaces
 } from 'inversify-express-utils';
 import { IPerfilSearchParameter, Pagination } from '../../../core/src/models/pagination';
+import { CategoriaPerfil } from '@core/models';
 import EntidadePerfil from '@core/entities/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import { Request } from 'express';
 import TYPES from '@core/types';
 import autenticado from '@app/middlewares/autenticado';
 import { inject } from 'inversify';
+import isPerfilPermitido from '@app/middlewares/perfil';
 
 @controller('/perfil')
 export class ControllerPerfil extends BaseHttpController implements interfaces.Controller {
@@ -43,5 +46,11 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
   @httpGet('/:id', autenticado)
   private getById(req: Request): Promise<EntidadePerfil> {
     return this.servicePerfil.getById(req.params.id);
+  }
+
+  @httpPut('/biografia', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async updateBiografiaById(req: Request): Promise<void> {
+    const biografia = req.body.biografia as string;
+    await this.servicePerfil.updateBiografiaById(req.session.profileID, biografia);
   }
 }
