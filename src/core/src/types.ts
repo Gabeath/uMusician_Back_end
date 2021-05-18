@@ -6,6 +6,7 @@ const TYPES = {
   RepositoryGeneroMusicalPerfil: 'RepositoryGeneroMusicalPerfil',
   RepositoryMidia: 'RepositoryMidia',
   RepositoryPerfil: 'RepositoryPerfil',
+  RepositoryServico: 'RepositoryServico',
   RepositoryUsuario: 'RepositoryUsuario',
 
   ServiceAvaliacao: 'ServiceAvaliacao',
@@ -13,6 +14,7 @@ const TYPES = {
   ServiceGeneroMusical: 'ServiceGeneroMusical',
   ServiceMidia: 'ServiceMidia',
   ServicePerfil: 'ServicePerfil',
+  ServiceServico: 'ServiceServico',
   ServiceUsuario: 'ServiceUsuario',
 };
 
