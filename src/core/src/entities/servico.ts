@@ -18,10 +18,10 @@ export default class EntidadeServico extends Base {
   @Column({ type: 'int4' })
   public situacao!: number;
   
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamptz' })
   public dataInicio!: string;
   
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamptz' })
   public dataTermino!: string;
 
   @Column({ type: 'uuid' })
