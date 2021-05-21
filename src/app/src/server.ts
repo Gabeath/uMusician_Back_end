@@ -6,6 +6,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'inversify';
 import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
+import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
 import { IRepositoryGeneroMusical } from '@core/repositories/interfaces/genero-musical';
 import {
@@ -25,6 +26,7 @@ import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacao } from '@core/repositories/apresentacao';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
+import { RepositoryEndereco } from '@core/repositories/endereco';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
 import { RepositoryGeneroMusical } from '@core/repositories/genero-musical';
 import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
@@ -86,6 +88,9 @@ export class Server {
       .to(RepositoryAvaliacao);
     container.bind<IServiceAvaliacao>(TYPES.ServiceAvaliacao)
       .to(ServiceAvaliacao);
+
+    container.bind<IRepositoryEndereco>(TYPES.RepositoryEndereco)
+      .to(RepositoryEndereco);
 
     container.bind<IRepositoryEspecialidade>(TYPES.RepositoryEspecialidade)
       .to(RepositoryEspecialidade);

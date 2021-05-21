@@ -1,6 +1,6 @@
 import { Repository, getRepository } from 'typeorm';
 import EntidadeServico from '@core/entities/servico';
-import { IRepositoryServico } from './interfaces/servico';
+import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { injectable } from 'inversify';
 
 @injectable()
