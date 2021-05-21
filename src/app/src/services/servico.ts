@@ -6,6 +6,7 @@ import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
+import { In } from 'typeorm';
 import { SituaçãoServiço } from '@core/models';
 import TYPES from '@core/types';
 
@@ -69,5 +70,25 @@ export class ServiceServico implements IServiceServico {
     servicoSaved.endereco = enderecoSaved;
 
     return servicoSaved;
+  }
+
+  async getServicosContratante(idContratante: string): Promise<EntidadeServico[]> {
+    const contratante = await this.repositoryPerfil.selectById(idContratante);
+
+    if (!contratante) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+
+    return this.repositoryServico.selectServicosByWhere({
+      where: {
+        idContratante,
+        situacao: In([SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO]),
+      },
+      relations: [
+        'apresentacao',
+        'apresentacao.perfil',
+        'apresentacao.perfil.usuario',
+      ]
+    });
   }
 }

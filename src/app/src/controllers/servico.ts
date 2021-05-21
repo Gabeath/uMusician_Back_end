@@ -50,4 +50,9 @@ export class ControllerServico extends BaseHttpController implements interfaces.
 
     return this.serviceServico.create(req.session.profileID, servico);
   }
+
+  @httpGet('/contratante', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
+  private async getServicosContratante(req: Request): Promise<EntidadeServico[]> {
+    return this.serviceServico.getServicosContratante(req.session.profileID);
+  }
 }
