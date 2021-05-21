@@ -13,12 +13,14 @@ import {
 } from '@core/repositories/interfaces/genero-musical-perfil';
 import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
+import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { IServiceMidia } from '@app/services/interfaces/midia';
 import { IServicePerfil } from './services/interfaces/perfil';
+import { IServiceServico } from './services/interfaces/servico';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacao } from '@core/repositories/apresentacao';
@@ -28,12 +30,14 @@ import { RepositoryGeneroMusical } from '@core/repositories/genero-musical';
 import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
 import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
+import { RepositoryServico } from '@core/repositories/servico';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
 import { ServiceEspecialidade } from '@app/services/especialidade';
 import { ServiceGeneroMusical } from '@app/services/generoMusical';
 import { ServiceMidia } from '@app/services/midia';
 import { ServicePerfil } from './services/perfil';
+import { ServiceServico } from './services/servico';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
 import compress from 'compression';
@@ -105,6 +109,11 @@ export class Server {
       .to(RepositoryPerfil);
     container.bind<IServicePerfil>(TYPES.ServicePerfil)
       .to(ServicePerfil);
+
+    container.bind<IRepositoryServico>(TYPES.RepositoryServico)
+      .to(RepositoryServico);
+    container.bind<IServiceServico>(TYPES.ServiceServico)
+      .to(ServiceServico);
         
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
       .to(RepositoryUsuario);

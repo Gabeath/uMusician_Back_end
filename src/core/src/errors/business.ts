@@ -13,6 +13,7 @@ export default class BusinessError extends CustomError {
 }
 
 export const ErrorCodes = {
+  APRESENTACAO_NAO_ENCONTRADA: 'Apresentação não encontrada',
   ARGUMENTOS_AUSENTES: 'Argumentos ausentes',
   ARGUMENTOS_INVALIDOS: 'Argumentos inválidos',
   DADOS_LOGIN_INVALIDOS: 'Dados de login inválidos',
