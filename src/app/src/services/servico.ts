@@ -43,6 +43,7 @@ export class ServiceServico implements IServiceServico {
 
     const servicoToSave: EntidadeServico = {
       situacao: SituaçãoServiço.PENDENTE,
+      nome: servico.nome,
       dataInicio: servico.dataInicio,
       dataTermino: servico.dataTermino,
       idApresentacao: apresentacao.id,

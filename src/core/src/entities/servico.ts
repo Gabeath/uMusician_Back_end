@@ -17,6 +17,9 @@ import EntidadePerfil from './perfil';
 export default class EntidadeServico extends Base {
   @Column({ type: 'int4' })
   public situacao!: number;
+
+  @Column()
+  public nome!: string;
   
   @Column({ type: 'timestamptz' })
   public dataInicio!: string;

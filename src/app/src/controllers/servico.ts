@@ -32,6 +32,7 @@ export class ControllerServico extends BaseHttpController implements interfaces.
   @httpPost('/', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
   private async solitarPerfil(req: Request): Promise<EntidadeServico> {
     const servico = {
+      nome: req.body.servico.nome as string,
       dataInicio: req.body.servico.dataInicio as string,
       dataTermino: req.body.servico.dataTermino as string,
       idApresentacao: req.body.servico.idApresentacao as string,
