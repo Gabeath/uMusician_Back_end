@@ -24,4 +24,14 @@ export class RepositoryAvaliacao implements IRepositoryAvaliacao {
       count,
     };
   }
+
+  async selectMediaAvaliacoesMusico(idPerfil: string): Promise<{ media: number }> {
+    const media: { media: string } = await this.repositoryAvaliacao
+      .createQueryBuilder('avaliacao')
+      .select('AVG(avaliacao.pontuacao)', 'media')
+      .where('avaliacao.idPerfil = :idPerfil', { idPerfil })
+      .getRawOne();
+
+    return { media: parseFloat(media.media) || 0 };
+  }
 }

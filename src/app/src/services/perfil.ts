@@ -3,6 +3,7 @@ import { IPerfilSearchParameter, Pagination } from '@core/models';
 import { inject, injectable } from 'inversify';
 import { DateTime } from 'luxon';
 import EntidadePerfil from '@core/entities/perfil';
+import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import TYPES from '@core/types';
@@ -10,11 +11,14 @@ import TYPES from '@core/types';
 @injectable()
 export class ServicePerfil implements IServicePerfil {
   private repositoryPerfil: IRepositoryPerfil;
+  private repositoryAvaliacao: IRepositoryAvaliacao;
 
   constructor(
   @inject(TYPES.RepositoryPerfil) repositoryPerfil: IRepositoryPerfil,
+    @inject(TYPES.RepositoryAvaliacao) repositoryAvaliacao: IRepositoryAvaliacao,
   ){
     this.repositoryPerfil = repositoryPerfil;
+    this.repositoryAvaliacao = repositoryAvaliacao;
   }
 
   async getMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter):
@@ -24,7 +28,9 @@ export class ServicePerfil implements IServicePerfil {
 
   async getById(id: string): Promise<EntidadePerfil> {
     const perfil: EntidadePerfil = await this.repositoryPerfil.selectById(id);
+    const avaliacao = await this.repositoryAvaliacao.selectMediaAvaliacoesMusico(perfil.id);
     perfil.usuario.senha = undefined;
+    perfil.mediaAvaliacoes = avaliacao.media;
     return perfil;
   }
 

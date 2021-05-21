@@ -79,4 +79,6 @@ export default class EntidadePerfil extends Base {
     (servico: EntidadeServico): EntidadePerfil => servico.contratante,
   )
   servicos?: EntidadeServico[];
+
+  mediaAvaliacoes?: number;
 }
