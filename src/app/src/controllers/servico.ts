@@ -55,4 +55,9 @@ export class ControllerServico extends BaseHttpController implements interfaces.
   private async getServicosContratante(req: Request): Promise<EntidadeServico[]> {
     return this.serviceServico.getServicosContratante(req.session.profileID);
   }
+
+  @httpGet('/:id', autenticado)
+  private async getDetalhesServico(req: Request): Promise<EntidadeServico | null> {
+    return this.serviceServico.getDetalhesServico(req.params.id);
+  }
 }

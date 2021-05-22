@@ -91,4 +91,13 @@ export class ServiceServico implements IServiceServico {
       ]
     });
   }
+
+  async getDetalhesServico(id: string): Promise<EntidadeServico | null> {
+    const servico = await this.repositoryServico.selectById(id);
+
+    servico.apresentacao.perfil.usuario.senha = undefined;
+    servico.contratante.usuario.senha = undefined;
+
+    return servico;
+  }
 }

@@ -25,4 +25,18 @@ export class RepositoryServico implements IRepositoryServico {
 
     return { count };
   }
+
+  async selectById(id: string): Promise<EntidadeServico | null> {
+    return this.repositoryServico.findOne({
+      where: { id },
+      relations: [
+        'apresentacao',
+        'apresentacao.perfil',
+        'apresentacao.perfil.usuario',
+        'contratante',
+        'contratante.usuario',
+        'endereco',
+      ],
+    });
+  }
 }
