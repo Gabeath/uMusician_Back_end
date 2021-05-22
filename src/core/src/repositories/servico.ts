@@ -31,6 +31,7 @@ export class RepositoryServico implements IRepositoryServico {
       where: { id },
       relations: [
         'apresentacao',
+        'apresentacao.especialidade',
         'apresentacao.perfil',
         'apresentacao.perfil.usuario',
         'contratante',
