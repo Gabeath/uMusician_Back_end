@@ -11,6 +11,7 @@ import Base from './base';
 import EntidadeApresentacao from './apresentacao';
 import EntidadeAvaliacao from './avaliacao';
 import EntidadeEndereco from './endereco';
+import EntidadeGeneroMusicalPerfil from './genero-musical-perfil';
 import EntidadePerfil from './perfil';
 
 @Entity('servico')
@@ -32,6 +33,12 @@ export default class EntidadeServico extends Base {
 
   @Column({ type: 'uuid' })
   public idContratante!: string;
+
+  @Column({ type: 'uuid' })
+  public idGeneroMusical!: string;
+
+  @Column({ type: 'float' })
+  public valor!: number;
 
   @ManyToOne(
     (): ObjectType<EntidadeApresentacao> => EntidadeApresentacao,
@@ -59,4 +66,10 @@ export default class EntidadeServico extends Base {
   )
   endereco?: EntidadeEndereco;
 
+  @ManyToOne(
+    (): ObjectType<EntidadeGeneroMusicalPerfil> => EntidadeGeneroMusicalPerfil,
+    (generoMusical: EntidadeGeneroMusicalPerfil): EntidadeServico[] => generoMusical.servicos,
+  )
+  @JoinColumn({ name: 'idApresentacao', referencedColumnName: 'id' })
+  public generoMusical?: EntidadeGeneroMusicalPerfil;
 }
