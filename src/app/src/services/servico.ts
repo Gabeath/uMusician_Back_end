@@ -3,6 +3,9 @@ import { inject, injectable } from 'inversify';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
+import {
+  IRepositoryGeneroMusicalPerfil
+} from '@core/repositories/interfaces/genero-musical-perfil';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
@@ -15,17 +18,21 @@ export class ServiceServico implements IServiceServico {
   private repositoryServico: IRepositoryServico;
   private repositoryApresentacao: IRepositoryApresentacao;
   private repositoryEndereco: IRepositoryEndereco;
+  private repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil;
   private repositoryPerfil: IRepositoryPerfil;
 
   constructor(
   @inject(TYPES.RepositoryServico) repositoryServico: IRepositoryServico,
     @inject(TYPES.RepositoryApresentacao) repositoryApresentacao: IRepositoryApresentacao,
     @inject(TYPES.RepositoryEndereco) repositoryEndereco: IRepositoryEndereco,
+    @inject(TYPES.RepositoryGeneroMusicalPerfil)
+    repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil,
     @inject(TYPES.RepositoryPerfil) repositoryPerfil: IRepositoryPerfil,
   ) {
     this.repositoryServico = repositoryServico;
     this.repositoryApresentacao = repositoryApresentacao;
     this.repositoryEndereco = repositoryEndereco;
+    this.repositoryGeneroMusicalPerfil = repositoryGeneroMusicalPerfil;
     this.repositoryPerfil = repositoryPerfil;
   }
 
@@ -42,13 +49,26 @@ export class ServiceServico implements IServiceServico {
       throw new BusinessError(ErrorCodes.APRESENTACAO_NAO_ENCONTRADA);
     }
 
+    const generoMusicalPerfil = await this.repositoryGeneroMusicalPerfil
+      .selectById(servico.idGeneroMusical);
+
+    if (!generoMusicalPerfil) {
+      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_NAO_ENCONTRADO);
+    }
+
+    if (apresentacao.idPerfil !== generoMusicalPerfil.idPerfil) {
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+    }
+
     const servicoToSave: EntidadeServico = {
       situacao: SituaçãoServiço.PENDENTE,
       nome: servico.nome,
       dataInicio: servico.dataInicio,
       dataTermino: servico.dataTermino,
+      valor: servico.valor,
       idApresentacao: apresentacao.id,
       idContratante: contratante.id,
+      idGeneroMusical: generoMusicalPerfil.id,
       createdBy: contratante.id,
     };
 

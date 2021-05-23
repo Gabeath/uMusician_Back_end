@@ -5,15 +5,12 @@ import {
   httpPost,
   interfaces,
 } from 'inversify-express-utils';
-import { CategoriaPerfil, Pagination, SearchParameterBase } from '@core/models';
-import EntidadeAvaliacao from '@core/entities/avaliacao';
+import { CategoriaPerfil } from '@core/models';
 import EntidadeServico from '@core/entities/servico';
-import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
 import { IServiceServico } from '@app/services/interfaces/servico';
 import { Request } from 'express';
 import TYPES from '@core/types';
 import autenticado from '@app/middlewares/autenticado';
-import { controllerPaginationHelper } from '@app/utils/pagination';
 import { inject } from 'inversify';
 import isPerfilPermitido from '@app/middlewares/perfil';
 
@@ -35,7 +32,9 @@ export class ControllerServico extends BaseHttpController implements interfaces.
       nome: req.body.servico.nome as string,
       dataInicio: req.body.servico.dataInicio as string,
       dataTermino: req.body.servico.dataTermino as string,
+      valor: req.body.servico.valor as number,
       idApresentacao: req.body.servico.idApresentacao as string,
+      idGeneroMusical: req.body.servico.idGeneroMusical as string,
       endereco: {
         cep: req.body.servico.endereco.cep as string,
         rua: req.body.servico.endereco.rua as string,

@@ -17,6 +17,7 @@ export const ErrorCodes = {
   ARGUMENTOS_AUSENTES: 'Argumentos ausentes',
   ARGUMENTOS_INVALIDOS: 'Argumentos inválidos',
   DADOS_LOGIN_INVALIDOS: 'Dados de login inválidos',
+  GENERO_MUSICAL_NAO_ENCONTRADO: 'Gênero musical não encontrado',
   PERFIL_NAO_ENCONTRADO: 'Perfil não encontrado',
   USUARIO_JA_CADASTRADO: 'Usuário já cadastrado',
   USUARIO_NAO_ENCONTRADO: 'Usuário não encontrado',
