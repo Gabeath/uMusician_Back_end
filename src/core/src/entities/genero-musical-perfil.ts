@@ -38,7 +38,7 @@ export default class EntidadeGeneroMusicalPerfil extends Base {
 
   @OneToMany(
     (): ObjectType<EntidadeServico> => EntidadeServico,
-    (servico: EntidadeServico): EntidadeGeneroMusicalPerfil => servico.generoMusical,
+    (servico: EntidadeServico): EntidadeGeneroMusicalPerfil => servico.generoMusicalPerfil,
   )
   servicos?: EntidadeServico[];
 }

@@ -34,6 +34,8 @@ export class RepositoryServico implements IRepositoryServico {
         'apresentacao.especialidade',
         'apresentacao.perfil',
         'apresentacao.perfil.usuario',
+        'generoMusicalPerfil',
+        'generoMusicalPerfil.generoMusical',
         'contratante',
         'contratante.usuario',
         'endereco',

@@ -70,6 +70,6 @@ export default class EntidadeServico extends Base {
     (): ObjectType<EntidadeGeneroMusicalPerfil> => EntidadeGeneroMusicalPerfil,
     (generoMusical: EntidadeGeneroMusicalPerfil): EntidadeServico[] => generoMusical.servicos,
   )
-  @JoinColumn({ name: 'idApresentacao', referencedColumnName: 'id' })
-  public generoMusical?: EntidadeGeneroMusicalPerfil;
+  @JoinColumn({ name: 'idGeneroMusical', referencedColumnName: 'id' })
+  public generoMusicalPerfil?: EntidadeGeneroMusicalPerfil;
 }
