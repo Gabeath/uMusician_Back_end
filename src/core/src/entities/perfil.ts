@@ -81,4 +81,6 @@ export default class EntidadePerfil extends Base {
   servicos?: EntidadeServico[];
 
   mediaAvaliacoes?: number;
+
+  countServicos?: number;
 }

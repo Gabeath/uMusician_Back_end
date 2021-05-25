@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import EntidadePerfil from '@core/entities/perfil';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
+import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import TYPES from '@core/types';
 
@@ -12,13 +13,16 @@ import TYPES from '@core/types';
 export class ServicePerfil implements IServicePerfil {
   private repositoryPerfil: IRepositoryPerfil;
   private repositoryAvaliacao: IRepositoryAvaliacao;
+  private repositoryServico: IRepositoryServico;
 
   constructor(
   @inject(TYPES.RepositoryPerfil) repositoryPerfil: IRepositoryPerfil,
     @inject(TYPES.RepositoryAvaliacao) repositoryAvaliacao: IRepositoryAvaliacao,
+    @inject(TYPES.RepositoryServico) repositoryServico: IRepositoryServico,
   ){
     this.repositoryPerfil = repositoryPerfil;
     this.repositoryAvaliacao = repositoryAvaliacao;
+    this.repositoryServico = repositoryServico;
   }
 
   async getMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter):
@@ -28,9 +32,20 @@ export class ServicePerfil implements IServicePerfil {
 
   async getById(id: string): Promise<EntidadePerfil> {
     const perfil: EntidadePerfil = await this.repositoryPerfil.selectById(id);
-    const avaliacao = await this.repositoryAvaliacao.selectMediaAvaliacoesMusico(perfil.id);
+
+    const idApresentacoes: string[] = perfil.apresentacoes.map((apresentacao) => {
+      return apresentacao.id;
+    });
+    const servico: { count: number } =
+    await this.repositoryServico.countServicosMusico(idApresentacoes);
+
+    const avaliacao: { media: number } =
+    await this.repositoryAvaliacao.selectMediaAvaliacoesMusico(perfil.id);
+
     perfil.usuario.senha = undefined;
     perfil.mediaAvaliacoes = avaliacao.media;
+    perfil.countServicos = servico.count;
+
     return perfil;
   }
 

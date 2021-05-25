@@ -23,10 +23,10 @@ export class Servico1617393254631 implements MigrationInterface {
             type: 'int4',
           }, {
             name: 'dataInicio',
-            type: 'date',
+            type: 'timestamptz',
           }, {
             name: 'dataTermino',
-            type: 'date',
+            type: 'timestamptz',
           }, {
             name: 'idApresentacao',
             type: 'uuid',
