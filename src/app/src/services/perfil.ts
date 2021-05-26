@@ -43,7 +43,7 @@ export class ServicePerfil implements IServicePerfil {
     await this.repositoryAvaliacao.selectMediaAvaliacoesMusico(perfil.id);
 
     perfil.usuario.senha = undefined;
-    perfil.mediaAvaliacoes = avaliacao.media;
+    perfil.avaliacaoMedia = avaliacao.media;
     perfil.countServicos = servico.count;
 
     return perfil;
