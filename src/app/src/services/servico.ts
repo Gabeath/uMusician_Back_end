@@ -108,7 +108,10 @@ export class ServiceServico implements IServiceServico {
         'apresentacao',
         'apresentacao.perfil',
         'apresentacao.perfil.usuario',
-      ]
+      ],
+      order: {
+        dataInicio: 'ASC'
+      }
     });
   }
 
