@@ -76,4 +76,40 @@ export class RepositoryUsuario implements IRepositoryUsuario {
       },
     });
   }
+
+  async updatePassword(id: string, senha: string): Promise<void>{
+    const usuario = await this.repositoryUsuario.findOne({
+      where: {
+        id
+      }
+    });
+    usuario.senha = senha;
+    await this.repositoryUsuario.save(usuario);
+  }
+
+  async selectById(id: string): Promise<EntidadeUsuario | null> {
+    return this.repositoryUsuario.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async selectByIdWithProfiles(id: string): Promise<EntidadeUsuario | null> {
+    return this.repositoryUsuario.findOne({
+      where: {
+        id,
+      },
+      join: {
+        alias: 'usuario',
+        leftJoinAndSelect: {
+          perfis: 'usuario.perfis',
+        },
+      },
+    });
+  }
+
+  async updateById(id: string, usuario: EntidadeUsuario): Promise<void> {
+    await this.repositoryUsuario.update(id, usuario);
+  }
 }

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Constants,
   initializeEnv as initializeEnvCore,
- } from '@core/constants';
+} from '@core/constants';
 
 class ConstantsClassAPP extends Constants {
   port: number;
@@ -8,7 +9,7 @@ class ConstantsClassAPP extends Constants {
   constructor(props: any) {
     super(props);
 
-    this.port = parseInt(props.API_PORT, 10);
+    this.port = parseInt(props.PORT, 10);
   }
 }
 

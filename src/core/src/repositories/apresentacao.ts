@@ -11,4 +11,8 @@ export class RepositoryApresentacao implements IRepositoryApresentacao {
   async create(apresentacao: EntidadeApresentacao[]): Promise<EntidadeApresentacao[]> {
     return this.repositoryApresentacao.save(apresentacao);
   }
+
+  async selectById(id: string): Promise<EntidadeApresentacao | null> {
+    return this.repositoryApresentacao.findOne({ where: { id } });
+  }
 }

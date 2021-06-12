@@ -1,3 +1,4 @@
+/* eslint-disable */
 export class Constants {
   env: 'production' | 'stage' | 'development';
   debug: boolean;
@@ -24,7 +25,7 @@ export class Constants {
   };
 
   constructor(props: any) {
-    this.env = props.NODE_ENV;
+    this.env = props.NODE_ENV as 'production' | 'stage' | 'development';
     this.appName = 'uMusician Back-end';
 
     this.debug = props.DEBUG === 'true';

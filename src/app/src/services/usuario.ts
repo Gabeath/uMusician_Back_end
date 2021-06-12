@@ -1,6 +1,7 @@
 import BusinessError, { ErrorCodes } from  '@core/errors/business';
 import { CategoriaPerfil, SituaçãoPerfil } from '@core/models/enumerators';
 import { inject, injectable } from 'inversify';
+import { DateTime } from 'luxon';
 import EntidadeApresentacao from '@core/entities/apresentacao';
 import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
 import EntidadePerfil from '@core/entities/perfil';
@@ -47,6 +48,7 @@ export class ServiceUsuario implements IServiceUsuario {
       cpf: usuario.cpf,
       genero: usuario.genero,
       dataNascimento: usuario.dataNascimento,
+      fotoUrl: usuario.fotoUrl
     };
 
     const perfilToSave: EntidadePerfil = {
@@ -107,15 +109,52 @@ export class ServiceUsuario implements IServiceUsuario {
     const existeEmail: EntidadeUsuario = await this.repositoryUsuario.selectByEmail(email);
 
     if (existeEmail) {
-      return { valido: false, mensagem: 'email_em_uso' };
+      return { valido: false, mensagem: 'E-mail em uso' };
     }
 
     const existeCpf: EntidadeUsuario = await this.repositoryUsuario.selectByCpf(cpf);
 
     if (existeCpf) {
-      return { valido: false, mensagem: 'cpf_em_uso' };
+      return { valido: false, mensagem: 'CPF em uso' };
     }
 
     return { valido: true, mensagem: null };
+  }
+
+  async alterarSenha(senha: string, user_id: string): Promise<void>{
+    if (!senha) {
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+    }
+
+    const senhaCriptografada = cryptToken(senha);
+    await this.repositoryUsuario.updatePassword(user_id, senhaCriptografada);
+  }
+
+  async buscarMeuUsuario(id: string): Promise<EntidadeUsuario>{
+    const usuario = await this.repositoryUsuario.selectByIdWithProfiles(id);
+    usuario.senha = undefined;
+    
+    return usuario;
+  }
+
+  async updateUsuario(idUsuario: string, usuario: EntidadeUsuario): Promise<void> {
+    const usuarioSaved: EntidadeUsuario = await this.repositoryUsuario.selectById(idUsuario);
+
+    if (!usuarioSaved) {
+      throw new BusinessError(ErrorCodes.USUARIO_NAO_ENCONTRADO);
+    }
+
+    const usuarioToSave = {
+      ...(usuario.nome && { nome: usuario.nome }),
+      ...(usuario.genero && { genero: usuario.genero }),
+      ...(usuario.dataNascimento && { dataNascimento: usuario.dataNascimento }),
+      ...(usuario.fotoUrl && { fotoUrl: usuario.fotoUrl }),
+    } as EntidadeUsuario;
+
+    await this.repositoryUsuario.updateById(usuarioSaved.id, {
+      ...usuarioToSave,
+      updatedAt: DateTime.local().toString(),
+      updatedBy: usuarioSaved.id,
+    });
   }
 }

@@ -4,11 +4,10 @@
     "main": "index.js",
     "private": true,
     "scripts": {
-        "lint": "tslint -t prose -c tsconfig.json './src/**/*.ts'",
+        "lint": "eslint ./src",
         "build": "npx tsc",
         "start": "cd ./dist/app && node index.js",
-        "cp:files": "cp -R ./src/app/src/mail-templates ./dist/app/src/mail-templates",
-        "start:dev": "git checkout -- .; git pull; pm2 delete 'uMusician API';npm run build; npx pm2 start ecosystem.config.js --env development; npm run cp:files"
+        "start:dev": "git checkout -- .; git pull; pm2 delete 'uMusician API';npm run build; npx pm2 start ecosystem.config.js --env development"
     },
     "husky": {
         "hooks": {
@@ -24,6 +23,7 @@
         "cors": "^2.8.5",
         "helmet": "^4.4.1",
         "http-status": "^1.5.0",
+        "husky": "^6.0.0",
         "inversify": "^5.0.5",
         "inversify-express-utils": "^6.3.2",
         "jsonwebtoken": "^8.5.1",
@@ -33,6 +33,7 @@
         "pg": "^8.5.1",
         "pm2": "^4.5.5",
         "reflect-metadata": "^0.1.13",
+        "sharp": "^0.28.1",
         "ts-custom-error": "^3.2.0",
         "typeorm": "^0.2.32"
     },
@@ -40,6 +41,7 @@
         "@types/jsonwebtoken": "^8.5.1",
         "@types/multer": "^1.4.5",
         "@types/node": "^14.14.37",
+        "@types/sharp": "^0.28.0",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
         "eslint": "^7.24.0",

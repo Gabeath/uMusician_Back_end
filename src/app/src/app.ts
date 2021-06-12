@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { initializeEnv } from '@app/constants';
 
 (async () => {
