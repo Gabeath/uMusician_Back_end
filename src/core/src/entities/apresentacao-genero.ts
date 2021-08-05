@@ -4,41 +4,40 @@ import {
   JoinColumn,
   ManyToOne,
   ObjectType,
-  OneToMany,
 } from 'typeorm';
 import Base from './base';
 import EntidadeGeneroMusical from './genero-musical';
 import EntidadePerfil from './perfil';
-import EntidadeServico from './servico';
 
 @Entity('genero-musical-perfil')
-export default class EntidadeGeneroMusicalPerfil extends Base {
+export default class EntidadeApresentacaoGenero extends Base {
   @Column()
   public ano!: string;
 
   @Column({ type: 'uuid' })
-  public idPerfil?: string;
+  public idMusico?: string;
 
   @Column({ type: 'uuid' })
   public idGeneroMusical!: string;
 
   @ManyToOne(
     (): ObjectType<EntidadePerfil> => EntidadePerfil,
-    (perfil: EntidadePerfil): EntidadeGeneroMusicalPerfil[] => perfil.generosMusicais,
+    (perfil: EntidadePerfil): EntidadeApresentacaoGenero[] => perfil.apresentacoesGenero,
   )
-  @JoinColumn({ name: 'idPerfil', referencedColumnName: 'id' })
-  public perfil?: EntidadePerfil;
+  @JoinColumn({ name: 'idMusico', referencedColumnName: 'id' })
+  public musico?: EntidadePerfil;
 
   @ManyToOne(
     (): ObjectType<EntidadeGeneroMusical> => EntidadeGeneroMusical,
-    (generoMusical: EntidadeGeneroMusical): EntidadeGeneroMusicalPerfil[] => generoMusical.perfis,
+    (generoMusical: EntidadeGeneroMusical): EntidadeApresentacaoGenero[] =>
+      generoMusical.apresentacoesGenero,
   )
   @JoinColumn({ name: 'idGeneroMusical', referencedColumnName: 'id' })
   public generoMusical?: EntidadeGeneroMusical;
 
-  @OneToMany(
-    (): ObjectType<EntidadeServico> => EntidadeServico,
-    (servico: EntidadeServico): EntidadeGeneroMusicalPerfil => servico.generoMusicalPerfil,
-  )
-  servicos?: EntidadeServico[];
+  // @OneToMany(
+  //   (): ObjectType<EntidadeServico> => EntidadeServico,
+  //   (servico: EntidadeServico): EntidadeApresentacaoGenero => servico.apresentacoesGenero,
+  // )
+  // servicos?: EntidadeServico[];
 }

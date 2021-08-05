@@ -23,12 +23,12 @@ export default class EntidadeMidia extends Base {
   public ano!: string;
 
   @Column({ type: 'uuid' })
-  public idPerfil!: string;
+  public idMusico!: string;
 
   @ManyToOne(
     (): ObjectType<EntidadePerfil> => EntidadePerfil,
-    (perfil: EntidadePerfil): EntidadeMidia[] => perfil.midias,
+    (musico: EntidadePerfil): EntidadeMidia[] => musico.midias,
   )
-  @JoinColumn({ name: 'idPerfil', referencedColumnName: 'id' })
-  public perfil?: EntidadePerfil;
+  @JoinColumn({ name: 'idMusico', referencedColumnName: 'id' })
+  public musico?: EntidadePerfil;
 }

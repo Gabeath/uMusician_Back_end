@@ -10,9 +10,9 @@ import {
   Pagination,
   SituaçãoPerfil,
 } from '@core/models';
-import EntidadeApresentacao from '@core/entities/apresentacao';
+import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
+import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadeAvaliacao from '@core/entities/avaliacao';
-import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
 import EntidadePerfil from '@core/entities/perfil';
 import EntidadeUsuario from '@core/entities/usuario';
 import { IRepositoryPerfil } from './interfaces/perfil';
@@ -22,10 +22,10 @@ import { injectable } from 'inversify';
 export class RepositoryPerfil implements IRepositoryPerfil {
   private repositoryPerfil: Repository<EntidadePerfil> = getRepository(EntidadePerfil);
   private repositoryAvaliacao: Repository<EntidadeAvaliacao> = getRepository(EntidadeAvaliacao);
-  private repositoryApresentacao: Repository<EntidadeApresentacao> =
-  getRepository(EntidadeApresentacao);
-  private repositoryGeneroMusicalPerfil: Repository<EntidadeGeneroMusicalPerfil> =
-  getRepository(EntidadeGeneroMusicalPerfil);
+  private repositoryApresentacao: Repository<EntidadeApresentacaoEspecialidade> =
+  getRepository(EntidadeApresentacaoEspecialidade);
+  private repositoryGeneroMusicalPerfil: Repository<EntidadeApresentacaoGenero> =
+  getRepository(EntidadeApresentacaoGenero);
   private repositoryUsuario: Repository<EntidadeUsuario> = getRepository(EntidadeUsuario);
 
   async selectMusicosWithSearchParameters(searchParameter: IPerfilSearchParameter):
@@ -49,7 +49,7 @@ export class RepositoryPerfil implements IRepositoryPerfil {
       idsPerfis = idsPerfisAvaliacoes;
     }
 
-    const generosMusicais: EntidadeGeneroMusicalPerfil[] = await this.repositoryGeneroMusicalPerfil
+    const generosMusicais: EntidadeApresentacaoGenero[] = await this.repositoryGeneroMusicalPerfil
       .find({
         where: {
           ...(idsPerfis.length > 0 && { idPerfil: In(idsPerfis) }),
@@ -63,7 +63,7 @@ export class RepositoryPerfil implements IRepositoryPerfil {
 
     idsPerfis = idsPerfisGenerosMusicais;
     
-    const apresentacoes: EntidadeApresentacao[] = await this.repositoryApresentacao.find({
+    const apresentacoes: EntidadeApresentacaoEspecialidade[] = await this.repositoryApresentacao.find({
       where: {
         idPerfil: In(idsPerfis),
         ...(searchParameter.especialidade && { idEspecialidade: searchParameter.especialidade }),

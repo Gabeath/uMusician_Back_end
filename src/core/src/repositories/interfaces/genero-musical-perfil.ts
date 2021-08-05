@@ -1,7 +1,7 @@
-import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
+import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 
 export interface IRepositoryGeneroMusicalPerfil {
-  create(generoMusicalPerfil: EntidadeGeneroMusicalPerfil[]):
-  Promise<EntidadeGeneroMusicalPerfil[]>;
-  selectById(id: string): Promise<EntidadeGeneroMusicalPerfil>;
+  create(generoMusicalPerfil: EntidadeApresentacaoGenero[]):
+  Promise<EntidadeApresentacaoGenero[]>;
+  selectById(id: string): Promise<EntidadeApresentacaoGenero>;
 }

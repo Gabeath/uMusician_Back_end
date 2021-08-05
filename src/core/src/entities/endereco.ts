@@ -6,16 +6,16 @@ import {
   OneToOne,
 } from 'typeorm';
 import Base from './base';
-import EntidadeServico from './servico';
+import EntidadeEvento from './evento';
 
 @Entity('endereco')
 export default class EntidadeEndereco extends Base {
   @Column({ type: 'uuid' })
-  public idServico!: string;
+  public idEvento!: string;
 
-  @OneToOne((): ObjectType<EntidadeServico> => EntidadeServico)
-  @JoinColumn({ name : 'idServico', referencedColumnName: 'id' })
-  public servico?: EntidadeServico;
+  @OneToOne((): ObjectType<EntidadeEvento> => EntidadeEvento)
+  @JoinColumn({ name : 'idEvento', referencedColumnName: 'id' })
+  public evento?: EntidadeEvento;
 
   @Column()
   public cep: string;
