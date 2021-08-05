@@ -4,12 +4,14 @@ import {
   JoinColumn,
   ManyToOne,
   ObjectType,
+  OneToMany,
 } from 'typeorm';
 import Base from './base';
 import EntidadeEspecialidade from './especialidade';
+import EntidadeEspecialidadeServico from './especialidade-servico';
 import EntidadePerfil from './perfil';
 
-@Entity('apresentacao')
+@Entity('apresentacao-especialidade')
 export default class EntidadeApresentacaoEspecialidade extends Base {
   @Column()
   public ano!: string;
@@ -39,9 +41,10 @@ export default class EntidadeApresentacaoEspecialidade extends Base {
   @JoinColumn({ name: 'idEspecialidade', referencedColumnName: 'id' })
   public especialidade?: EntidadeEspecialidade;
 
-  // @OneToMany(
-  //   (): ObjectType<EntidadeServico> => EntidadeServico,
-  //   (servico: EntidadeServico): EntidadeApresentacaoEspecialidade => servico.apresentacao,
-  // )
-  // servicos?: EntidadeServico[];
+  @OneToMany(
+    (): ObjectType<EntidadeEspecialidadeServico> => EntidadeEspecialidadeServico,
+    (especialidadeServico: EntidadeEspecialidadeServico): EntidadeApresentacaoEspecialidade =>
+      especialidadeServico.apresentacaoEspecialidade,
+  )
+  especialidadesServico?: EntidadeEspecialidadeServico[];
 }
