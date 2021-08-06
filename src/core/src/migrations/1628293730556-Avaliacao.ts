@@ -5,12 +5,12 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class Endereco1617393634021 implements MigrationInterface {
+export class Avaliacao1628293730556 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'endereco',
+        name: 'avaliacao',
         columns: [
           {
             name: 'id',
@@ -19,33 +19,15 @@ export class Endereco1617393634021 implements MigrationInterface {
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           }, {
-            name: 'idServico',
-            type: 'uuid',
+            name: 'pontuacao',
+            type: 'int4',
           }, {
-            name: 'cep',
-            type: 'varchar',
-          }, {
-            name: 'pais',
-            type: 'varchar',
-          }, {
-            name: 'estado',
-            type: 'varchar',
-          }, {
-            name: 'cidade',
-            type: 'varchar',
-          }, {
-            name: 'bairro',
-            type: 'varchar',
-          }, {
-            name: 'rua',
-            type: 'varchar',
-          }, {
-            name: 'numero',
-            type: 'varchar',
-          }, {
-            name: 'complemento',
+            name: 'comentario',
             type: 'varchar',
             isNullable: true,
+          }, {
+            name: 'idServico',
+            type: 'uuid',
           }, {
             name: 'createdBy',
             type: 'varchar',
@@ -84,7 +66,7 @@ export class Endereco1617393634021 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('endereco');
+    await queryRunner.dropTable('avaliacao');
   }
 
 }

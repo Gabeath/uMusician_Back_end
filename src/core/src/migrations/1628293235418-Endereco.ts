@@ -5,12 +5,12 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class Servico1617393254631 implements MigrationInterface {
+export class Endereco1628293235418 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'servico',
+        name: 'endereco',
         columns: [
           {
             name: 'id',
@@ -19,20 +19,33 @@ export class Servico1617393254631 implements MigrationInterface {
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           }, {
-            name: 'situacao',
-            type: 'int4',
-          }, {
-            name: 'dataInicio',
-            type: 'timestamptz',
-          }, {
-            name: 'dataTermino',
-            type: 'timestamptz',
-          }, {
-            name: 'idApresentacao',
+            name: 'idEvento',
             type: 'uuid',
           }, {
-            name: 'idContratante',
-            type: 'uuid',
+            name: 'cep',
+            type: 'varchar',
+          }, {
+            name: 'pais',
+            type: 'varchar',
+          }, {
+            name: 'estado',
+            type: 'varchar',
+          }, {
+            name: 'cidade',
+            type: 'varchar',
+          }, {
+            name: 'bairro',
+            type: 'varchar',
+          }, {
+            name: 'rua',
+            type: 'varchar',
+          }, {
+            name: 'numero',
+            type: 'varchar',
+          }, {
+            name: 'complemento',
+            type: 'varchar',
+            isNullable: true,
           }, {
             name: 'createdBy',
             type: 'varchar',
@@ -61,14 +74,9 @@ export class Servico1617393254631 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idContratante'],
+            columnNames: ['idEvento'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'perfil',
-          }),
-          new TableForeignKey({
-            columnNames: ['idApresentacao'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'apresentacao',
+            referencedTableName: 'evento',
           }),
         ],
       })
@@ -76,7 +84,7 @@ export class Servico1617393254631 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('servico');
+    await queryRunner.dropTable('endereco');
   }
 
 }
