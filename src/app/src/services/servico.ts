@@ -23,7 +23,7 @@ export class ServiceServico implements IServiceServico {
 
   constructor(
   @inject(TYPES.RepositoryServico) repositoryServico: IRepositoryServico,
-    @inject(TYPES.RepositoryApresentacao) repositoryApresentacao: IRepositoryApresentacao,
+    @inject(TYPES.RepositoryApresentacaoEspecialidade) repositoryApresentacao: IRepositoryApresentacao,
     @inject(TYPES.RepositoryEndereco) repositoryEndereco: IRepositoryEndereco,
     @inject(TYPES.RepositoryGeneroMusicalPerfil)
     repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil,

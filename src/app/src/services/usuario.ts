@@ -23,7 +23,7 @@ export class ServiceUsuario implements IServiceUsuario {
 
   constructor(
   @inject(TYPES.RepositoryUsuario) repositoryUsuario: IRepositoryUsuario,
-    @inject(TYPES.RepositoryApresentacao) repositoryApresentacao: IRepositoryApresentacao,
+    @inject(TYPES.RepositoryApresentacaoEspecialidade) repositoryApresentacao: IRepositoryApresentacao,
     @inject(TYPES.RepositoryGeneroMusicalPerfil)
     repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil,
   ) {

@@ -4,7 +4,7 @@ import * as bodyParser from 'body-parser';
 import * as httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'inversify';
-import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
+import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
@@ -24,7 +24,7 @@ import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceServico } from './services/interfaces/servico';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import { RepositoryApresentacao } from '@core/repositories/apresentacao';
+import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresentacao-especialidade';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
 import { RepositoryEndereco } from '@core/repositories/endereco';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
@@ -81,8 +81,8 @@ export class Server {
   }
 
   configDependencies(): void {
-    container.bind<IRepositoryApresentacao>(TYPES.RepositoryApresentacao)
-      .to(RepositoryApresentacao);
+    container.bind<IRepositoryApresentacaoEspecialidade>(TYPES.RepositoryApresentacaoEspecialidade)
+      .to(RepositoryApresentacaoEspecialidade);
 
     container.bind<IRepositoryAvaliacao>(TYPES.RepositoryAvaliacao)
       .to(RepositoryAvaliacao);
