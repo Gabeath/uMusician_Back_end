@@ -9,6 +9,7 @@ import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-s
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceEvento } from './interfaces/evento';
+import { In } from 'typeorm';
 import { SituaçãoServiço } from '@core/models';
 import TYPES from '@core/types';
 
@@ -131,9 +132,30 @@ export class ServiceEvento implements IServiceEvento {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    return this.repositoryEvento.selectAllByWhere({
+    const eventos = await this.repositoryEvento.selectAllByWhere({
       idContratante: contratante.id,
       deletedAt: null,
+    });
+
+    const listaIdEvento = eventos.map(o => o.id);
+    const servicos = await this.repositoryServico.selectAllByWhere({
+      idEvento: In(listaIdEvento),
+      deletedAt: null,
+    });
+
+    const listaIdMusico = servicos.map(o => o.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
+    const musicos = await this.repositoryPerfil.selectAllByListaIdWithUsuario(listaIdMusico);
+
+    const servicosEventos = servicos.map((servico) => {
+      const musico = musicos.find(o => o.id === servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
+      musico.usuario.senha = undefined;
+      servico.musico = musico;
+      return servico;
+    });
+
+    return eventos.map((evento) => {
+      evento.servicos = servicosEventos.filter(servico => servico.idEvento === evento.id);
+      return evento;
     });
   }
 

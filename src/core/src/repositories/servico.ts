@@ -12,7 +12,15 @@ export class RepositoryServico implements IRepositoryServico {
   }
 
   async selectAllByWhere(where: FindConditions<EntidadeServico>): Promise<EntidadeServico[]> {
-    return this.repositoryServico.find(where);
+    return this.repositoryServico.find({
+      where,
+      relations: [
+        'generosServico',
+        'generosServico.apresentacaoGenero',
+        'especialidadesServico',
+        'especialidadesServico.apresentacaoEspecialidade',
+      ],
+    });
   }
 
   async selectById(id: string): Promise<EntidadeServico> {
