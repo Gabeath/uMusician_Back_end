@@ -41,4 +41,28 @@ export class ServiceAvaliacao implements IServiceAvaliacao {
 
     return this.repositoryAvaliacao.selectAvaliacoesPaginated(listaIdServico, searchParameter);
   }
+
+  async getAvaliacaoMedia(idMusico: string): Promise<number> {
+    const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
+      .selectByIdMusicoWithEspecialidadeServico(idMusico);
+
+    const listaIdServico: string[] = [];
+    apresentacoesEspecialidade.forEach((apresentacao) => {
+      apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
+    });
+
+    const avaliacoes = await this.repositoryAvaliacao.selectAvaliacoesPaginated(listaIdServico, {});
+
+    let media = 0;
+
+    if (avaliacoes.count > 0) {
+      avaliacoes.rows.forEach(o => {
+        media += o.pontuacao;
+      });
+
+      media = media/avaliacoes.count;
+    }
+
+    return media;
+  }
 }

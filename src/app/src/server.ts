@@ -9,9 +9,7 @@ import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
 import { IRepositoryGeneroMusical } from '@core/repositories/interfaces/genero-musical';
-import {
-  IRepositoryGeneroMusicalPerfil
-} from '@core/repositories/interfaces/genero-musical-perfil';
+import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
@@ -29,7 +27,7 @@ import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
 import { RepositoryEndereco } from '@core/repositories/endereco';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
 import { RepositoryGeneroMusical } from '@core/repositories/genero-musical';
-import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
+import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
@@ -102,8 +100,8 @@ export class Server {
     container.bind<IServiceGeneroMusical>(TYPES.ServiceGeneroMusical)
       .to(ServiceGeneroMusical);
 
-    container.bind<IRepositoryGeneroMusicalPerfil>(TYPES.RepositoryGeneroMusicalPerfil)
-      .to(RepositoryGeneroMusicalPerfil);
+    container.bind<IRepositoryApresentacaoGenero>(TYPES.RepositoryApresentacaoGenero)
+      .to(RepositoryApresentacaoGenero);
 
     container.bind<IRepositoryMidia>(TYPES.RepositoryMidia)
       .to(RepositoryMidia);

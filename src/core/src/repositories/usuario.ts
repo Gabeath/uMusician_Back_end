@@ -1,4 +1,4 @@
-import { Repository, getConnection, getRepository } from 'typeorm';
+import { FindConditions, Repository, getConnection, getRepository } from 'typeorm';
 import EntidadePerfil from '@core/entities/perfil';
 import EntidadeUsuario from '@core/entities/usuario';
 import { IRepositoryUsuario } from './interfaces/usuario';
@@ -111,5 +111,9 @@ export class RepositoryUsuario implements IRepositoryUsuario {
 
   async updateById(id: string, usuario: EntidadeUsuario): Promise<void> {
     await this.repositoryUsuario.update(id, usuario);
+  }
+
+  async selectAllByWhere(where: FindConditions<EntidadeUsuario>): Promise<EntidadeUsuario[]> {
+    return this.repositoryUsuario.find({ where });
   }
 }

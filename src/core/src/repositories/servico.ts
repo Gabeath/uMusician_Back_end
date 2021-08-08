@@ -1,4 +1,4 @@
-import { FindManyOptions, In, Repository, getRepository } from 'typeorm';
+import { FindConditions, Repository, getRepository } from 'typeorm';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { injectable } from 'inversify';
@@ -11,19 +11,8 @@ export class RepositoryServico implements IRepositoryServico {
     return this.repositoryServico.save(servico);
   }
 
-  async selectServicosByWhere(where: FindManyOptions<EntidadeServico>):
-  Promise<EntidadeServico[]> {
+  async selectAllByWhere(where: FindConditions<EntidadeServico>): Promise<EntidadeServico[]> {
     return this.repositoryServico.find(where);
-  }
-
-  async countServicosMusico(idApresentacoes: string[]): Promise<{ count: number }> {
-    const count = await this.repositoryServico.count({
-      where: {
-        idApresentacao: In(idApresentacoes),
-      },
-    });
-
-    return { count };
   }
 
   async selectById(id: string): Promise<EntidadeServico | null> {

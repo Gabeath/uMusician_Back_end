@@ -1,11 +1,9 @@
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { inject, injectable } from 'inversify';
 import EntidadeServico from '@core/entities/servico';
-import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
+import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
+import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
-import {
-  IRepositoryGeneroMusicalPerfil
-} from '@core/repositories/interfaces/genero-musical-perfil';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
@@ -16,23 +14,24 @@ import TYPES from '@core/types';
 @injectable()
 export class ServiceServico implements IServiceServico {
   private repositoryServico: IRepositoryServico;
-  private repositoryApresentacao: IRepositoryApresentacao;
+  private repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade;
   private repositoryEndereco: IRepositoryEndereco;
-  private repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil;
+  private repositoryApresentacaoGenero: IRepositoryApresentacaoGenero;
   private repositoryPerfil: IRepositoryPerfil;
 
   constructor(
   @inject(TYPES.RepositoryServico) repositoryServico: IRepositoryServico,
-    @inject(TYPES.RepositoryApresentacaoEspecialidade) repositoryApresentacao: IRepositoryApresentacao,
+    @inject(TYPES.RepositoryApresentacaoEspecialidade)
+    repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade,
     @inject(TYPES.RepositoryEndereco) repositoryEndereco: IRepositoryEndereco,
-    @inject(TYPES.RepositoryGeneroMusicalPerfil)
-    repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil,
+    @inject(TYPES.RepositoryApresentacaoGenero)
+    repositoryApresentacaoGenero: IRepositoryApresentacaoGenero,
     @inject(TYPES.RepositoryPerfil) repositoryPerfil: IRepositoryPerfil,
   ) {
     this.repositoryServico = repositoryServico;
-    this.repositoryApresentacao = repositoryApresentacao;
+    this.repositoryApresentacaoEspecialidade = repositoryApresentacaoEspecialidade;
     this.repositoryEndereco = repositoryEndereco;
-    this.repositoryGeneroMusicalPerfil = repositoryGeneroMusicalPerfil;
+    this.repositoryApresentacaoGenero = repositoryApresentacaoGenero;
     this.repositoryPerfil = repositoryPerfil;
   }
 
@@ -43,13 +42,13 @@ export class ServiceServico implements IServiceServico {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    const apresentacao = await this.repositoryApresentacao.selectById(servico.idApresentacao);
+    const apresentacao = await this.repositoryApresentacaoEspecialidade.selectById(servico.idApresentacao);
 
     if (!apresentacao) {
       throw new BusinessError(ErrorCodes.APRESENTACAO_NAO_ENCONTRADA);
     }
 
-    const generoMusicalPerfil = await this.repositoryGeneroMusicalPerfil
+    const generoMusicalPerfil = await this.repositoryApresentacaoGenero
       .selectById(servico.idGeneroMusical);
 
     if (!generoMusicalPerfil) {
@@ -99,7 +98,7 @@ export class ServiceServico implements IServiceServico {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    return this.repositoryServico.selectServicosByWhere({
+    return this.repositoryServico.selectAllByWhere({
       where: {
         idContratante,
         situacao: In([SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO]),
@@ -122,5 +121,23 @@ export class ServiceServico implements IServiceServico {
     servico.contratante.usuario.senha = undefined;
 
     return servico;
+  }
+
+  async countServicosConcluidos(idMusico: string): Promise<number> {
+    const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
+      .selectByIdMusicoWithEspecialidadeServico(idMusico);
+
+    const listaIdServico: string[] = [];
+    apresentacoesEspecialidade.forEach((apresentacao) => {
+      apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
+    });
+
+    const servicos = await this.repositoryServico.selectAllByWhere({
+      id: In(listaIdServico),
+      situacao: SituaçãoServiço.CONCLUÍDO,
+      deletedAt: null,
+    });
+
+    return servicos.length;
   }
 }

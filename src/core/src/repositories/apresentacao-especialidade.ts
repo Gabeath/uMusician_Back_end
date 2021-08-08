@@ -1,4 +1,4 @@
-import { Repository, getRepository } from 'typeorm';
+import { FindConditions, Repository, getRepository } from 'typeorm';
 import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { injectable } from 'inversify';
@@ -22,5 +22,10 @@ export class RepositoryApresentacaoEspecialidade implements IRepositoryApresenta
       where: { idMusico },
       relations: ['especialidadesServico'],
     });
+  }
+
+  async selectAllByWhere(where: FindConditions<EntidadeApresentacaoEspecialidade>):
+  Promise<EntidadeApresentacaoEspecialidade[]> {
+    return this.repositoryApresentacaoEspecialidade.find({ where });
   }
 }

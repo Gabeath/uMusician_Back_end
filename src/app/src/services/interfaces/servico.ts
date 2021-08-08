@@ -4,4 +4,5 @@ export interface IServiceServico {
   create(idContratante: string, servico: EntidadeServico): Promise<EntidadeServico>;
   getServicosContratante(idContratante: string): Promise<EntidadeServico[]>;
   getDetalhesServico(id: string): Promise<EntidadeServico | null>;
+  countServicosConcluidos(idMusico: string): Promise<number>;
 }

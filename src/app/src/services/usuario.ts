@@ -8,7 +8,7 @@ import EntidadePerfil from '@core/entities/perfil';
 import EntidadeUsuario from '@core/entities/usuario';
 import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
 import {
-  IRepositoryGeneroMusicalPerfil
+  IRepositoryApresentacaoGenero
 } from '@core/repositories/interfaces/genero-musical-perfil';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
@@ -19,13 +19,13 @@ import { cryptToken } from '@app/utils/tokens';
 export class ServiceUsuario implements IServiceUsuario {
   private repositoryUsuario: IRepositoryUsuario;
   private repositoryApresentacao: IRepositoryApresentacao;
-  private repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil;
+  private repositoryGeneroMusicalPerfil: IRepositoryApresentacaoGenero;
 
   constructor(
   @inject(TYPES.RepositoryUsuario) repositoryUsuario: IRepositoryUsuario,
     @inject(TYPES.RepositoryApresentacaoEspecialidade) repositoryApresentacao: IRepositoryApresentacao,
     @inject(TYPES.RepositoryGeneroMusicalPerfil)
-    repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil,
+    repositoryGeneroMusicalPerfil: IRepositoryApresentacaoGenero,
   ) {
     this.repositoryUsuario = repositoryUsuario;
     this.repositoryApresentacao = repositoryApresentacao;
