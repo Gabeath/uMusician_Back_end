@@ -5,7 +5,6 @@ import {
   interfaces,
 } from 'inversify-express-utils';
 import { DateTime, Interval } from 'luxon';
-import { Request } from 'express';
 import { getEnv } from '@app/constants';
 
 const startedAt: DateTime = DateTime.local();
@@ -21,8 +20,7 @@ export class HealthController extends BaseHttpController implements interfaces.C
   }
 
   @httpGet('/status')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private searchDocument(req: Request): { app: string, uptime: number, now: string} {
+  private searchDocument(): { app: string, uptime: number, now: string } {
     return {
       app: getEnv().appName,
       uptime: Interval.fromDateTimes(startedAt, DateTime.local()).length('seconds'),

@@ -6,7 +6,6 @@ import {
 } from 'inversify-express-utils';
 import EntidadeEspecialidade from '@core/entities/especialidade';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
-import { Request } from 'express';
 import TYPES from '@core/types';
 import { inject } from 'inversify';
 
@@ -23,8 +22,7 @@ export class ControllerEspecialidade extends BaseHttpController implements inter
   }
 
   @httpGet('/seletor')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private getAllEspecialidades(req: Request): Promise<EntidadeEspecialidade[]> {
+  private getAllEspecialidades(): Promise<EntidadeEspecialidade[]> {
     return this.serviceEspecialidade.getAll();
   }
 }

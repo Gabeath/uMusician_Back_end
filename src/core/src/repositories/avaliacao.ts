@@ -1,5 +1,5 @@
+import { In, Repository, getRepository } from 'typeorm';
 import { Pagination, SearchParameterBase } from '@core/models';
-import { Repository, getRepository } from 'typeorm';
 import EntidadeAvaliacao from '@core/entities/avaliacao';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { injectable } from 'inversify';
@@ -8,15 +8,15 @@ import { injectable } from 'inversify';
 export class RepositoryAvaliacao implements IRepositoryAvaliacao {
   private repositoryAvaliacao: Repository<EntidadeAvaliacao> = getRepository(EntidadeAvaliacao);
 
-  async selectAvaliacoesPaginated(idPerfil: string, searchParameter: SearchParameterBase):
+  async selectAvaliacoesPaginated(listaIdServico: string[], searchParameter: SearchParameterBase):
   Promise<Pagination<EntidadeAvaliacao>> {
     const [rows, count] = await this.repositoryAvaliacao.findAndCount({
-      where: { idPerfil },
-      skip: searchParameter.offset,
-      take: searchParameter.limit,
-      order: {
+      where: { idServico: In(listaIdServico) },
+      ...(searchParameter.limit && { take: searchParameter.limit }),
+      ...(searchParameter.orderBy && { order: {
         [searchParameter.orderBy]: searchParameter.isDESC ? 'DESC' : 'ASC',
-      },
+      }, }),
+      skip: searchParameter.offset,
     });
 
     return {

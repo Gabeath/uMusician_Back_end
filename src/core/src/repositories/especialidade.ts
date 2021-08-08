@@ -10,10 +10,7 @@ export class RepositoryEspecialidade implements IRepositoryEspecialidade {
 
   async selectAll(): Promise<EntidadeEspecialidade[]> {
     return this.repositoryEspecialidade.find({
-      order: {
-        popularidade: 'ASC',
-        nome: 'ASC',
-      },
+      order: { nome: 'ASC' },
     });
   }
 }

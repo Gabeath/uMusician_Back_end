@@ -25,11 +25,11 @@ export class ControllerAvaliacao extends BaseHttpController implements interface
     this.serviceAvaliacao = serviceAvaliacao;
   }
 
-  @httpGet('/:idPerfil', autenticado)
+  @httpGet('/:idMusico', autenticado)
   private async getAvaliacoesPaginated(req: Request): Promise<Pagination<EntidadeAvaliacao>> {
     const searchParameter: SearchParameterBase = {
       ...controllerPaginationHelper(req.query),
     };
-    return this.serviceAvaliacao.getAvaliacoesPaginated(req.params.idPerfil, searchParameter);
+    return this.serviceAvaliacao.getAvaliacoesPaginated(req.params.idMusico, searchParameter);
   }
 }

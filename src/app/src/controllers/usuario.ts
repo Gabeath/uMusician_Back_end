@@ -8,8 +8,8 @@ import {
 } from 'inversify-express-utils';
 import { Request, Response } from 'express';
 import { dadosArquivo, uparArquivoNaNuvem } from '@app/utils/uploads';
-import EntidadeApresentacao from '@core/entities/apresentacao';
-import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
+import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
+import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadeUsuario from '@core/entities/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import TYPES from '@core/types';
@@ -64,8 +64,9 @@ export class ControllerUsuario extends BaseHttpController implements interfaces.
         cidade: req.body.usuario.perfil.cidade as string,
         estado: req.body.usuario.perfil.estado as string,
         biografia: req.body.usuario.perfil.biografia as string,
-        generosMusicais: req.body.usuario.perfil.generosMusicais as EntidadeGeneroMusicalPerfil[],
-        apresentacoes: req.body.usuario.perfil.apresentacoes as EntidadeApresentacao[],
+        apresentacoesGenero: req.body.usuario.perfil.apresentacoesGenero as EntidadeApresentacaoGenero[],
+        apresentacoesEspecialidade: req.body.usuario.perfil
+          .apresentacoesEspecialidade as EntidadeApresentacaoEspecialidade[],
       }]
     };
 

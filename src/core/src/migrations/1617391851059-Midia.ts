@@ -31,7 +31,7 @@ export class Midia1617391851059 implements MigrationInterface {
             name: 'ano',
             type: 'varchar',
           }, {
-            name: 'idPerfil',
+            name: 'idMusico',
             type: 'uuid',
           }, {
             name: 'createdBy',
@@ -61,7 +61,7 @@ export class Midia1617391851059 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idPerfil'],
+            columnNames: ['idMusico'],
             referencedColumnNames: ['id'],
             referencedTableName: 'perfil',
           }),
