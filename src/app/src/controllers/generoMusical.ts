@@ -6,7 +6,6 @@ import {
 } from 'inversify-express-utils';
 import EntidadeGeneroMusical from '@core/entities/genero-musical';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
-import { Request } from 'express';
 import TYPES from '@core/types';
 import { inject } from 'inversify';
 
@@ -23,8 +22,7 @@ export class ControllerGeneroMusical extends BaseHttpController implements inter
   }
 
   @httpGet('/seletor')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private getAllGenerosMusicais(req: Request): Promise<EntidadeGeneroMusical[]> {
+  private getAllGenerosMusicais(): Promise<EntidadeGeneroMusical[]> {
     return this.serviceGeneroMusical.getAll();
   }
 }

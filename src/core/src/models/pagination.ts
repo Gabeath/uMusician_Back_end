@@ -10,7 +10,7 @@ export interface SearchParameterBase {
   limit?: number;
 }
 
-export interface IPerfilSearchParameter extends SearchParameterBase {
+export interface IMusicoSearchParameter extends SearchParameterBase {
   generoMusical?: string;
   especialidade?: string;
   nome?: string;
@@ -19,4 +19,6 @@ export interface IPerfilSearchParameter extends SearchParameterBase {
   valorMinimo?: number;
   valorMaximo?: number;
   pontuacaoAvaliacao?: number;
+  listaIdMusico?: string[];
+  listaIdUsuario?: string[];
 }

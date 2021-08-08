@@ -5,12 +5,12 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
+export class Servico1628293457392 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'apresentacao-genero',
+        name: 'servico',
         columns: [
           {
             name: 'id',
@@ -19,13 +19,13 @@ export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           }, {
-            name: 'ano',
-            type: 'varchar',
+            name: 'situacao',
+            type: 'int4',
           }, {
-            name: 'idMusico',
-            type: 'uuid',
+            name: 'valor',
+            type: 'float',
           }, {
-            name: 'idGeneroMusical',
+            name: 'idEvento',
             type: 'uuid',
           }, {
             name: 'createdBy',
@@ -55,14 +55,9 @@ export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idMusico'],
+            columnNames: ['idEvento'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'perfil',
-          }),
-          new TableForeignKey({
-            columnNames: ['idGeneroMusical'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'genero-musical',
+            referencedTableName: 'evento',
           }),
         ],
       })
@@ -70,7 +65,7 @@ export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('apresentacao-genero');
+    await queryRunner.dropTable('servico');
   }
 
 }

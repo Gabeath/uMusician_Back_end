@@ -1,15 +1,10 @@
 import BusinessError, { ErrorCodes } from  '@core/errors/business';
 import { CategoriaPerfil, SituaçãoPerfil } from '@core/models/enumerators';
 import { inject, injectable } from 'inversify';
-import { DateTime } from 'luxon';
-import EntidadeApresentacao from '@core/entities/apresentacao';
-import EntidadeGeneroMusicalPerfil from '@core/entities/genero-musical-perfil';
-import EntidadePerfil from '@core/entities/perfil';
 import EntidadeUsuario from '@core/entities/usuario';
-import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
-import {
-  IRepositoryGeneroMusicalPerfil
-} from '@core/repositories/interfaces/genero-musical-perfil';
+import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
+import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
+import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import TYPES from '@core/types';
@@ -18,30 +13,45 @@ import { cryptToken } from '@app/utils/tokens';
 @injectable()
 export class ServiceUsuario implements IServiceUsuario {
   private repositoryUsuario: IRepositoryUsuario;
-  private repositoryApresentacao: IRepositoryApresentacao;
-  private repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil;
+  private repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade;
+  private repositoryApresentacaoGenero: IRepositoryApresentacaoGenero;
+  private repositoryPerfil: IRepositoryPerfil;
 
   constructor(
   @inject(TYPES.RepositoryUsuario) repositoryUsuario: IRepositoryUsuario,
-    @inject(TYPES.RepositoryApresentacao) repositoryApresentacao: IRepositoryApresentacao,
-    @inject(TYPES.RepositoryGeneroMusicalPerfil)
-    repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil,
+    @inject(TYPES.RepositoryApresentacaoEspecialidade)
+    repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade,
+    @inject(TYPES.RepositoryApresentacaoGenero)
+    repositoryApresentacaoGenero: IRepositoryApresentacaoGenero,
+    @inject(TYPES.RepositoryPerfil) repositoryPerfil: IRepositoryPerfil,
   ) {
     this.repositoryUsuario = repositoryUsuario;
-    this.repositoryApresentacao = repositoryApresentacao;
-    this.repositoryGeneroMusicalPerfil = repositoryGeneroMusicalPerfil;
+    this.repositoryApresentacaoEspecialidade = repositoryApresentacaoEspecialidade;
+    this.repositoryApresentacaoGenero = repositoryApresentacaoGenero;
+    this.repositoryPerfil = repositoryPerfil;
   }
 
   async criarUsuarioPerfil(usuario: EntidadeUsuario): Promise<EntidadeUsuario> {
     const existe: EntidadeUsuario = await this.repositoryUsuario
       .selectByEmailOrCpf(usuario.email, usuario.cpf);
 
-    if (existe)
-      throw new BusinessError(ErrorCodes.USUARIO_JA_CADASTRADO);
+    if (existe) { throw new BusinessError(ErrorCodes.USUARIO_JA_CADASTRADO); }
+
+    if (!usuario.perfis || usuario.perfis.length <= 0) {
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+    }
+
+    if (usuario.perfis[0].categoria === CategoriaPerfil.MUSICO && (
+      !usuario.perfis[0].apresentacoesEspecialidade || !usuario.perfis[0].apresentacoesGenero
+      || usuario.perfis[0].apresentacoesEspecialidade.length <= 0
+      || usuario.perfis[0].apresentacoesGenero.length <= 0
+    )) {
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+    }
 
     const senhaEncriptada: string = cryptToken(usuario.senha);
 
-    const usuarioToSave: EntidadeUsuario = {
+    const usuarioSaved = await this.repositoryUsuario.create({
       email: usuario.email,
       senha: senhaEncriptada,
       nome: usuario.nome,
@@ -49,44 +59,41 @@ export class ServiceUsuario implements IServiceUsuario {
       genero: usuario.genero,
       dataNascimento: usuario.dataNascimento,
       fotoUrl: usuario.fotoUrl
-    };
+    });
 
-    const perfilToSave: EntidadePerfil = {
+    const perfilSaved = await this.repositoryPerfil.create({
+      idUsuario: usuarioSaved.id,
       categoria: usuario.perfis[0].categoria,
       cidade: usuario.perfis[0].cidade,
       estado: usuario.perfis[0].estado,
       biografia: usuario.perfis[0].biografia,
       situacao: SituaçãoPerfil.ATIVO,
-    };
-
-    const usuarioSaved: EntidadeUsuario =
-    await this.repositoryUsuario.criarUsuarioPerfil(usuarioToSave, perfilToSave);
+    });
 
     if (usuario.perfis[0].categoria === CategoriaPerfil.MUSICO) {
-      const apresentacoes: EntidadeApresentacao[] = usuario.perfis[0].apresentacoes.map(
-        (apresentacao: EntidadeApresentacao) => {
+      const apresentacoesEspecialidadeSaved = await this.repositoryApresentacaoEspecialidade
+        .create(usuario.perfis[0].apresentacoesEspecialidade.map((o) => {
           return {
-            ...apresentacao,
-            idPerfil: usuarioSaved.perfis[0].id,
+            idMusico: perfilSaved.id,
+            idEspecialidade: o.idEspecialidade,
+            ano: o.ano,
+            valorHora: o.valorHora,
           };
-        }
-      );
-      const generosMusicais: EntidadeGeneroMusicalPerfil[] = usuario.perfis[0].generosMusicais.map(
-        (generoMusical: EntidadeGeneroMusicalPerfil) => {
+        }));
+      const apresentacoesGeneroSaved = await this.repositoryApresentacaoGenero
+        .create(usuario.perfis[0].apresentacoesGenero.map((o) => {
           return {
-            ...generoMusical,
-            idPerfil: usuarioSaved.perfis[0].id,
+            idMusico: perfilSaved.id,
+            idGeneroMusical: o.idGeneroMusical,
+            ano: o.ano,
           };
-        }
-      );
-      const apresentacoesSalvas: EntidadeApresentacao[] =
-      await this.repositoryApresentacao.create(apresentacoes);
-      const generosMusicaisSalvas: EntidadeGeneroMusicalPerfil[] = 
-      await this.repositoryGeneroMusicalPerfil.create(generosMusicais);
+        }));
 
-      usuarioSaved.perfis[0].apresentacoes = apresentacoesSalvas;
-      usuarioSaved.perfis[0].generosMusicais = generosMusicaisSalvas;
+      perfilSaved.apresentacoesEspecialidade = apresentacoesEspecialidadeSaved;
+      perfilSaved.apresentacoesGenero = apresentacoesGeneroSaved;
     }
+
+    usuarioSaved.perfis = [perfilSaved];
 
     return usuarioSaved;
   }
@@ -95,10 +102,10 @@ export class ServiceUsuario implements IServiceUsuario {
     const usuario = await this.repositoryUsuario.selectByEmail(email);
     const senhaCriptografada = cryptToken(senha);
 
-    if(!usuario || usuario.senha !== senhaCriptografada)
+    if (!usuario || usuario.senha !== senhaCriptografada)
       throw new BusinessError(ErrorCodes.DADOS_LOGIN_INVALIDOS);
 
-    if(usuario.perfis.filter(perfil => perfil.categoria === tipoPerfil).length === 0)
+    if (usuario.perfis.filter(perfil => perfil.categoria === tipoPerfil).length === 0)
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
 
     return usuario;
@@ -121,16 +128,22 @@ export class ServiceUsuario implements IServiceUsuario {
     return { valido: true, mensagem: null };
   }
 
-  async alterarSenha(senha: string, user_id: string): Promise<void>{
+  async alterarSenha(senha: string, idUsuario: string): Promise<void> {
+    const usuarioSaved: EntidadeUsuario = await this.repositoryUsuario.selectById(idUsuario);
+
+    if (!usuarioSaved) {
+      throw new BusinessError(ErrorCodes.USUARIO_NAO_ENCONTRADO);
+    }
+
     if (!senha) {
       throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
     }
 
     const senhaCriptografada = cryptToken(senha);
-    await this.repositoryUsuario.updatePassword(user_id, senhaCriptografada);
+    await this.repositoryUsuario.updateById(usuarioSaved.id, { senha: senhaCriptografada });
   }
 
-  async buscarMeuUsuario(id: string): Promise<EntidadeUsuario>{
+  async buscarMeuUsuario(id: string): Promise<EntidadeUsuario> {
     const usuario = await this.repositoryUsuario.selectByIdWithProfiles(id);
     usuario.senha = undefined;
     
@@ -144,16 +157,11 @@ export class ServiceUsuario implements IServiceUsuario {
       throw new BusinessError(ErrorCodes.USUARIO_NAO_ENCONTRADO);
     }
 
-    const usuarioToSave = {
-      ...(usuario.nome && { nome: usuario.nome }),
-      ...(usuario.genero && { genero: usuario.genero }),
-      ...(usuario.dataNascimento && { dataNascimento: usuario.dataNascimento }),
-      ...(usuario.fotoUrl && { fotoUrl: usuario.fotoUrl }),
-    } as EntidadeUsuario;
-
     await this.repositoryUsuario.updateById(usuarioSaved.id, {
-      ...usuarioToSave,
-      updatedAt: DateTime.local().toString(),
+      nome: usuario.nome,
+      genero: usuario.genero,
+      dataNascimento: usuario.dataNascimento,
+      fotoUrl: usuario.fotoUrl,
       updatedBy: usuarioSaved.id,
     });
   }

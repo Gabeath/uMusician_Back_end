@@ -1,10 +1,13 @@
 const TYPES = {
-  RepositoryApresentacao: 'RepositoryApresentacao',
+  RepositoryApresentacaoEspecialidade: 'RepositoryApresentacaoEspecialidade',
   RepositoryAvaliacao: 'RepositoryAvaliacao',
   RepositoryEndereco: 'RepositoryEndereco',
   RepositoryEspecialidade: 'RepositoryEspecialidade',
+  RepositoryEspecialidadeServico: 'RepositoryEspecialidadeServico',
+  RepositoryEvento: 'RepositoryEvento',
   RepositoryGeneroMusical: 'RepositoryGeneroMusical',
-  RepositoryGeneroMusicalPerfil: 'RepositoryGeneroMusicalPerfil',
+  RepositoryGeneroServico: 'RepositoryGeneroServico',
+  RepositoryApresentacaoGenero: 'RepositoryApresentacaoGenero',
   RepositoryMidia: 'RepositoryMidia',
   RepositoryPerfil: 'RepositoryPerfil',
   RepositoryServico: 'RepositoryServico',
@@ -12,6 +15,7 @@ const TYPES = {
 
   ServiceAvaliacao: 'ServiceAvaliacao',
   ServiceEspecialidade: 'ServiceEspecialidade',
+  ServiceEvento: 'ServiceEvento',
   ServiceGeneroMusical: 'ServiceGeneroMusical',
   ServiceMidia: 'ServiceMidia',
   ServicePerfil: 'ServicePerfil',
