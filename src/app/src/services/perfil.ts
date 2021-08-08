@@ -81,11 +81,9 @@ export class ServicePerfil implements IServicePerfil {
 
     const musicos = await this.repositoryPerfil.selectMusicosWithSearchParameters(searchParameter);
 
-    await Promise.all(musicos.rows
-      .map(async (musico, index) => {
-        musicos.rows[index].avaliacaoMedia = await this.serviceAvaliacao.getAvaliacaoMedia(musico.id);
-      }),
-    );
+    for (let i = 0; i < musicos.rows.length; i +=1) {
+      musicos.rows[i].avaliacaoMedia = await this.serviceAvaliacao.getAvaliacaoMedia(musicos.rows[i].id);
+    }
 
     if (searchParameter.pontuacaoAvaliacao) {
       musicos.rows = musicos.rows.filter(o => o.avaliacaoMedia >= searchParameter.pontuacaoAvaliacao);
