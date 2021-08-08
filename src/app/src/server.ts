@@ -8,7 +8,10 @@ import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfa
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
+import { IRepositoryEspecialidadeServico } from '@core/repositories/interfaces/especialidade-servico';
+import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
 import { IRepositoryGeneroMusical } from '@core/repositories/interfaces/genero-musical';
+import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-servico';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
@@ -26,7 +29,10 @@ import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresent
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
 import { RepositoryEndereco } from '@core/repositories/endereco';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
+import { RepositoryEspecialidadeServico } from '@core/repositories/especialidade-servico';
+import { RepositoryEvento } from '@core/repositories/evento';
 import { RepositoryGeneroMusical } from '@core/repositories/genero-musical';
+import { RepositoryGeneroServico } from '@core/repositories/genero-servico';
 import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
@@ -82,6 +88,9 @@ export class Server {
     container.bind<IRepositoryApresentacaoEspecialidade>(TYPES.RepositoryApresentacaoEspecialidade)
       .to(RepositoryApresentacaoEspecialidade);
 
+    container.bind<IRepositoryApresentacaoGenero>(TYPES.RepositoryApresentacaoGenero)
+      .to(RepositoryApresentacaoGenero);
+
     container.bind<IRepositoryAvaliacao>(TYPES.RepositoryAvaliacao)
       .to(RepositoryAvaliacao);
     container.bind<IServiceAvaliacao>(TYPES.ServiceAvaliacao)
@@ -95,13 +104,19 @@ export class Server {
     container.bind<IServiceEspecialidade>(TYPES.ServiceEspecialidade)
       .to(ServiceEspecialidade);
 
+    container.bind<IRepositoryEspecialidadeServico>(TYPES.RepositoryEspecialidadeServico)
+      .to(RepositoryEspecialidadeServico);
+
+    container.bind<IRepositoryEvento>(TYPES.RepositoryEvento)
+      .to(RepositoryEvento);
+
     container.bind<IRepositoryGeneroMusical>(TYPES.RepositoryGeneroMusical)
       .to(RepositoryGeneroMusical);
     container.bind<IServiceGeneroMusical>(TYPES.ServiceGeneroMusical)
       .to(ServiceGeneroMusical);
 
-    container.bind<IRepositoryApresentacaoGenero>(TYPES.RepositoryApresentacaoGenero)
-      .to(RepositoryApresentacaoGenero);
+    container.bind<IRepositoryGeneroServico>(TYPES.RepositoryGeneroServico)
+      .to(RepositoryGeneroServico);
 
     container.bind<IRepositoryMidia>(TYPES.RepositoryMidia)
       .to(RepositoryMidia);
