@@ -10,22 +10,22 @@ import EntidadePerfil from './perfil';
 @Entity('usuario')
 export default class EntidadeUsuario extends Base {
   @Column()
-  public email!: string;
+  public email?: string;
 
   @Column()
-  public senha!: string;
+  public senha?: string;
   
   @Column()
-  public nome!: string;
+  public nome?: string;
   
   @Column()
-  public cpf!: string;
+  public cpf?: string;
   
   @Column({ type: 'int4' })
-  public genero!: number;
+  public genero?: number;
   
   @Column({ type: 'date' })
-  public dataNascimento!: string;
+  public dataNascimento?: string;
   
   @Column()
   public fotoUrl?: string;

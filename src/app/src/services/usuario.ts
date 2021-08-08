@@ -151,18 +151,20 @@ export class ServiceUsuario implements IServiceUsuario {
   }
 
   async updateUsuario(idUsuario: string, usuario: EntidadeUsuario): Promise<void> {
-    const usuarioSaved: EntidadeUsuario = await this.repositoryUsuario.selectById(idUsuario);
+    const usuarioSaved = await this.repositoryUsuario.selectById(idUsuario);
 
     if (!usuarioSaved) {
       throw new BusinessError(ErrorCodes.USUARIO_NAO_ENCONTRADO);
     }
 
-    await this.repositoryUsuario.updateById(usuarioSaved.id, {
-      nome: usuario.nome,
-      genero: usuario.genero,
-      dataNascimento: usuario.dataNascimento,
-      fotoUrl: usuario.fotoUrl,
+    const usuarioToSave: EntidadeUsuario = {
+      ...(usuario.nome && { nome: usuario.nome }),
+      ...(usuario.genero && { genero: usuario.genero }),
+      ...(usuario.dataNascimento && { dataNascimento: usuario.dataNascimento }),
+      ...(usuario.fotoUrl && { fotoUrl: usuario.fotoUrl }),
       updatedBy: usuarioSaved.id,
-    });
+    };
+
+    await this.repositoryUsuario.updateById(usuarioSaved.id, usuarioToSave);
   }
 }
