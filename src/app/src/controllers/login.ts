@@ -21,7 +21,6 @@ export class LoginController extends BaseHttpController implements interfaces.Co
 
   @httpPost('/')
   private async login(req: Request, res: Response): Promise<Response>{
-
     const {
       email,
       senha,
@@ -32,8 +31,7 @@ export class LoginController extends BaseHttpController implements interfaces.Co
       tipoPerfil: number,
     };
 
-    if(!email || !senha || !tipoPerfil)
-      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+    if(!email || !senha || !tipoPerfil) { throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES); }
     
     try {
       const usuario = await this.serviceUsuario.buscarUsuario(email, senha, tipoPerfil);
@@ -49,7 +47,7 @@ export class LoginController extends BaseHttpController implements interfaces.Co
       usuario.senha = undefined;
 
       return res.json(usuario);
-    } catch (err){
+    } catch (err) {
       return res.status(400).json({
         'message': err.message as string,
       });
