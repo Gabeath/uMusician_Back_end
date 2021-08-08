@@ -37,10 +37,10 @@ export class RepositoryPerfil implements IRepositoryPerfil {
         deletedAt: null,
       },
       ...(searchParameter.limit && { take: searchParameter.limit }),
-      skip: searchParameter.offset,
-      order: {
+      ...(searchParameter.orderBy && { order: {
         [searchParameter.orderBy]: searchParameter.isDESC ? 'DESC' : 'ASC',
-      },
+      }, }),
+      skip: searchParameter.offset,
     });
 
     return { rows, count };

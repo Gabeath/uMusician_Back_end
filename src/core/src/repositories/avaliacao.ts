@@ -12,11 +12,11 @@ export class RepositoryAvaliacao implements IRepositoryAvaliacao {
   Promise<Pagination<EntidadeAvaliacao>> {
     const [rows, count] = await this.repositoryAvaliacao.findAndCount({
       where: { idServico: In(listaIdServico) },
-      skip: searchParameter.offset,
-      take: searchParameter.limit,
-      order: {
+      ...(searchParameter.limit && { take: searchParameter.limit }),
+      ...(searchParameter.orderBy && { order: {
         [searchParameter.orderBy]: searchParameter.isDESC ? 'DESC' : 'ASC',
-      },
+      }, }),
+      skip: searchParameter.offset,
     });
 
     return {
