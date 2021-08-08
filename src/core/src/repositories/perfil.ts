@@ -20,6 +20,10 @@ import { injectable } from 'inversify';
 export class RepositoryPerfil implements IRepositoryPerfil {
   private repositoryPerfil: Repository<EntidadePerfil> = getRepository(EntidadePerfil);
 
+  async create(perfil: EntidadePerfil): Promise<EntidadePerfil> {
+    return this.repositoryPerfil.save(perfil);
+  }
+
   async selectMusicosWithSearchParameters(searchParameter: IMusicoSearchParameter):
   Promise<Pagination<EntidadePerfil>> {
     const [ rows, count ] = await this.repositoryPerfil.findAndCount({

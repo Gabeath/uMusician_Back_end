@@ -3,6 +3,7 @@ import EntidadePerfil from '@core/entities/perfil';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export interface IRepositoryPerfil {
+  create(perfil: EntidadePerfil): Promise<EntidadePerfil>;
   selectMusicosWithSearchParameters(searchParameter: IMusicoSearchParameter): 
   Promise<Pagination<EntidadePerfil>>;
   selectById(id: string): Promise<EntidadePerfil>;
