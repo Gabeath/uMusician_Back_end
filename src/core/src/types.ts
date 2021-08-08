@@ -15,6 +15,7 @@ const TYPES = {
 
   ServiceAvaliacao: 'ServiceAvaliacao',
   ServiceEspecialidade: 'ServiceEspecialidade',
+  ServiceEvento: 'ServiceEvento',
   ServiceGeneroMusical: 'ServiceGeneroMusical',
   ServiceMidia: 'ServiceMidia',
   ServicePerfil: 'ServicePerfil',

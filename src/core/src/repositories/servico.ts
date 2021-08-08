@@ -15,19 +15,18 @@ export class RepositoryServico implements IRepositoryServico {
     return this.repositoryServico.find(where);
   }
 
-  async selectById(id: string): Promise<EntidadeServico | null> {
+  async selectById(id: string): Promise<EntidadeServico> {
+    return this.repositoryServico.findOne({ where: { id } });
+  }
+
+  async selectCompleteById(id: string): Promise<EntidadeServico> {
     return this.repositoryServico.findOne({
       where: { id },
       relations: [
-        'apresentacao',
-        'apresentacao.especialidade',
-        'apresentacao.perfil',
-        'apresentacao.perfil.usuario',
-        'generoMusicalPerfil',
-        'generoMusicalPerfil.generoMusical',
-        'contratante',
-        'contratante.usuario',
-        'endereco',
+        'avaliacao',
+        'evento',
+        'generosServico',
+        'especialidadesServico',
       ],
     });
   }

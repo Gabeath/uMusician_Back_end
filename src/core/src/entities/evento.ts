@@ -25,7 +25,7 @@ export default class EntidadeEvento extends Base {
   public dataTermino!: string;
 
   @Column({ type: 'uuid' })
-  public idContratante!: string;
+  public idContratante?: string;
 
   @ManyToOne(
     (): ObjectType<EntidadePerfil> => EntidadePerfil,

@@ -8,7 +8,7 @@ export class RepositoryEspecialidadeServico implements IRepositoryEspecialidadeS
   private repositoryEspecialidadeServico: Repository<EntidadeEspecialidadeServico> =
   getRepository(EntidadeEspecialidadeServico);
 
-  async create(especialidadeServico: EntidadeEspecialidadeServico): Promise<EntidadeEspecialidadeServico> {
-    return this.repositoryEspecialidadeServico.save(especialidadeServico);
+  async create(especialidadesServico: EntidadeEspecialidadeServico[]): Promise<EntidadeEspecialidadeServico[]> {
+    return this.repositoryEspecialidadeServico.save(especialidadesServico);
   }
 }

@@ -13,6 +13,7 @@ import EntidadeAvaliacao from './avaliacao';
 import EntidadeEspecialidadeServico from './especialidade-servico';
 import EntidadeEvento from './evento';
 import EntidadeGeneroServico from './genero-servico';
+import EntidadePerfil from './perfil';
 
 @Entity('servico')
 export default class EntidadeServico extends Base {
@@ -51,4 +52,6 @@ export default class EntidadeServico extends Base {
       especialidadeServico.servico,
   )
   especialidadesServico?: EntidadeEspecialidadeServico[];
+
+  musico?: EntidadePerfil;
 }

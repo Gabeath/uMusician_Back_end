@@ -19,6 +19,7 @@ import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
+import { IServiceEvento } from '@app/services/interfaces/evento';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { IServiceMidia } from '@app/services/interfaces/midia';
 import { IServicePerfil } from './services/interfaces/perfil';
@@ -40,6 +41,7 @@ import { RepositoryServico } from '@core/repositories/servico';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
 import { ServiceEspecialidade } from '@app/services/especialidade';
+import { ServiceEvento } from '@app/services/evento';
 import { ServiceGeneroMusical } from '@app/services/generoMusical';
 import { ServiceMidia } from '@app/services/midia';
 import { ServicePerfil } from './services/perfil';
@@ -109,6 +111,8 @@ export class Server {
 
     container.bind<IRepositoryEvento>(TYPES.RepositoryEvento)
       .to(RepositoryEvento);
+    container.bind<IServiceEvento>(TYPES.ServiceEvento)
+      .to(ServiceEvento);
 
     container.bind<IRepositoryGeneroMusical>(TYPES.RepositoryGeneroMusical)
       .to(RepositoryGeneroMusical);

@@ -1,5 +1,6 @@
 export * from '@app/controllers/avaliacao';
 export * from '@app/controllers/especialidade';
+export * from '@app/controllers/evento';
 export * from '@app/controllers/generoMusical';
 export * from '@app/controllers/health';
 export * from '@app/controllers/login';

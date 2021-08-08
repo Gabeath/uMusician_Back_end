@@ -11,7 +11,7 @@ import EntidadeEvento from './evento';
 @Entity('endereco')
 export default class EntidadeEndereco extends Base {
   @Column({ type: 'uuid' })
-  public idEvento!: string;
+  public idEvento?: string;
 
   @OneToOne((): ObjectType<EntidadeEvento> => EntidadeEvento)
   @JoinColumn({ name : 'idEvento', referencedColumnName: 'id' })

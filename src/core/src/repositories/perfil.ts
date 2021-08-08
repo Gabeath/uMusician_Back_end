@@ -65,4 +65,11 @@ export class RepositoryPerfil implements IRepositoryPerfil {
 
     await this.repositoryPerfil.update(id, perfil);
   }
+
+  async selectAllByListaIdWithUsuario(listaId: string[]): Promise<EntidadePerfil[]> {
+    return this.repositoryPerfil.find({
+      where: { id: In(listaId) },
+      relations: ['usuario'],
+    });
+  }
 }
