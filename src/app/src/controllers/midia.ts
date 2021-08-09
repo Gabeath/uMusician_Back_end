@@ -28,7 +28,9 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
   @httpPost('/', reqFormData.single('midia'))
   private async criarMidiaPortfólio(req: Request, res: Response):
   Promise<Response | EntidadeMidia> {
-    const { ano, titulo, tipo } = req.body as { ano: string, titulo: string, tipo: number };
+    const ano = req.body.ano as string;
+    const titulo = req.body.titulo as string;
+    const tipo = parseInt(req.body.tipo as string, 10);
     let pastaDestino = '';
 
     try {
