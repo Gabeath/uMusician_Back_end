@@ -41,6 +41,7 @@ export class RepositoryPerfil implements IRepositoryPerfil {
         [searchParameter.orderBy]: searchParameter.isDESC ? 'DESC' : 'ASC',
       }, }),
       skip: searchParameter.offset,
+      relations: ['usuario'],
     });
 
     return { rows, count };

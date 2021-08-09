@@ -83,6 +83,7 @@ export class ServicePerfil implements IServicePerfil {
 
     for (let i = 0; i < musicos.rows.length; i +=1) {
       musicos.rows[i].avaliacaoMedia = await this.serviceAvaliacao.getAvaliacaoMedia(musicos.rows[i].id);
+      musicos.rows[i].usuario.senha = undefined;
     }
 
     if (searchParameter.pontuacaoAvaliacao) {
