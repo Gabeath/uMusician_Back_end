@@ -1,6 +1,7 @@
-import { FindConditions, Repository, getRepository } from 'typeorm';
+import { FindConditions, In, Repository, getRepository } from 'typeorm';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
+import { SituaçãoServiço } from '@core/models';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -36,6 +37,21 @@ export class RepositoryServico implements IRepositoryServico {
         'generosServico',
         'especialidadesServico',
       ],
+    });
+  }
+
+  async selectServicosPendentesMusico(listaIdServico: string[]): Promise<EntidadeServico[]> {
+    return this.repositoryServico.find({
+      where: {
+        id: In(listaIdServico),
+        situacao: In([SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO]),
+        deletedAt: null,
+      },
+      relations: [
+        'evento',
+        'evento.contratante',
+        'evento.contratante.usuario',
+      ]
     });
   }
 }

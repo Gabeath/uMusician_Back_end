@@ -6,4 +6,5 @@ export interface IRepositoryServico {
   selectAllByWhere(where: FindConditions<EntidadeServico>): Promise<EntidadeServico[]>;
   selectById(id: string): Promise<EntidadeServico>;
   selectCompleteById(id: string): Promise<EntidadeServico>;
+  selectServicosPendentesMusico(listaIdServico: string[]): Promise<EntidadeServico[]>;
 }
