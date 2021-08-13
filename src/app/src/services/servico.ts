@@ -1,3 +1,4 @@
+import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { inject, injectable } from 'inversify';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
@@ -59,5 +60,26 @@ export class ServiceServico implements IServiceServico {
     }
 
     return servicos;
+  }
+
+  async responderSolicitacaoServico(idServico: string, resposta: SituaçãoServiço, idMusico: string): Promise<void> {
+    const servico = await this.repositoryServico.selectById(idServico);
+
+    if (!servico || (resposta !== SituaçãoServiço.ACEITO && resposta !== SituaçãoServiço.REJEITADO)) {
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+    }
+
+    // const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
+    //   .selectByIdMusicoWithEspecialidadeServico(idMusico);
+
+    // const listaIdServico: string[] = [];
+    // apresentacoesEspecialidade.forEach((apresentacao) => {
+    //   apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
+    // });
+
+    await this.repositoryServico.updateById(servico.id, {
+      situacao: resposta,
+      updatedBy: idMusico,
+    });
   }
 }
