@@ -2,9 +2,10 @@ import {
   BaseHttpController,
   controller,
   httpGet,
+  httpPost,
   interfaces,
 } from 'inversify-express-utils';
-import { CategoriaPerfil } from '@core/models';
+import { CategoriaPerfil, SituaçãoServiço } from '@core/models';
 import EntidadeServico from '@core/entities/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
 import { Request } from 'express';
@@ -33,5 +34,14 @@ export class ControllerServico extends BaseHttpController implements interfaces.
   @httpGet('/:id', autenticado)
   private async getDetalhesServico(req: Request): Promise<EntidadeServico | null> {
     return this.serviceServico.getDetalhesServico(req.params.id);
+  }
+
+  @httpPost('/:id/resposta', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async responderSolicitacaoServico(req: Request): Promise<void> {
+    return this.serviceServico.responderSolicitacaoServico(
+      req.params.id,
+      req.body.resposta as SituaçãoServiço,
+      req.session.profileID
+    );
   }
 }
