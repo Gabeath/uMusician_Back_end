@@ -65,6 +65,13 @@ export class RepositoryPerfil implements IRepositoryPerfil {
     });
   }
 
+  async selectByIdWithUsuario(id: string): Promise<EntidadePerfil> {
+    return this.repositoryPerfil.findOne({
+      where: { id },
+      relations: ['usuario'],
+    });
+  }
+
   async updateById(id: string, perfil: QueryDeepPartialEntity<EntidadePerfil>): Promise<void> {
     perfil.updatedAt = DateTime.local().toISO();
 

@@ -43,8 +43,12 @@ export class RepositoryServico implements IRepositoryServico {
       relations: [
         'avaliacao',
         'evento',
+        'evento.contratante',
+        'evento.contratante.usuario',
         'generosServico',
+        'generosServico.apresentacaoGenero',
         'especialidadesServico',
+        'especialidadesServico.apresentacaoEspecialidade',
       ],
     });
   }

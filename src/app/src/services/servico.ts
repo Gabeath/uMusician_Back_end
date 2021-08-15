@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
+import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
 import { SituaçãoServiço } from '@core/models';
@@ -14,19 +15,33 @@ export class ServiceServico implements IServiceServico {
   private repositoryServico: IRepositoryServico;
   private repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade;
   private repositoryEvento: IRepositoryEvento;
+  private repositoryPerfil: IRepositoryPerfil;
 
   constructor(
   @inject(TYPES.RepositoryServico) repositoryServico: IRepositoryServico,
     @inject(TYPES.RepositoryApresentacaoEspecialidade)
     repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade,
     @inject(TYPES.RepositoryEvento) repositoryEvento: IRepositoryEvento,
+    @inject(TYPES.RepositoryPerfil) repositoryPerfil: IRepositoryPerfil,
   ) {
     this.repositoryServico = repositoryServico;
     this.repositoryApresentacaoEspecialidade = repositoryApresentacaoEspecialidade;
     this.repositoryEvento = repositoryEvento;
+    this.repositoryPerfil = repositoryPerfil;
   }
 
   async getDetalhesServico(id: string): Promise<EntidadeServico> {
+    const servico = await this.repositoryServico.selectCompleteById(id);
+
+    if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
+
+    const musico = await this.repositoryPerfil
+      .selectById(servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
+
+    servico.musico = musico;
+    servico.musico.usuario.senha = undefined;
+    servico.evento.contratante.usuario.senha = undefined;
+
     return this.repositoryServico.selectCompleteById(id);
   }
 
