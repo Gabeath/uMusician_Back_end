@@ -16,6 +16,7 @@ export const ErrorCodes = {
   APRESENTACAO_NAO_ENCONTRADA: 'Apresentação não encontrada',
   ARGUMENTOS_AUSENTES: 'Argumentos ausentes',
   ARGUMENTOS_INVALIDOS: 'Argumentos inválidos',
+  CONFLITO_HORARIO: 'Não é possível aceitar dois eventos que preencham o mesmo horário',
   DADOS_LOGIN_INVALIDOS: 'Dados de login inválidos',
   EVENTO_NAO_ENCONTRADO: 'Evento não encontrado',
   GENERO_MUSICAL_NAO_ENCONTRADO: 'Gênero musical não encontrado',

@@ -30,6 +30,13 @@ export class RepositoryServico implements IRepositoryServico {
     return this.repositoryServico.findOne({ where: { id } });
   }
 
+  async selectByIdWithEvento(id: string): Promise<EntidadeServico> {
+    return this.repositoryServico.findOne({
+      where: { id },
+      relations: ['evento'],
+    });
+  }
+
   async selectCompleteById(id: string): Promise<EntidadeServico> {
     return this.repositoryServico.findOne({
       where: { id },
