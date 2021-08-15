@@ -1,4 +1,4 @@
-import { FindConditions, Repository, getRepository } from 'typeorm';
+import { FindConditions, FindOneOptions, Repository, getRepository } from 'typeorm';
 import EntidadeEvento from '@core/entities/evento';
 import { IRepositoryEvento } from './interfaces/evento';
 import { injectable } from 'inversify';
@@ -9,6 +9,10 @@ export class RepositoryEvento implements IRepositoryEvento {
 
   async create(evento: EntidadeEvento): Promise<EntidadeEvento> {
     return this.repositoryEvento.save(evento);
+  }
+
+  async selectOneByOptions(options: FindOneOptions<EntidadeEvento>): Promise<EntidadeEvento> {
+    return this.repositoryEvento.findOne(options);
   }
 
   async selectAllByWhere(where: FindConditions<EntidadeEvento>): Promise<EntidadeEvento[]> {
