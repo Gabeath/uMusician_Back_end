@@ -8,4 +8,5 @@ export interface IServiceUsuario {
   alterarSenha(senha: string, idUsuario: string): Promise<void>;
   buscarMeuUsuario(id: string): Promise<EntidadeUsuario>;
   updateUsuario(idUsuario: string, usuario: EntidadeUsuario): Promise<void>;
+  buscarUsuarioPeloEmail(email: string): Promise<EntidadeUsuario>;
 }

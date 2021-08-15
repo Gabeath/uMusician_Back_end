@@ -10,6 +10,9 @@ import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import TYPES from '@core/types';
 import {generateJWT} from '../utils/tokens';
 import { inject } from 'inversify';
+import { destroyCache, getCache, setCache } from '@app/utils/operacoesRedis';
+import { sendResetPasswordMail } from '@app/utils/envioDeEmail';
+import crypto from 'crypto'
 
 @controller('/login')
 export class LoginController extends BaseHttpController implements interfaces.Controller {
@@ -52,5 +55,74 @@ export class LoginController extends BaseHttpController implements interfaces.Co
         'message': err.message as string,
       });
     }
+  }
+
+  @httpPost('/sendEmailForgotPassword')
+  private async sendEmailForgotPassword(req: Request, res: Response): Promise<Response>{
+    const {email} = req.body as {email: string};
+
+    if(!email)
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+
+    const usuario = await this.serviceUsuario.buscarUsuarioPeloEmail(email);
+
+    if(usuario){
+      
+      const codigo = crypto.randomBytes(4).toString('hex').substring(0, 6);
+      await setCache(codigo, email, 86400);
+
+      try {
+        await sendResetPasswordMail(usuario.nome, email, codigo);
+      } catch (error){
+        console.log(error);
+        await destroyCache(codigo);
+        return res.status(400).json({
+          'message': 'Não foi possível enviar o email para redefinição de senha. Entre em contato'
+        });
+      }
+    }
+  }
+
+  @httpPost('/validadeCode')
+  private async validateCode(req: Request, res: Response): Promise<Response>{
+    const {email, codigo} = req.body as {email: string, codigo: string};
+
+    if(!email || !codigo)
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+
+    const emailSalvo = await getCache(codigo);
+
+    if(!emailSalvo || emailSalvo !== email)
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+
+    const usuario = await this.serviceUsuario.buscarUsuarioPeloEmail(email);
+
+    if(!usuario)
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+
+    return res.json({
+      name: usuario.nome
+    });
+  }
+
+  @httpPost('/resetPassword')
+  private async resetPassword(req: Request): Promise<void>{
+    const {email, codigo, senha} = req.body as {email: string, codigo: string, senha: string};
+
+    if(!email || !codigo || !senha)
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES);
+
+    const emailSalvo = await getCache(codigo);
+
+    if(!emailSalvo || emailSalvo !== email)
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+
+    const usuario = await this.serviceUsuario.buscarUsuarioPeloEmail(email);
+
+    if(!usuario)
+      throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+
+    await this.serviceUsuario.alterarSenha(senha, usuario.id);
+    await destroyCache(codigo);
   }
 }

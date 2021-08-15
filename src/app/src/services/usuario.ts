@@ -167,4 +167,8 @@ export class ServiceUsuario implements IServiceUsuario {
 
     await this.repositoryUsuario.updateById(usuarioSaved.id, usuarioToSave);
   }
+
+  async buscarUsuarioPeloEmail(email: string): Promise<EntidadeUsuario> {
+    return this.repositoryUsuario.selectByEmail(email);
+  }
 }
