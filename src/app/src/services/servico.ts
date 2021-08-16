@@ -88,37 +88,39 @@ export class ServiceServico implements IServiceServico {
       throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
     }
 
-    const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
-      .selectByIdMusicoWithEspecialidadeServico(idMusico);
-
-    const listaIdServico: string[] = [];
-    apresentacoesEspecialidade.forEach((apresentacao) => {
-      apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
-    });
-
-    const servicos = await this.repositoryServico.selectAllByWhere({
-      id: In(listaIdServico),
-      situacao: SituaçãoServiço.ACEITO,
-      deletedAt: null,
-    });
-
-    const evento = await this.repositoryEvento.selectOneByOptions({
-      where: [
-        {
-          id: In(servicos.map(o => o.idEvento)),
-          dataInicio: Between(servico.evento.dataInicio, servico.evento.dataTermino),
-          deletedAt: null,
-        },
-        {
-          id: In(servicos.map(o => o.idEvento)),
-          dataTermino: Between(servico.evento.dataInicio, servico.evento.dataTermino),
-          deletedAt: null,
-        },
-      ]
-    });
-
-    if (evento) {
-      throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+    if (resposta === SituaçãoServiço.ACEITO) {
+      const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
+        .selectByIdMusicoWithEspecialidadeServico(idMusico);
+  
+      const listaIdServico: string[] = [];
+      apresentacoesEspecialidade.forEach((apresentacao) => {
+        apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
+      });
+  
+      const servicos = await this.repositoryServico.selectAllByWhere({
+        id: In(listaIdServico),
+        situacao: SituaçãoServiço.ACEITO,
+        deletedAt: null,
+      });
+  
+      const evento = await this.repositoryEvento.selectOneByOptions({
+        where: [
+          {
+            id: In(servicos.map(o => o.idEvento)),
+            dataInicio: Between(servico.evento.dataInicio, servico.evento.dataTermino),
+            deletedAt: null,
+          },
+          {
+            id: In(servicos.map(o => o.idEvento)),
+            dataTermino: Between(servico.evento.dataInicio, servico.evento.dataTermino),
+            deletedAt: null,
+          },
+        ]
+      });
+  
+      if (evento) {
+        throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+      }
     }
 
     await this.repositoryServico.updateById(servico.id, {
