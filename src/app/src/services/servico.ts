@@ -119,7 +119,7 @@ export class ServiceServico implements IServiceServico {
       });
   
       if (evento) {
-        throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
+        throw new BusinessError(ErrorCodes.CONFLITO_HORARIO);
       }
     }
 
