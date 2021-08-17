@@ -1,6 +1,7 @@
 import { Between, In } from 'typeorm';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { inject, injectable } from 'inversify';
+import { DateTime } from 'luxon';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
@@ -125,6 +126,22 @@ export class ServiceServico implements IServiceServico {
 
     await this.repositoryServico.updateById(servico.id, {
       situacao: resposta,
+      updatedBy: idMusico,
+    });
+  }
+
+  async musicoCancelarServico(idServico: string, idMusico: string): Promise<void> {
+    const servico = await this.repositoryServico.selectByIdWithEvento(idServico);
+
+    if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
+
+    const dataServico = DateTime.fromISO(servico.evento.dataInicio);
+    if (dataServico.diffNow('day').days >= -2) {
+      throw new BusinessError(ErrorCodes.LIMITE_CANCELAMENTO_ESTOURADO);
+    }
+
+    await this.repositoryServico.updateById(servico.id, {
+      situacao: SituaçãoServiço.CANCELADO,
       updatedBy: idMusico,
     });
   }

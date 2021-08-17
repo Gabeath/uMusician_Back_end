@@ -1,6 +1,7 @@
 import {
   BaseHttpController,
   controller,
+  httpDelete,
   httpGet,
   httpPost,
   interfaces,
@@ -41,7 +42,15 @@ export class ControllerServico extends BaseHttpController implements interfaces.
     return this.serviceServico.responderSolicitacaoServico(
       req.params.id,
       req.body.resposta as SituaçãoServiço,
-      req.session.profileID
+      req.session.profileID,
+    );
+  }
+
+  @httpDelete('/:id/musico/cancelar', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async musicoCancelarServico(req: Request): Promise<void> {
+    return this.serviceServico.musicoCancelarServico(
+      req.params.id,
+      req.session.profileID,
     );
   }
 }

@@ -13,6 +13,7 @@ export enum SituaçãoServiço {
   REJEITADO = 2,
   PENDENTE = 3,
   CONCLUÍDO = 4,
+  CANCELADO = 5,
 }
 
 export enum TipoMídia {
