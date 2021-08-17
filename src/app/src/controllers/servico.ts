@@ -53,4 +53,12 @@ export class ControllerServico extends BaseHttpController implements interfaces.
       req.session.profileID,
     );
   }
+
+  @httpDelete('/:id/contratante/cancelar', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
+  private async contratanteCancelarServico(req: Request): Promise<void> {
+    return this.serviceServico.contratanteCancelarServico(
+      req.params.id,
+      req.session.profileID,
+    );
+  }
 }
