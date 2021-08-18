@@ -10,6 +10,7 @@ import Base from './base';
 import EntidadeApresentacaoEspecialidade from './apresentacao-especialidade';
 import EntidadeApresentacaoGenero from './apresentacao-genero';
 import EntidadeAviso from './aviso';
+import EntidadeConfirmacaoPresenca from './confirmacao-presenca';
 import EntidadeEvento from './evento';
 import EntidadeMidia from './midia';
 import EntidadeUsuario from './usuario';
@@ -70,6 +71,18 @@ export default class EntidadePerfil extends Base {
     (evento: EntidadeEvento): EntidadePerfil => evento.contratante,
   )
   eventos?: EntidadeEvento[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeConfirmacaoPresenca> => EntidadeConfirmacaoPresenca,
+    (confirmacaoPresenca: EntidadeConfirmacaoPresenca): EntidadePerfil => confirmacaoPresenca.musico,
+  )
+  confirmacoesPresencaMusico?: EntidadeConfirmacaoPresenca[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeConfirmacaoPresenca> => EntidadeConfirmacaoPresenca,
+    (confirmacaoPresenca: EntidadeConfirmacaoPresenca): EntidadePerfil => confirmacaoPresenca.contratante,
+  )
+  confirmacoesPresencaContratante?: EntidadeConfirmacaoPresenca[];
 
   countServicos?: number;
 
