@@ -1,6 +1,7 @@
 const TYPES = {
   RepositoryApresentacaoEspecialidade: 'RepositoryApresentacaoEspecialidade',
   RepositoryAvaliacao: 'RepositoryAvaliacao',
+  RepositoryConfirmacaoPresenca: 'RepositoryConfirmacaoPresenca',
   RepositoryEndereco: 'RepositoryEndereco',
   RepositoryEspecialidade: 'RepositoryEspecialidade',
   RepositoryEspecialidadeServico: 'RepositoryEspecialidadeServico',

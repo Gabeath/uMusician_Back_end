@@ -11,6 +11,7 @@ import ForbiddenError from '@core/errors/forbidden';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
+import { IRepositoryConfirmacaoPresenca } from '@core/repositories/interfaces/confirmacao-presenca';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
 import { IRepositoryEspecialidadeServico } from '@core/repositories/interfaces/especialidade-servico';
@@ -34,6 +35,7 @@ import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresentacao-especialidade';
 import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
+import { RepositoryConfirmacaoPresenca } from '@core/repositories/confirmacao-presenca';
 import { RepositoryEndereco } from '@core/repositories/endereco';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
 import { RepositoryEspecialidadeServico } from '@core/repositories/especialidade-servico';
@@ -108,6 +110,9 @@ export class Server {
       .to(RepositoryAvaliacao);
     container.bind<IServiceAvaliacao>(TYPES.ServiceAvaliacao)
       .to(ServiceAvaliacao);
+
+    container.bind<IRepositoryConfirmacaoPresenca>(TYPES.RepositoryConfirmacaoPresenca)
+      .to(RepositoryConfirmacaoPresenca);
 
     container.bind<IRepositoryEndereco>(TYPES.RepositoryEndereco)
       .to(RepositoryEndereco);
