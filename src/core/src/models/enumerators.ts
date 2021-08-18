@@ -46,3 +46,7 @@ export enum ClassificaçãoEspecialidade {
   MEZZO_SOPRANO = 9,
   OUTROS = 10,
 }
+
+export enum StatusConfirmacaoPresenca {
+  CRIADA = 1,
+}
