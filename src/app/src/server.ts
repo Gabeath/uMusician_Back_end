@@ -61,6 +61,7 @@ import cors from 'cors';
 import { getEnv } from '@app/constants';
 import helmet from 'helmet';
 import { v4 } from 'uuid';
+import updateServiceStatus from '@app/jobs/updateServiceStatusDaily'
 
 const container: Container = new Container();
 
@@ -197,6 +198,7 @@ export class Server {
     });
 
     const app: any = server.build();
+    updateServiceStatus.start();
     app.listen(getEnv().port, (): void => console.log(`ONLINE ${getEnv().port}`));
   }
 
