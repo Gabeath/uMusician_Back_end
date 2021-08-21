@@ -15,6 +15,7 @@ const TYPES = {
   RepositoryUsuario: 'RepositoryUsuario',
 
   ServiceAvaliacao: 'ServiceAvaliacao',
+  ServiceConfirmacaoPresenca: 'ServiceConfirmacaoPresenca',
   ServiceEspecialidade: 'ServiceEspecialidade',
   ServiceEvento: 'ServiceEvento',
   ServiceGeneroMusical: 'ServiceGeneroMusical',

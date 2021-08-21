@@ -23,6 +23,7 @@ import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
+import { IServiceConfirmacaoPresenca } from '@app/services/interfaces/confirmacao-presenca';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
 import { IServiceEvento } from '@app/services/interfaces/evento';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
@@ -47,6 +48,7 @@ import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
+import { ServiceConfirmacaoPresenca } from '@app/services/confirmacao-presenca';
 import { ServiceEspecialidade } from '@app/services/especialidade';
 import { ServiceEvento } from '@app/services/evento';
 import { ServiceGeneroMusical } from '@app/services/generoMusical';
@@ -60,8 +62,8 @@ import compress from 'compression';
 import cors from 'cors';
 import { getEnv } from '@app/constants';
 import helmet from 'helmet';
+import updateServiceStatus from '@app/jobs/updateServiceStatusDaily';
 import { v4 } from 'uuid';
-import updateServiceStatus from '@app/jobs/updateServiceStatusDaily'
 
 const container: Container = new Container();
 
@@ -114,6 +116,8 @@ export class Server {
 
     container.bind<IRepositoryConfirmacaoPresenca>(TYPES.RepositoryConfirmacaoPresenca)
       .to(RepositoryConfirmacaoPresenca);
+    container.bind<IServiceConfirmacaoPresenca>(TYPES.ServiceConfirmacaoPresenca)
+      .to(ServiceConfirmacaoPresenca);
 
     container.bind<IRepositoryEndereco>(TYPES.RepositoryEndereco)
       .to(RepositoryEndereco);

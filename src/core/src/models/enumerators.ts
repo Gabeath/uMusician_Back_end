@@ -14,7 +14,8 @@ export enum SituaçãoServiço {
   PENDENTE = 3,
   CONCLUÍDO = 4,
   CANCELADO = 5,
-  EXPIRADO = 6
+  EXPIRADO = 6,
+  PENDENTE_CONFIRMACAO_PRESENCA = 7,
 }
 
 export enum TipoMídia {
@@ -50,4 +51,5 @@ export enum ClassificaçãoEspecialidade {
 
 export enum StatusConfirmacaoPresenca {
   CRIADA = 1,
+  CONFIRMADA = 2,
 }

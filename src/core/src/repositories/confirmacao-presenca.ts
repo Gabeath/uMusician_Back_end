@@ -18,6 +18,10 @@ export class RepositoryConfirmacaoPresenca implements IRepositoryConfirmacaoPres
     return this.repositoryConfirmacaoPresenca.findOne({ where: { id } });
   }
 
+  async selectByIdServico(idServico: string): Promise<EntidadeConfirmacaoPresenca> {
+    return this.repositoryConfirmacaoPresenca.findOne({ where: { idServico } });
+  }
+
   async updateById(id: string, confirmacaoPresenca: QueryDeepPartialEntity<EntidadeConfirmacaoPresenca>):
   Promise<void> {
     confirmacaoPresenca.updatedAt = DateTime.local().toISO();
