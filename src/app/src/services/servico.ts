@@ -145,4 +145,20 @@ export class ServiceServico implements IServiceServico {
       updatedBy: idMusico,
     });
   }
+
+  async contratanteCancelarServico(idServico: string, idContratante: string): Promise<void> {
+    const servico = await this.repositoryServico.selectByIdWithEvento(idServico);
+
+    if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
+
+    const dataServico = DateTime.fromISO(servico.evento.dataInicio);
+    if (dataServico.diffNow('day').days >= -1) {
+      throw new BusinessError(ErrorCodes.LIMITE_CANCELAMENTO_ESTOURADO);
+    }
+
+    await this.repositoryServico.updateById(servico.id, {
+      situacao: SituaçãoServiço.CANCELADO,
+      updatedBy: idContratante,
+    });
+  }
 }

@@ -7,4 +7,5 @@ export interface IServiceServico {
   getServicosPendentesMusico(idMusico: string): Promise<EntidadeServico[]>;
   responderSolicitacaoServico(idServico: string, resposta: SituaçãoServiço, idMusico: string): Promise<void>;
   musicoCancelarServico(idServico: string, idMusico: string): Promise<void>;
+  contratanteCancelarServico(idServico: string, idContratante: string): Promise<void>;
 }
