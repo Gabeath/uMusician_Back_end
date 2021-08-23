@@ -11,6 +11,7 @@ import ForbiddenError from '@core/errors/forbidden';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
+import { IRepositoryConfirmacaoPresenca } from '@core/repositories/interfaces/confirmacao-presenca';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
 import { IRepositoryEspecialidadeServico } from '@core/repositories/interfaces/especialidade-servico';
@@ -22,6 +23,7 @@ import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
+import { IServiceConfirmacaoPresenca } from '@app/services/interfaces/confirmacao-presenca';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
 import { IServiceEvento } from '@app/services/interfaces/evento';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
@@ -34,6 +36,7 @@ import { InversifyExpressServer } from 'inversify-express-utils';
 import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresentacao-especialidade';
 import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
+import { RepositoryConfirmacaoPresenca } from '@core/repositories/confirmacao-presenca';
 import { RepositoryEndereco } from '@core/repositories/endereco';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
 import { RepositoryEspecialidadeServico } from '@core/repositories/especialidade-servico';
@@ -45,6 +48,7 @@ import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
+import { ServiceConfirmacaoPresenca } from '@app/services/confirmacao-presenca';
 import { ServiceEspecialidade } from '@app/services/especialidade';
 import { ServiceEvento } from '@app/services/evento';
 import { ServiceGeneroMusical } from '@app/services/generoMusical';
@@ -58,8 +62,8 @@ import compress from 'compression';
 import cors from 'cors';
 import { getEnv } from '@app/constants';
 import helmet from 'helmet';
+import updateServiceStatus from '@app/jobs/updateServiceStatusDaily';
 import { v4 } from 'uuid';
-import updateServiceStatus from '@app/jobs/updateServiceStatusDaily'
 
 const container: Container = new Container();
 
@@ -109,6 +113,11 @@ export class Server {
       .to(RepositoryAvaliacao);
     container.bind<IServiceAvaliacao>(TYPES.ServiceAvaliacao)
       .to(ServiceAvaliacao);
+
+    container.bind<IRepositoryConfirmacaoPresenca>(TYPES.RepositoryConfirmacaoPresenca)
+      .to(RepositoryConfirmacaoPresenca);
+    container.bind<IServiceConfirmacaoPresenca>(TYPES.ServiceConfirmacaoPresenca)
+      .to(ServiceConfirmacaoPresenca);
 
     container.bind<IRepositoryEndereco>(TYPES.RepositoryEndereco)
       .to(RepositoryEndereco);

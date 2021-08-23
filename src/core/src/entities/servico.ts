@@ -10,6 +10,7 @@ import {
 
 import Base from './base';
 import EntidadeAvaliacao from './avaliacao';
+import EntidadeConfirmacaoPresenca from './confirmacao-presenca';
 import EntidadeEspecialidadeServico from './especialidade-servico';
 import EntidadeEvento from './evento';
 import EntidadeGeneroServico from './genero-servico';
@@ -52,6 +53,12 @@ export default class EntidadeServico extends Base {
       especialidadeServico.servico,
   )
   especialidadesServico?: EntidadeEspecialidadeServico[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeConfirmacaoPresenca> => EntidadeConfirmacaoPresenca,
+    (confirmacaoPresenca: EntidadeConfirmacaoPresenca): EntidadeServico => confirmacaoPresenca.servico,
+  )
+  confirmacoesPresenca?: EntidadeConfirmacaoPresenca[];
 
   musico?: EntidadePerfil;
 }
