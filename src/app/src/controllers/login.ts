@@ -68,7 +68,7 @@ export class LoginController extends BaseHttpController implements interfaces.Co
 
     if(usuario){
       
-      const codigo = crypto.randomBytes(4).toString('hex').substring(0, 6);
+      const codigo = crypto.randomBytes(4).toString('hex').substring(0, 6).toUpperCase();
       await setCache(codigo, email, 86400);
 
       try {
