@@ -25,13 +25,13 @@ export class ControllerConfirmacaoPresenca extends BaseHttpController implements
     this.serviceConfirmacaoPresenca = serviceConfirmacaoPresenca;
   }
 
-  @httpPost('/gerar-confirmacao', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
+  @httpPost('/gerar-confirmacao', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async gerarCodigoConfirmacao(req: Request): Promise<EntidadeConfirmacaoPresenca> {
     const idServico = req.body.idServico as string;
     return this.serviceConfirmacaoPresenca.gerarCodigoConfirmacao(idServico, req.session.profileID);
   }
 
-  @httpPost('/confirmar', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  @httpPost('/confirmar', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
   private async confirmarPresenca(req: Request): Promise<void> {
     const idServico = req.body.idServico as string;
     const codigo = req.body.codigo as string;

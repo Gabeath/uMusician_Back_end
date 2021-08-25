@@ -20,8 +20,8 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
     this.repositoryServico = repositoryServico;
   }
   
-  async gerarCodigoConfirmacao(idServico: string, idContratante: string): Promise<EntidadeConfirmacaoPresenca> {
-    const servico = await this.repositoryServico.selectCompleteById(idServico);
+  async gerarCodigoConfirmacao(idServico: string, idMusico: string): Promise<EntidadeConfirmacaoPresenca> {
+    const servico = await this.repositoryServico.selectByIdWithEvento(idServico);
     
     if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
 
@@ -29,22 +29,22 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
 
     const confirmacao = await this.repositoryConfirmacaoPresenca.create({
       codigo,
-      idContratante,
+      idContratante: servico.evento.idContratante,
       idServico: servico.id,
-      idMusico: servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico,
+      idMusico: idMusico,
       status: StatusConfirmacaoPresenca.CRIADA,
-      createdBy: idContratante,
+      createdBy: idMusico,
     });
 
     await this.repositoryServico.updateById(servico.id, {
       situacao: SituaçãoServiço.PENDENTE_CONFIRMACAO_PRESENCA,
-      updatedBy: idContratante,
+      updatedBy: idMusico,
     });
 
     return confirmacao;
   }
 
-  async confirmarPresenca(idServico: string, codigo: string, idMusico: string): Promise<void> {
+  async confirmarPresenca(idServico: string, codigo: string, idContratante: string): Promise<void> {
     const servico = await this.repositoryServico.selectById(idServico);
     
     if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
@@ -56,12 +56,12 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
 
     await this.repositoryConfirmacaoPresenca.updateById(confirmacao.id, {
       status: StatusConfirmacaoPresenca.CONFIRMADA,
-      updatedBy: idMusico,
+      updatedBy: idContratante,
     });
 
     await this.repositoryServico.updateById(servico.id, {
       situacao: SituaçãoServiço.CONCLUÍDO,
-      updatedBy: idMusico,
+      updatedBy: idContratante,
     });
   }
 }
