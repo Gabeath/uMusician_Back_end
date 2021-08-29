@@ -23,7 +23,7 @@ export const ErrorCodes = {
   GENERO_MUSICAL_NAO_ENCONTRADO: 'Gênero musical não encontrado',
   LIMITE_CANCELAMENTO_ESTOURADO: 'Já passou o tempo limite para você cancelar esse serviço',
   PERFIL_NAO_ENCONTRADO: 'Perfil não encontrado',
-  SERVICO_SEM_CONFIRMACAO_CRIADA: 'O contratante deste serviço ainda não gerou sua confirmação',
+  SERVICO_SEM_CONFIRMACAO_CRIADA: 'O músico deste serviço ainda não gerou sua confirmação',
   USUARIO_JA_CADASTRADO: 'Usuário já cadastrado',
   USUARIO_NAO_ENCONTRADO: 'Usuário não encontrado',
 };
