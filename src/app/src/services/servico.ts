@@ -136,7 +136,7 @@ export class ServiceServico implements IServiceServico {
     if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
 
     const dataServico = DateTime.fromISO(servico.evento.dataInicio);
-    if (dataServico.diffNow('day').days >= -2) {
+    if (dataServico.diffNow('day').days <= 2) {
       throw new BusinessError(ErrorCodes.LIMITE_CANCELAMENTO_ESTOURADO);
     }
 
@@ -152,7 +152,7 @@ export class ServiceServico implements IServiceServico {
     if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
 
     const dataServico = DateTime.fromISO(servico.evento.dataInicio);
-    if (dataServico.diffNow('day').days >= -1) {
+    if (dataServico.diffNow('day').days <= 1) {
       throw new BusinessError(ErrorCodes.LIMITE_CANCELAMENTO_ESTOURADO);
     }
 
