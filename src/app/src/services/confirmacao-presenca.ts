@@ -52,7 +52,7 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
     const confirmacao = await this.repositoryConfirmacaoPresenca.selectByIdServico(servico.id);
     
     if (!confirmacao) { throw new BusinessError(ErrorCodes.SERVICO_SEM_CONFIRMACAO_CRIADA); }
-    if (confirmacao.codigo === codigo) { throw new BusinessError(ErrorCodes.CODIGO_INVALIDO); }
+    if (confirmacao.codigo !== codigo) { throw new BusinessError(ErrorCodes.CODIGO_INVALIDO); }
 
     await this.repositoryConfirmacaoPresenca.updateById(confirmacao.id, {
       status: StatusConfirmacaoPresenca.CONFIRMADA,
