@@ -9,7 +9,6 @@ import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-s
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceEvento } from './interfaces/evento';
-import { In } from 'typeorm';
 import { SituaçãoServiço } from '@core/models';
 import TYPES from '@core/types';
 
@@ -132,31 +131,32 @@ export class ServiceEvento implements IServiceEvento {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    const eventos = await this.repositoryEvento.selectAllByWhere({
-      idContratante: contratante.id,
-      deletedAt: null,
-    });
+    const eventos = await this.repositoryEvento.selectEventosPendentesContratante(contratante.id);
 
-    const listaIdEvento = eventos.map(o => o.id);
-    const servicos = await this.repositoryServico.selectAllByWhere({
-      idEvento: In(listaIdEvento),
-      deletedAt: null,
+    const listaIdMusico: string[] = [];
+    eventos.forEach((evento) => {
+      const ids = evento.servicos.map(o => o.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
+      listaIdMusico.push(...ids);
     });
-
-    const listaIdMusico = servicos.map(o => o.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
+    
     const musicos = await this.repositoryPerfil.selectAllByListaIdWithUsuario(listaIdMusico);
 
-    const servicosEventos = servicos.map((servico) => {
-      const musico = musicos.find(o => o.id === servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
-      musico.usuario.senha = undefined;
-      servico.musico = musico;
-      return servico;
-    });
+    const eventosContratante: EntidadeEvento[] = [];
+    eventos.forEach((evento) => {
+      const servicos = evento.servicos.map((servico) => {
+        const musico = musicos.find(o => o.id === servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
+        musico.usuario.senha = undefined;
+        servico.musico = musico;
+        servico.especialidadesServico = undefined;
+        return servico;
+      });
+      evento.servicos = servicos;
 
-    return eventos.map((evento) => {
-      evento.servicos = servicosEventos.filter(servico => servico.idEvento === evento.id);
-      return evento;
+      eventosContratante.push(evento);
     });
+    
+
+    return eventosContratante;
   }
 
   async getDetalhesEvento(id: string): Promise<EntidadeEvento> {

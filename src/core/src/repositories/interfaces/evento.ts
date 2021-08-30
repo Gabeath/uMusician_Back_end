@@ -6,4 +6,5 @@ export interface IRepositoryEvento {
   selectOneByOptions(options: FindOneOptions<EntidadeEvento>): Promise<EntidadeEvento>;
   selectAllByWhere(where: FindConditions<EntidadeEvento>): Promise<EntidadeEvento[]>;
   selectCompleteById(id: string): Promise<EntidadeEvento>;
+  selectEventosPendentesContratante(idContratante: string): Promise<EntidadeEvento[]>;
 }

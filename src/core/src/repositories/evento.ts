@@ -1,6 +1,7 @@
 import { FindConditions, FindOneOptions, Repository, getRepository } from 'typeorm';
 import EntidadeEvento from '@core/entities/evento';
-import { IRepositoryEvento } from './interfaces/evento';
+import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
+import { SituaçãoServiço } from '@core/models';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -35,5 +36,21 @@ export class RepositoryEvento implements IRepositoryEvento {
         'servicos.especialidadesServico.apresentacaoEspecialidade.especialidade',
       ],
     });
+  }
+
+  async selectEventosPendentesContratante(idContratante: string): Promise<EntidadeEvento[]> {
+    return this.repositoryEvento
+      .createQueryBuilder('evento')
+      .leftJoinAndSelect('evento.servicos', 'servicos')
+      .leftJoinAndSelect('servicos.especialidadesServico', 'especialidadesServico')
+      .leftJoinAndSelect('especialidadesServico.apresentacaoEspecialidade', 'apresentacaoEspecialidade')
+      .where({
+        idContratante,
+        deletedAt: null,
+      })
+      .andWhere('servicos.situacao IN(:...situacoes)',
+        { situacoes: [SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO] })
+      .andWhere('servicos.deletedAt IS NULL')
+      .getMany();
   }
 }
