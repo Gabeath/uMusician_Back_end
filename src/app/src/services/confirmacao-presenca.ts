@@ -36,11 +36,6 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
       createdBy: idMusico,
     });
 
-    await this.repositoryServico.updateById(servico.id, {
-      situacao: SituaçãoServiço.PENDENTE_CONFIRMACAO_PRESENCA,
-      updatedBy: idMusico,
-    });
-
     return confirmacao;
   }
 
