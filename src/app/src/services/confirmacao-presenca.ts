@@ -28,7 +28,7 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
     let confirmacao = await this.repositoryConfirmacaoPresenca.selectByIdServico(servico.id);
 
     if (!confirmacao) {
-      const codigo = Math.random().toString(36).substring(2, 14);
+      const codigo = `${Math.random().toString(36).substring(2, 8)}${Math.random().toString(36).substring(2, 8)}`;
   
       confirmacao = await this.repositoryConfirmacaoPresenca.create({
         codigo,
