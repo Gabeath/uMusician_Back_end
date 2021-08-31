@@ -64,7 +64,7 @@ export class ServiceServico implements IServiceServico {
     return servicos.length;
   }
 
-  async getServicosPendentesMusico(idMusico: string): Promise<EntidadeServico[]> {
+  async getServicosMusico(idMusico: string, situacoesDosServicos: SituaçãoServiço[]): Promise<EntidadeServico[]> {
     const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
       .selectByIdMusicoWithEspecialidadeServico(idMusico);
 
@@ -73,7 +73,7 @@ export class ServiceServico implements IServiceServico {
       apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
     });
 
-    const servicos = await this.repositoryServico.selectServicosPendentesMusico(listaIdServico);
+    const servicos = await this.repositoryServico.selectServicosMusico(listaIdServico, situacoesDosServicos);
 
     for (let i = 0; i < servicos.length; i += 1) {
       servicos[i].evento.contratante.usuario.senha = undefined;
