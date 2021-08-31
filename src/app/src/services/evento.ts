@@ -124,14 +124,15 @@ export class ServiceEvento implements IServiceEvento {
     };
   }
 
-  async getEventosByIdContratante(idContratante: string): Promise<EntidadeEvento[]> {
+  async getEventosByIdContratante(idContratante: string, situacoesDosServicos: SituaçãoServiço[]):
+  Promise<EntidadeEvento[]> {
     const contratante = await this.repositoryPerfil.selectById(idContratante);
 
     if (!contratante) {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    const eventos = await this.repositoryEvento.selectEventosPendentesContratante(contratante.id);
+    const eventos = await this.repositoryEvento.selectEventosContratante(contratante.id, situacoesDosServicos);
 
     const listaIdMusico: string[] = [];
     eventos.forEach((evento) => {

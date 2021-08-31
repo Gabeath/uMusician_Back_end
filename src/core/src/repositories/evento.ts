@@ -38,7 +38,8 @@ export class RepositoryEvento implements IRepositoryEvento {
     });
   }
 
-  async selectEventosPendentesContratante(idContratante: string): Promise<EntidadeEvento[]> {
+  async selectEventosContratante(idContratante: string, situacoesDosServicos: SituaçãoServiço[]):
+  Promise<EntidadeEvento[]> {
     return this.repositoryEvento
       .createQueryBuilder('evento')
       .leftJoinAndSelect('evento.servicos', 'servicos')
@@ -49,7 +50,7 @@ export class RepositoryEvento implements IRepositoryEvento {
         deletedAt: null,
       })
       .andWhere('servicos.situacao IN(:...situacoes)',
-        { situacoes: [SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO] })
+        { situacoes: situacoesDosServicos })
       .andWhere('servicos.deletedAt IS NULL')
       .getMany();
   }
