@@ -25,16 +25,20 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
     
     if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
 
-    const codigo = Math.random().toString(36).substring(2, 12);
+    let confirmacao = await this.repositoryConfirmacaoPresenca.selectByIdServico(servico.id);
 
-    const confirmacao = await this.repositoryConfirmacaoPresenca.create({
-      codigo,
-      idContratante: servico.evento.idContratante,
-      idServico: servico.id,
-      idMusico: idMusico,
-      status: StatusConfirmacaoPresenca.CRIADA,
-      createdBy: idMusico,
-    });
+    if (!confirmacao) {
+      const codigo = Math.random().toString(36).substring(2, 14);
+  
+      confirmacao = await this.repositoryConfirmacaoPresenca.create({
+        codigo,
+        idContratante: servico.evento.idContratante,
+        idServico: servico.id,
+        idMusico: idMusico,
+        status: StatusConfirmacaoPresenca.CRIADA,
+        createdBy: idMusico,
+      });
+    }
 
     return confirmacao;
   }
