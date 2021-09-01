@@ -9,6 +9,7 @@ import {
 import Base from './base';
 import EntidadeApresentacaoEspecialidade from './apresentacao-especialidade';
 import EntidadeApresentacaoGenero from './apresentacao-genero';
+import EntidadeAvaliacao from './avaliacao';
 import EntidadeAviso from './aviso';
 import EntidadeConfirmacaoPresenca from './confirmacao-presenca';
 import EntidadeEvento from './evento';
@@ -83,6 +84,12 @@ export default class EntidadePerfil extends Base {
     (confirmacaoPresenca: EntidadeConfirmacaoPresenca): EntidadePerfil => confirmacaoPresenca.contratante,
   )
   confirmacoesPresencaContratante?: EntidadeConfirmacaoPresenca[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeAvaliacao> => EntidadeAvaliacao,
+    (avaliacao: EntidadeAvaliacao): EntidadePerfil => avaliacao.musico,
+  )
+  avaliacoes?: EntidadeAvaliacao[];
 
   countServicos?: number;
 

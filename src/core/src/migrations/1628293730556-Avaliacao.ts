@@ -29,6 +29,9 @@ export class Avaliacao1628293730556 implements MigrationInterface {
             name: 'idServico',
             type: 'uuid',
           }, {
+            name: 'idMusico',
+            type: 'uuid',
+          }, {
             name: 'createdBy',
             type: 'varchar',
             isNullable: true,
@@ -59,6 +62,11 @@ export class Avaliacao1628293730556 implements MigrationInterface {
             columnNames: ['idServico'],
             referencedColumnNames: ['id'],
             referencedTableName: 'servico',
+          }),
+          new TableForeignKey({
+            columnNames: ['idMusico'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'perfil',
           }),
         ],
       })
