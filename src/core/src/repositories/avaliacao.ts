@@ -8,6 +8,14 @@ import { injectable } from 'inversify';
 export class RepositoryAvaliacao implements IRepositoryAvaliacao {
   private repositoryAvaliacao: Repository<EntidadeAvaliacao> = getRepository(EntidadeAvaliacao);
 
+  async create(avaliacao: EntidadeAvaliacao): Promise<EntidadeAvaliacao> {
+    return this.repositoryAvaliacao.save(avaliacao);
+  }
+
+  async selectByIdServico(idServico: string): Promise<EntidadeAvaliacao> {
+    return this.repositoryAvaliacao.findOne({ where: { idServico } });
+  }
+
   async selectAvaliacoesPaginated(listaIdServico: string[], searchParameter: SearchParameterBase):
   Promise<Pagination<EntidadeAvaliacao>> {
     const [rows, count] = await this.repositoryAvaliacao.findAndCount({
