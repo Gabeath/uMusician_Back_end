@@ -53,11 +53,12 @@ export class RepositoryServico implements IRepositoryServico {
     });
   }
 
-  async selectServicosPendentesMusico(listaIdServico: string[]): Promise<EntidadeServico[]> {
+  async selectServicosMusico(listaIdServico: string[], situacoesDosServicos: SituaçãoServiço[]):
+  Promise<EntidadeServico[]> {
     return this.repositoryServico.find({
       where: {
         id: In(listaIdServico),
-        situacao: In([SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO]),
+        situacao: In(situacoesDosServicos),
         deletedAt: null,
       },
       relations: [

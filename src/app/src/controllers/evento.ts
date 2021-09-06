@@ -5,7 +5,7 @@ import {
   httpPost,
   interfaces,
 } from 'inversify-express-utils';
-import { CategoriaPerfil } from '@core/models';
+import { CategoriaPerfil, SituaçãoServiço } from '@core/models';
 import EntidadeEvento from '@core/entities/evento';
 import EntidadeServico from '@core/entities/servico';
 import { IServiceEvento } from '@app/services/interfaces/evento';
@@ -51,7 +51,24 @@ export class ControllerEvento extends BaseHttpController implements interfaces.C
 
   @httpGet('/contratante', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
   private async getEventosByIdContratante(req: Request): Promise<EntidadeEvento[]> {
-    return this.serviceEvento.getEventosByIdContratante(req.session.profileID);
+    const situacoes = [
+      SituaçãoServiço.PENDENTE,
+      SituaçãoServiço.ACEITO
+    ] as SituaçãoServiço[];
+
+    return this.serviceEvento.getEventosByIdContratante(req.session.profileID, situacoes);
+  }
+
+  @httpGet('/contratante/concluidos', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
+  private async getEventosConcluidosByIdContratante(req: Request): Promise<EntidadeEvento[]> {
+    const situacoes = [
+      SituaçãoServiço.CONCLUÍDO,
+      SituaçãoServiço.CANCELADO,
+      SituaçãoServiço.EXPIRADO,
+      SituaçãoServiço.REJEITADO
+    ] as SituaçãoServiço[];
+
+    return this.serviceEvento.getEventosByIdContratante(req.session.profileID, situacoes);
   }
 
   @httpGet('/:id', autenticado)

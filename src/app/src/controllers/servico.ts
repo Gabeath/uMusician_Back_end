@@ -29,7 +29,24 @@ export class ControllerServico extends BaseHttpController implements interfaces.
 
   @httpGet('/musico/pendentes', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async getServicosPendentesMusico(req: Request): Promise<EntidadeServico[]> {
-    return this.serviceServico.getServicosPendentesMusico(req.session.profileID);
+    const situacoes = [
+      SituaçãoServiço.PENDENTE,
+      SituaçãoServiço.ACEITO
+    ] as SituaçãoServiço[];
+
+    return this.serviceServico.getServicosMusico(req.session.profileID, situacoes);
+  }
+
+  @httpGet('/musico/concluidos', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async getServicosConcluidosMusico(req: Request): Promise<EntidadeServico[]> {
+    const situacoes = [
+      SituaçãoServiço.CONCLUÍDO,
+      SituaçãoServiço.CANCELADO,
+      SituaçãoServiço.EXPIRADO,
+      SituaçãoServiço.REJEITADO
+    ] as SituaçãoServiço[];
+
+    return this.serviceServico.getServicosMusico(req.session.profileID, situacoes);
   }
 
   @httpGet('/:id', autenticado)
