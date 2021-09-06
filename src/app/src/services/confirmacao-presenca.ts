@@ -53,7 +53,7 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
     
     if (!confirmacao) { throw new BusinessError(ErrorCodes.SERVICO_SEM_CONFIRMACAO_CRIADA); }
     if (confirmacao.codigo !== codigo) { throw new BusinessError(ErrorCodes.CODIGO_INVALIDO); }
-    if (DateTime.fromISO(servico.evento.dataInicio).diffNow('seconds').seconds <= 0) {
+    if (DateTime.fromJSDate(servico.evento.dataInicio as Date).diffNow('day').days <= 0) {
       throw new BusinessError(ErrorCodes.EVENTO_NAO_INICIADO);
     }
 
