@@ -19,10 +19,10 @@ export default class EntidadeEvento extends Base {
   public nome!: string;
   
   @Column({ type: 'timestamptz' })
-  public dataInicio!: string;
+  public dataInicio!: Date | string;
   
   @Column({ type: 'timestamptz' })
-  public dataTermino!: string;
+  public dataTermino!: Date | string;
 
   @Column({ type: 'uuid' })
   public idContratante?: string;
