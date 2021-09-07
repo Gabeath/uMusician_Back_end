@@ -6,7 +6,6 @@ import EntidadePerfil from '@core/entities/perfil';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
-import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAvaliacao } from './interfaces/avaliacao';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import { IServiceServico } from './interfaces/servico';
@@ -17,7 +16,6 @@ export class ServicePerfil implements IServicePerfil {
   private repositoryPerfil: IRepositoryPerfil;
   private repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade;
   private repositoryApresentacaoGenero: IRepositoryApresentacaoGenero;
-  private repositoryUsuario: IRepositoryUsuario;
   private serviceAvaliacao: IServiceAvaliacao;
   private serviceServico: IServiceServico;
 
@@ -26,14 +24,12 @@ export class ServicePerfil implements IServicePerfil {
     @inject(TYPES.RepositoryApresentacaoEspecialidade)
     repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade,
     @inject(TYPES.RepositoryApresentacaoGenero) repositoryApresentacaoGenero: IRepositoryApresentacaoGenero,
-    @inject(TYPES.RepositoryUsuario) repositoryUsuario: IRepositoryUsuario,
     @inject(TYPES.ServiceAvaliacao) serviceAvaliacao: IServiceAvaliacao,
     @inject(TYPES.ServiceServico) serviceServico: IServiceServico,
   ) {
     this.repositoryPerfil = repositoryPerfil;
     this.repositoryApresentacaoEspecialidade = repositoryApresentacaoEspecialidade;
     this.repositoryApresentacaoGenero = repositoryApresentacaoGenero;
-    this.repositoryUsuario = repositoryUsuario;
     this.serviceAvaliacao = serviceAvaliacao;
     this.serviceServico = serviceServico;
   }
