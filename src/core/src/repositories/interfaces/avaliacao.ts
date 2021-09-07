@@ -6,5 +6,5 @@ export interface IRepositoryAvaliacao {
   selectByIdServico(idServico: string): Promise<EntidadeAvaliacao>;
   selectAvaliacoesPaginated(listaIdServico: string[], searchParameter: SearchParameterBase):
   Promise<Pagination<EntidadeAvaliacao>>;
-  selectMediaAvaliacoesMusico(idPerfil: string): Promise<{ media: number }>;
+  selectMediaAvaliacoesMusico(idMusico: string): Promise<number>;
 }

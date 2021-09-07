@@ -33,13 +33,13 @@ export class RepositoryAvaliacao implements IRepositoryAvaliacao {
     };
   }
 
-  async selectMediaAvaliacoesMusico(idPerfil: string): Promise<{ media: number }> {
+  async selectMediaAvaliacoesMusico(idMusico: string): Promise<number> {
     const media: { media: string } = await this.repositoryAvaliacao
       .createQueryBuilder('avaliacao')
       .select('AVG(avaliacao.pontuacao)', 'media')
-      .where('avaliacao.idPerfil = :idPerfil', { idPerfil })
+      .where('avaliacao.idMusico = :idMusico', { idMusico })
       .getRawOne();
 
-    return { media: parseFloat(media.media) || 0 };
+    return parseFloat(media.media) || 0;
   }
 }
