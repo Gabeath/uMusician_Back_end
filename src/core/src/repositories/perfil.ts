@@ -26,8 +26,10 @@ export class RepositoryPerfil implements IRepositoryPerfil {
 
   async selectMusicosWithSearchParameters(searchParameter: IMusicoSearchParameter):
   Promise<Pagination<EntidadePerfil>> {
-    const [ rows, count ] = await this.repositoryPerfil.findAndCount({
-      where: {
+    const [ rows, count ] = await this.repositoryPerfil
+      .createQueryBuilder('perfil')
+      .leftJoinAndSelect('perfil.usuario', 'usuario')
+      .where({
         ...(searchParameter.listaIdMusico && { id: In(searchParameter.listaIdMusico) }),
         ...(searchParameter.listaIdUsuario && { idUsuario: In(searchParameter.listaIdUsuario) }),
         ...(searchParameter.cidade && { cidade: ILike(`%${searchParameter.cidade}%`) }),
@@ -35,14 +37,12 @@ export class RepositoryPerfil implements IRepositoryPerfil {
         categoria: CategoriaPerfil.MUSICO,
         situacao: SituaçãoPerfil.ATIVO,
         deletedAt: null,
-      },
-      ...(searchParameter.limit && { take: searchParameter.limit }),
-      ...(searchParameter.orderBy && { order: {
-        [searchParameter.orderBy]: searchParameter.isDESC ? 'DESC' : 'ASC',
-      }, }),
-      skip: searchParameter.offset,
-      relations: ['usuario'],
-    });
+      })
+      .andWhere('UNACCENT(usuario.nome) LIKE UNACCENT(:nome)', { nome: `%${searchParameter.nome || ''}%` })
+      .take(searchParameter.limit || 10)
+      .skip(searchParameter.offset || 0)
+      .orderBy(`perfil.${searchParameter.orderBy || 'createdAt'}`, searchParameter.isDESC ? 'DESC' : 'ASC')
+      .getManyAndCount();
 
     return { rows, count };
   }

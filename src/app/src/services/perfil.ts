@@ -1,4 +1,4 @@
-import { Between, ILike, In } from 'typeorm';
+import { Between, In } from 'typeorm';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { CategoriaPerfil, IMusicoSearchParameter, Pagination } from '@core/models';
 import { inject, injectable } from 'inversify';
@@ -41,15 +41,6 @@ export class ServicePerfil implements IServicePerfil {
   async getMusicosWithSearchParameters(searchParameter: IMusicoSearchParameter):
   Promise<Pagination<EntidadePerfil>> {
     let listaIdMusico: string[];
-
-    if (searchParameter.nome) {
-      const usuarios = await this.repositoryUsuario.selectAllByWhere({
-        nome: ILike(`%${searchParameter.nome}%`),
-        deletedAt: null,
-      });
-
-      searchParameter.listaIdUsuario = usuarios.map((o) => o.id);
-    }
 
     if (searchParameter.generoMusical) {
       const apresentacoesGenero = await this.repositoryApresentacaoGenero
