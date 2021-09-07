@@ -6,4 +6,5 @@ export interface IServiceAvaliacao {
   getAvaliacoesPaginated(idMusico: string, searchParameter: SearchParameterBase):
   Promise<Pagination<EntidadeAvaliacao>>;
   getAvaliacaoMedia(idMusico: string): Promise<number>;
+  getMediasAvaliacoesMusico(pontuacao: number): Promise<{ media: number, idMusico: string }[]>;
 }

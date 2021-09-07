@@ -49,22 +49,14 @@ export class ServiceAvaliacao implements IServiceAvaliacao {
 
   async getAvaliacoesPaginated(idMusico: string, searchParameter: SearchParameterBase):
   Promise<Pagination<EntidadeAvaliacao>> {
-    const musico = await this.repositoryPerfil.selectById(idMusico);
-
-    if (!musico) { throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO); }
-
-    const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
-      .selectByIdMusicoWithEspecialidadeServico(musico.id);
-
-    const listaIdServico: string[] = [];
-    apresentacoesEspecialidade.forEach((apresentacao) => {
-      apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
-    });
-
-    return this.repositoryAvaliacao.selectAvaliacoesPaginated(listaIdServico, searchParameter);
+    return this.repositoryAvaliacao.selectAvaliacoesPaginated(idMusico, searchParameter);
   }
 
   async getAvaliacaoMedia(idMusico: string): Promise<number> {
     return this.repositoryAvaliacao.selectMediaAvaliacoesMusico(idMusico);
+  }
+
+  async getMediasAvaliacoesMusico(pontuacao: number): Promise<{ media: number, idMusico: string }[]> {
+    return this.repositoryAvaliacao.selectMediasAvaliacoesMusico(pontuacao);
   }
 }

@@ -42,6 +42,13 @@ export class ServicePerfil implements IServicePerfil {
   Promise<Pagination<EntidadePerfil>> {
     let listaIdMusico: string[];
 
+    if (searchParameter.pontuacaoAvaliacao) {
+      const medias = await this.serviceAvaliacao.getMediasAvaliacoesMusico(searchParameter.pontuacaoAvaliacao);
+
+      const listaIdMusicoAvaliacoes = medias.map(o => o.idMusico);
+      listaIdMusico = listaIdMusicoAvaliacoes;
+    }
+
     if (searchParameter.generoMusical) {
       const apresentacoesGenero = await this.repositoryApresentacaoGenero
         .selectAllByIdGenero(searchParameter.generoMusical);
@@ -55,7 +62,7 @@ export class ServicePerfil implements IServicePerfil {
       || searchParameter.valorMaximo) {
       const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
         .selectAllByWhere({
-          ...(listaIdMusico && { idEspecialidade: In(listaIdMusico) }),
+          ...(listaIdMusico && { idMusico: In(listaIdMusico) }),
           ...(searchParameter.especialidade && { id: searchParameter.especialidade }),
           valorHora: Between(
             searchParameter.valorMinimo || 0,
@@ -75,11 +82,6 @@ export class ServicePerfil implements IServicePerfil {
     for (let i = 0; i < musicos.rows.length; i +=1) {
       musicos.rows[i].avaliacaoMedia = await this.serviceAvaliacao.getAvaliacaoMedia(musicos.rows[i].id);
       musicos.rows[i].usuario.senha = undefined;
-    }
-
-    if (searchParameter.pontuacaoAvaliacao) {
-      musicos.rows = musicos.rows.filter(o => o.avaliacaoMedia >= searchParameter.pontuacaoAvaliacao);
-      musicos.count = musicos.rows.length;
     }
 
     return musicos;

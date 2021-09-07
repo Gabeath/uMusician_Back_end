@@ -1,5 +1,5 @@
-import { In, Repository, getRepository } from 'typeorm';
 import { Pagination, SearchParameterBase } from '@core/models';
+import { Repository, getRepository } from 'typeorm';
 import EntidadeAvaliacao from '@core/entities/avaliacao';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
 import { injectable } from 'inversify';
@@ -16,10 +16,10 @@ export class RepositoryAvaliacao implements IRepositoryAvaliacao {
     return this.repositoryAvaliacao.findOne({ where: { idServico } });
   }
 
-  async selectAvaliacoesPaginated(listaIdServico: string[], searchParameter: SearchParameterBase):
+  async selectAvaliacoesPaginated(idMusico: string, searchParameter: SearchParameterBase):
   Promise<Pagination<EntidadeAvaliacao>> {
     const [rows, count] = await this.repositoryAvaliacao.findAndCount({
-      where: { idServico: In(listaIdServico) },
+      where: { idMusico },
       ...(searchParameter.limit && { take: searchParameter.limit }),
       ...(searchParameter.orderBy && { order: {
         [searchParameter.orderBy]: searchParameter.isDESC ? 'DESC' : 'ASC',
@@ -41,5 +41,17 @@ export class RepositoryAvaliacao implements IRepositoryAvaliacao {
       .getRawOne();
 
     return parseFloat(media.media) || 0;
+  }
+
+  async selectMediasAvaliacoesMusico(pontuacao: number): Promise<{ media: number, idMusico: string }[]> {
+    const resposta: { media: string, idMusico: string }[] = await this.repositoryAvaliacao
+      .createQueryBuilder('avaliacao')
+      .select('AVG(avaliacao.pontuacao)', 'media')
+      .addSelect('avaliacao.idMusico', 'idMusico')
+      .groupBy('avaliacao.idMusico')
+      .having('AVG(avaliacao.pontuacao) >= :pontuacao', { pontuacao })
+      .getRawMany();
+
+    return resposta.map(o => ({ media: parseFloat(o.media), idMusico: o.idMusico }));
   }
 }
