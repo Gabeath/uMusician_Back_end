@@ -91,7 +91,8 @@ export class ServicePerfil implements IServicePerfil {
     perfil.usuario.senha = undefined;
 
     if (perfil.categoria === CategoriaPerfil.MUSICO) {
-      perfil.avaliacaoMedia = await this.serviceAvaliacao.getAvaliacaoMedia(perfil.id);
+      const avaliacaoMedia = await this.serviceAvaliacao.getAvaliacaoMedia(perfil.id);
+      perfil.avaliacaoMedia = parseInt(avaliacaoMedia.toFixed(1), 10);
       perfil.countServicos = await this.serviceServico.countServicosConcluidos(perfil.id);
     }
 
