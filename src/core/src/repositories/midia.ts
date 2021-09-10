@@ -11,4 +11,12 @@ export class RepositoryMidia implements IRepositoryMidia {
   async create(midia: EntidadeMidia): Promise<EntidadeMidia> {
     return this.repositoryMidia.save(midia);
   }
+
+  async findByID(id: string): Promise<EntidadeMidia> {
+    return this.repositoryMidia.findOne(id);
+  }
+
+  async delete(midia: EntidadeMidia): Promise<void>{
+    await this.repositoryMidia.remove(midia);
+  }
 }

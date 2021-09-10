@@ -1,6 +1,7 @@
 import {
   BaseHttpController,
   controller,
+  httpDelete,
   httpPost,
   interfaces,
 } from 'inversify-express-utils';
@@ -9,6 +10,7 @@ import { CategoriaPerfil, TipoMídia } from '@core/models';
 import { Request, Response } from 'express';
 import { excluirArquivoTemporario, uparArquivoNaNuvem } from '@app/utils/uploads';
 import EntidadeMidia from '@core/entities/midia';
+import ForbiddenError from '@core/errors/forbidden';
 import { IServiceMidia } from '@app/services/interfaces/midia';
 import TYPES from '@core/types';
 import autenticado from '@app/middlewares/autenticado';
@@ -68,5 +70,19 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
       else
         return res.status(500).json({ 'message': error.message as string });
     }
+  }
+
+  @httpDelete('/:id', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async deletarMidiaPortfólio(req: Request): Promise<void>{
+    const midiaID = req.params.id;
+    const midia = await this.serviceMidia.findByID(midiaID);
+
+    if(!midia)
+      throw new BusinessError(ErrorCodes.MIDIA_NAO_ENCONTRADA);
+
+    if(midia.idMusico !== req.session.profileID)
+      throw new ForbiddenError();
+
+    return this.serviceMidia.deleteMidia(midia);
   }
 }
