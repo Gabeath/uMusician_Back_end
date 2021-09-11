@@ -7,6 +7,7 @@ import { IRepositoryConfirmacaoPresenca } from '@core/repositories/interfaces/co
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceConfirmacaoPresenca } from '@app/services/interfaces/confirmacao-presenca';
 import TYPES from '@core/types';
+import crypto from 'crypto';
 
 @injectable()
 export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
@@ -29,7 +30,7 @@ export class ServiceConfirmacaoPresenca implements IServiceConfirmacaoPresenca {
     let confirmacao = await this.repositoryConfirmacaoPresenca.selectByIdServico(servico.id);
 
     if (!confirmacao) {
-      const codigo = `${Math.random().toString(36).substring(2, 8)}${Math.random().toString(36).substring(2, 8)}`;
+      const codigo = crypto.randomBytes(6).toString('hex').substring(0, 12).toUpperCase();
   
       confirmacao = await this.repositoryConfirmacaoPresenca.create({
         codigo,
