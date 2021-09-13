@@ -26,9 +26,8 @@ export class ServiceMidia implements IServiceMidia {
   async deleteMidia(midia: EntidadeMidia): Promise<void>{
     await excluirArquivoDaNuvem(midia.url);
 
-    //Descomentar quando tiver a feature de thumbnail
-    // if(midia.thumbnailUrl)
-    //   await excluirArquivoDaNuvem(midia.thumbnailUrl);
+    if(midia.thumbnailUrl)
+      await excluirArquivoDaNuvem(midia.thumbnailUrl);
     
     return this.repositoryMidia.delete(midia);
   }
