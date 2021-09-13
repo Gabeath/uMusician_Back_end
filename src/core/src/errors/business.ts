@@ -29,4 +29,5 @@ export const ErrorCodes = {
   SERVICO_SEM_CONFIRMACAO_CRIADA: 'O músico deste serviço ainda não gerou sua confirmação',
   USUARIO_JA_CADASTRADO: 'Usuário já cadastrado',
   USUARIO_NAO_ENCONTRADO: 'Usuário não encontrado',
+  MIDIA_NAO_ENCONTRADA: 'Mídia não encontrada'
 };
