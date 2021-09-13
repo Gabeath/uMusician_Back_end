@@ -33,6 +33,7 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
     const ano = req.body.ano as string;
     const titulo = req.body.titulo as string;
     const tipo = parseInt(req.body.tipo as string, 10);
+    const thumbnailUrl = req.body.thumbnailUrl as string;
     let pastaDestino = '';
 
     try {
@@ -58,6 +59,7 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
         titulo,
         tipo,
         url,
+        thumbnailUrl,
         idMusico: req.session.profileID,
       };
 
