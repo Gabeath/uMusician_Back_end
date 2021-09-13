@@ -22,6 +22,9 @@ export default class EntidadeMidia extends Base {
   @Column()
   public ano!: string;
 
+  @Column()
+  public thumbnailUrl?: string;
+
   @Column({ type: 'uuid' })
   public idMusico!: string;
 
