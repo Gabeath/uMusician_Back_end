@@ -14,7 +14,7 @@
     "import-name": 0,
     "max-len": [
       2,
-      100,
+      120,
       2
     ],
     "@typescript-eslint/array-type": [

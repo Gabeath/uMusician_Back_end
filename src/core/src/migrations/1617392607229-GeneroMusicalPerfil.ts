@@ -10,7 +10,7 @@ export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'genero-musical-perfil',
+        name: 'apresentacao-genero',
         columns: [
           {
             name: 'id',
@@ -22,7 +22,7 @@ export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
             name: 'ano',
             type: 'varchar',
           }, {
-            name: 'idPerfil',
+            name: 'idMusico',
             type: 'uuid',
           }, {
             name: 'idGeneroMusical',
@@ -55,7 +55,7 @@ export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idPerfil'],
+            columnNames: ['idMusico'],
             referencedColumnNames: ['id'],
             referencedTableName: 'perfil',
           }),
@@ -70,7 +70,7 @@ export class GeneroMusicalPerfil1617392607229 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('genero-musical-perfil');
+    await queryRunner.dropTable('apresentacao-genero');
   }
 
 }

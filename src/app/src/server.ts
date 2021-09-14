@@ -1,77 +1,99 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import '@app/controllers';
 import * as bodyParser from 'body-parser';
 import * as httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
+import BusinessError from '@core/errors/business';
 import { Container } from 'inversify';
-import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
+import ForbiddenError from '@core/errors/forbidden';
+import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
+import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
+import { IRepositoryConfirmacaoPresenca } from '@core/repositories/interfaces/confirmacao-presenca';
 import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
 import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
+import { IRepositoryEspecialidadeServico } from '@core/repositories/interfaces/especialidade-servico';
+import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
 import { IRepositoryGeneroMusical } from '@core/repositories/interfaces/genero-musical';
-import {
-  IRepositoryGeneroMusicalPerfil
-} from '@core/repositories/interfaces/genero-musical-perfil';
+import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-servico';
 import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
+import { IServiceConfirmacaoPresenca } from '@app/services/interfaces/confirmacao-presenca';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
+import { IServiceEvento } from '@app/services/interfaces/evento';
 import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { IServiceMidia } from '@app/services/interfaces/midia';
 import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceServico } from './services/interfaces/servico';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
+import IntegrationError from '@core/errors/integration';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import { RepositoryApresentacao } from '@core/repositories/apresentacao';
+import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresentacao-especialidade';
+import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
+import { RepositoryConfirmacaoPresenca } from '@core/repositories/confirmacao-presenca';
 import { RepositoryEndereco } from '@core/repositories/endereco';
 import { RepositoryEspecialidade } from '@core/repositories/especialidade';
+import { RepositoryEspecialidadeServico } from '@core/repositories/especialidade-servico';
+import { RepositoryEvento } from '@core/repositories/evento';
 import { RepositoryGeneroMusical } from '@core/repositories/genero-musical';
-import { RepositoryGeneroMusicalPerfil } from '@core/repositories/genero-musical-perfil';
+import { RepositoryGeneroServico } from '@core/repositories/genero-servico';
 import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
+import { ServiceConfirmacaoPresenca } from '@app/services/confirmacao-presenca';
 import { ServiceEspecialidade } from '@app/services/especialidade';
+import { ServiceEvento } from '@app/services/evento';
 import { ServiceGeneroMusical } from '@app/services/generoMusical';
 import { ServiceMidia } from '@app/services/midia';
 import { ServicePerfil } from './services/perfil';
 import { ServiceServico } from './services/servico';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
+import UnauthorizedError from '@core/errors/unauthorized';
 import compress from 'compression';
 import cors from 'cors';
 import { getEnv } from '@app/constants';
 import helmet from 'helmet';
+import updateServiceStatus from '@app/jobs/updateServiceStatusDaily';
 import { v4 } from 'uuid';
 
 const container: Container = new Container();
 
-const handleError: (err: any, req: Request, res: Response) => void =
-  (err: any, req: Request, res: Response): void => {
-    if (err.isBusinessError) {
-      res.status(httpStatus.BAD_REQUEST).json({
-        error: err.code,
-        options: err.options,
-      });
+const handleError: (
+  err: BusinessError | IntegrationError | ForbiddenError | UnauthorizedError | Error,
+  req: Request,
+  res: Response,
+) => void =
+(
+  err: BusinessError | IntegrationError | ForbiddenError | UnauthorizedError,
+  req: Request,
+  res: Response,
+): void => {
+  if (err instanceof BusinessError && err.isBusinessError) {
+    res.status(httpStatus.BAD_REQUEST).json({
+      error: err.code,
+      options: err.options,
+    });
 
-    } else if (err.isIntegrationError) {
-      res.status(httpStatus.BAD_REQUEST).json({ error: err.message, service: err.service });
-    } else if (err.isPersistentError) {
+  } else if ((err instanceof UnauthorizedError && err.isUnauthorizedError) || err.name === 'TokenExpiredError') {
+    res.sendStatus(httpStatus.UNAUTHORIZED);
+  } else {
+    if (getEnv().env !== 'production') {
       res.status(httpStatus.INTERNAL_SERVER_ERROR)
         .json({ stack: err.stack, message: err.message, ...err });
-    } else if (err.isUnauthorizedError || err.name === 'TokenExpiredError') {
-      res.sendStatus(httpStatus.UNAUTHORIZED);
-    } else if (err.isForbiddenError) {
-      res.sendStatus(httpStatus.FORBIDDEN);
     } else {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR)
-        .json({ stack: err.stack, message: err.message, ...err });
+      res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
-  };
+  }
+};
 
 export class Server {
 
@@ -81,13 +103,21 @@ export class Server {
   }
 
   configDependencies(): void {
-    container.bind<IRepositoryApresentacao>(TYPES.RepositoryApresentacao)
-      .to(RepositoryApresentacao);
+    container.bind<IRepositoryApresentacaoEspecialidade>(TYPES.RepositoryApresentacaoEspecialidade)
+      .to(RepositoryApresentacaoEspecialidade);
+
+    container.bind<IRepositoryApresentacaoGenero>(TYPES.RepositoryApresentacaoGenero)
+      .to(RepositoryApresentacaoGenero);
 
     container.bind<IRepositoryAvaliacao>(TYPES.RepositoryAvaliacao)
       .to(RepositoryAvaliacao);
     container.bind<IServiceAvaliacao>(TYPES.ServiceAvaliacao)
       .to(ServiceAvaliacao);
+
+    container.bind<IRepositoryConfirmacaoPresenca>(TYPES.RepositoryConfirmacaoPresenca)
+      .to(RepositoryConfirmacaoPresenca);
+    container.bind<IServiceConfirmacaoPresenca>(TYPES.ServiceConfirmacaoPresenca)
+      .to(ServiceConfirmacaoPresenca);
 
     container.bind<IRepositoryEndereco>(TYPES.RepositoryEndereco)
       .to(RepositoryEndereco);
@@ -97,13 +127,21 @@ export class Server {
     container.bind<IServiceEspecialidade>(TYPES.ServiceEspecialidade)
       .to(ServiceEspecialidade);
 
+    container.bind<IRepositoryEspecialidadeServico>(TYPES.RepositoryEspecialidadeServico)
+      .to(RepositoryEspecialidadeServico);
+
+    container.bind<IRepositoryEvento>(TYPES.RepositoryEvento)
+      .to(RepositoryEvento);
+    container.bind<IServiceEvento>(TYPES.ServiceEvento)
+      .to(ServiceEvento);
+
     container.bind<IRepositoryGeneroMusical>(TYPES.RepositoryGeneroMusical)
       .to(RepositoryGeneroMusical);
     container.bind<IServiceGeneroMusical>(TYPES.ServiceGeneroMusical)
       .to(ServiceGeneroMusical);
 
-    container.bind<IRepositoryGeneroMusicalPerfil>(TYPES.RepositoryGeneroMusicalPerfil)
-      .to(RepositoryGeneroMusicalPerfil);
+    container.bind<IRepositoryGeneroServico>(TYPES.RepositoryGeneroServico)
+      .to(RepositoryGeneroServico);
 
     container.bind<IRepositoryMidia>(TYPES.RepositoryMidia)
       .to(RepositoryMidia);
@@ -158,13 +196,14 @@ export class Server {
       });
       // Handle 500
       // do not remove next from line bellow, error handle will not work
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       app.use((err: any, req: Request, res: Response, _next: NextFunction): void =>
         handleError(err, req, res));
     });
 
     const app: any = server.build();
+    updateServiceStatus.start();
     app.listen(getEnv().port, (): void => console.log(`ONLINE ${getEnv().port}`));
-
   }
 
 }

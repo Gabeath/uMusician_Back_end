@@ -5,12 +5,12 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class Endereco1617393634021 implements MigrationInterface {
+export class Evento1628292778234 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'endereco',
+        name: 'evento',
         columns: [
           {
             name: 'id',
@@ -19,33 +19,17 @@ export class Endereco1617393634021 implements MigrationInterface {
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           }, {
-            name: 'idServico',
+            name: 'nome',
+            type: 'varchar',
+          }, {
+            name: 'dataInicio',
+            type: 'timestamptz',
+          }, {
+            name: 'dataTermino',
+            type: 'timestamptz',
+          }, {
+            name: 'idContratante',
             type: 'uuid',
-          }, {
-            name: 'cep',
-            type: 'varchar',
-          }, {
-            name: 'pais',
-            type: 'varchar',
-          }, {
-            name: 'estado',
-            type: 'varchar',
-          }, {
-            name: 'cidade',
-            type: 'varchar',
-          }, {
-            name: 'bairro',
-            type: 'varchar',
-          }, {
-            name: 'rua',
-            type: 'varchar',
-          }, {
-            name: 'numero',
-            type: 'varchar',
-          }, {
-            name: 'complemento',
-            type: 'varchar',
-            isNullable: true,
           }, {
             name: 'createdBy',
             type: 'varchar',
@@ -74,9 +58,9 @@ export class Endereco1617393634021 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idServico'],
+            columnNames: ['idContratante'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'servico',
+            referencedTableName: 'perfil',
           }),
         ],
       })
@@ -84,7 +68,7 @@ export class Endereco1617393634021 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('endereco');
+    await queryRunner.dropTable('evento');
   }
 
 }

@@ -1,6 +1,9 @@
-import { FindManyOptions, In, Repository, getRepository } from 'typeorm';
+import { FindConditions, In, Repository, getRepository } from 'typeorm';
+import { DateTime } from 'luxon';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { SituaçãoServiço } from '@core/models';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -11,35 +14,64 @@ export class RepositoryServico implements IRepositoryServico {
     return this.repositoryServico.save(servico);
   }
 
-  async selectServicosByWhere(where: FindManyOptions<EntidadeServico>):
-  Promise<EntidadeServico[]> {
-    return this.repositoryServico.find(where);
-  }
-
-  async countServicosMusico(idApresentacoes: string[]): Promise<{ count: number }> {
-    const count = await this.repositoryServico.count({
-      where: {
-        idApresentacao: In(idApresentacoes),
-      },
+  async selectAllByWhere(where: FindConditions<EntidadeServico>): Promise<EntidadeServico[]> {
+    return this.repositoryServico.find({
+      where,
+      relations: [
+        'generosServico',
+        'generosServico.apresentacaoGenero',
+        'especialidadesServico',
+        'especialidadesServico.apresentacaoEspecialidade',
+      ],
     });
-
-    return { count };
   }
 
-  async selectById(id: string): Promise<EntidadeServico | null> {
+  async selectById(id: string): Promise<EntidadeServico> {
+    return this.repositoryServico.findOne({ where: { id } });
+  }
+
+  async selectByIdWithEvento(id: string): Promise<EntidadeServico> {
+    return this.repositoryServico.findOne({
+      where: { id },
+      relations: ['evento'],
+    });
+  }
+
+  async selectCompleteById(id: string): Promise<EntidadeServico> {
     return this.repositoryServico.findOne({
       where: { id },
       relations: [
-        'apresentacao',
-        'apresentacao.especialidade',
-        'apresentacao.perfil',
-        'apresentacao.perfil.usuario',
-        'generoMusicalPerfil',
-        'generoMusicalPerfil.generoMusical',
-        'contratante',
-        'contratante.usuario',
-        'endereco',
+        'avaliacao',
+        'evento',
+        'evento.contratante',
+        'evento.contratante.usuario',
+        'generosServico',
+        'generosServico.apresentacaoGenero',
+        'especialidadesServico',
+        'especialidadesServico.apresentacaoEspecialidade',
       ],
     });
+  }
+
+  async selectServicosMusico(listaIdServico: string[], situacoesDosServicos: SituaçãoServiço[]):
+  Promise<EntidadeServico[]> {
+    return this.repositoryServico.find({
+      where: {
+        id: In(listaIdServico),
+        situacao: In(situacoesDosServicos),
+        deletedAt: null,
+      },
+      relations: [
+        'evento',
+        'evento.contratante',
+        'evento.contratante.usuario',
+      ]
+    });
+  }
+
+  async updateById(id: string, servico: QueryDeepPartialEntity<EntidadeServico>): Promise<void> {
+    servico.updatedAt = DateTime.local().toISO();
+
+    await this.repositoryServico.update(id, servico);
   }
 }

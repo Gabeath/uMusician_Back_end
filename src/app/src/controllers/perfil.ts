@@ -5,13 +5,14 @@ import {
   httpPut,
   interfaces
 } from 'inversify-express-utils';
-import { IPerfilSearchParameter, Pagination } from '../../../core/src/models/pagination';
+import { IMusicoSearchParameter, Pagination } from '@core/models/pagination';
 import { CategoriaPerfil } from '@core/models';
 import EntidadePerfil from '@core/entities/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import { Request } from 'express';
 import TYPES from '@core/types';
 import autenticado from '@app/middlewares/autenticado';
+import { controllerPaginationHelper } from '@app/utils/pagination';
 import { inject } from 'inversify';
 import isPerfilPermitido from '@app/middlewares/perfil';
 
@@ -29,7 +30,8 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
 
   @httpGet('/musicos', autenticado)
   private getMusicos(req: Request): Promise<Pagination<EntidadePerfil>> {
-    const searchParameter: IPerfilSearchParameter = {
+    const searchParameter: IMusicoSearchParameter = {
+      ...controllerPaginationHelper(req.query),
       generoMusical: req.query.generoMusical as string,
       especialidade: req.query.especialidade as string,
       nome: req.query.nome as string,

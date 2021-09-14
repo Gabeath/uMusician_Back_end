@@ -1,11 +1,12 @@
 import {
   BaseHttpController,
   controller,
+  httpDelete,
   httpGet,
   httpPost,
   interfaces,
 } from 'inversify-express-utils';
-import { CategoriaPerfil } from '@core/models';
+import { CategoriaPerfil, SituaçãoServiço } from '@core/models';
 import EntidadeServico from '@core/entities/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
 import { Request } from 'express';
@@ -26,37 +27,55 @@ export class ControllerServico extends BaseHttpController implements interfaces.
     this.serviceServico = serviceServico;
   }
 
-  @httpPost('/', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
-  private async solitarPerfil(req: Request): Promise<EntidadeServico> {
-    const servico = {
-      nome: req.body.servico.nome as string,
-      dataInicio: req.body.servico.dataInicio as string,
-      dataTermino: req.body.servico.dataTermino as string,
-      valor: req.body.servico.valor as number,
-      idApresentacao: req.body.servico.idApresentacao as string,
-      idGeneroMusical: req.body.servico.idGeneroMusical as string,
-      endereco: {
-        cep: req.body.servico.endereco.cep as string,
-        rua: req.body.servico.endereco.rua as string,
-        bairro: req.body.servico.endereco.bairro as string,
-        cidade: req.body.servico.endereco.cidade as string,
-        estado: req.body.servico.endereco.estado as string,
-        numero: req.body.servico.endereco.numero as string,
-        pais: req.body.servico.endereco.pais as string,
-        complemento: req.body.servico.endereco.complemento as string,
-      }
-    } as EntidadeServico;
+  @httpGet('/musico/pendentes', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async getServicosPendentesMusico(req: Request): Promise<EntidadeServico[]> {
+    const situacoes = [
+      SituaçãoServiço.PENDENTE,
+      SituaçãoServiço.ACEITO
+    ] as SituaçãoServiço[];
 
-    return this.serviceServico.create(req.session.profileID, servico);
+    return this.serviceServico.getServicosMusico(req.session.profileID, situacoes);
   }
 
-  @httpGet('/contratante/pendente', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
-  private async getServicosContratante(req: Request): Promise<EntidadeServico[]> {
-    return this.serviceServico.getServicosContratante(req.session.profileID);
+  @httpGet('/musico/concluidos', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async getServicosConcluidosMusico(req: Request): Promise<EntidadeServico[]> {
+    const situacoes = [
+      SituaçãoServiço.CONCLUÍDO,
+      SituaçãoServiço.CANCELADO,
+      SituaçãoServiço.EXPIRADO,
+      SituaçãoServiço.REJEITADO
+    ] as SituaçãoServiço[];
+
+    return this.serviceServico.getServicosMusico(req.session.profileID, situacoes);
   }
 
   @httpGet('/:id', autenticado)
   private async getDetalhesServico(req: Request): Promise<EntidadeServico | null> {
     return this.serviceServico.getDetalhesServico(req.params.id);
+  }
+
+  @httpPost('/:id/resposta', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async responderSolicitacaoServico(req: Request): Promise<void> {
+    return this.serviceServico.responderSolicitacaoServico(
+      req.params.id,
+      req.body.resposta as SituaçãoServiço,
+      req.session.profileID,
+    );
+  }
+
+  @httpDelete('/:id/musico/cancelar', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async musicoCancelarServico(req: Request): Promise<void> {
+    return this.serviceServico.musicoCancelarServico(
+      req.params.id,
+      req.session.profileID,
+    );
+  }
+
+  @httpDelete('/:id/contratante/cancelar', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
+  private async contratanteCancelarServico(req: Request): Promise<void> {
+    return this.serviceServico.contratanteCancelarServico(
+      req.params.id,
+      req.session.profileID,
+    );
   }
 }

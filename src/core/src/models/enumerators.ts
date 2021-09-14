@@ -13,6 +13,8 @@ export enum SituaçãoServiço {
   REJEITADO = 2,
   PENDENTE = 3,
   CONCLUÍDO = 4,
+  CANCELADO = 5,
+  EXPIRADO = 6,
 }
 
 export enum TipoMídia {
@@ -44,4 +46,9 @@ export enum ClassificaçãoEspecialidade {
   BARÍTONO = 8,
   MEZZO_SOPRANO = 9,
   OUTROS = 10,
+}
+
+export enum StatusConfirmacaoPresenca {
+  CRIADA = 1,
+  CONFIRMADA = 2,
 }

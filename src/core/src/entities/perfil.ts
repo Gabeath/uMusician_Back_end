@@ -7,12 +7,13 @@ import {
   OneToMany,
 } from 'typeorm';
 import Base from './base';
-import EntidadeApresentacao from './apresentacao';
+import EntidadeApresentacaoEspecialidade from './apresentacao-especialidade';
+import EntidadeApresentacaoGenero from './apresentacao-genero';
 import EntidadeAvaliacao from './avaliacao';
 import EntidadeAviso from './aviso';
-import EntidadeGeneroMusicalPerfil from './genero-musical-perfil';
+import EntidadeConfirmacaoPresenca from './confirmacao-presenca';
+import EntidadeEvento from './evento';
 import EntidadeMidia from './midia';
-import EntidadeServico from './servico';
 import EntidadeUsuario from './usuario';
 
 @Entity('perfil')
@@ -50,35 +51,47 @@ export default class EntidadePerfil extends Base {
 
   @OneToMany(
     (): ObjectType<EntidadeMidia> => EntidadeMidia,
-    (midia: EntidadeMidia): EntidadePerfil => midia.perfil,
+    (midia: EntidadeMidia): EntidadePerfil => midia.musico,
   )
   midias?: EntidadeMidia[];
 
   @OneToMany(
-    (): ObjectType<EntidadeGeneroMusicalPerfil> => EntidadeGeneroMusicalPerfil,
-    (generoMusical: EntidadeGeneroMusicalPerfil): EntidadePerfil => generoMusical.perfil,
+    (): ObjectType<EntidadeApresentacaoGenero> => EntidadeApresentacaoGenero,
+    (apresentacaoGenero: EntidadeApresentacaoGenero): EntidadePerfil => apresentacaoGenero.musico,
   )
-  generosMusicais?: EntidadeGeneroMusicalPerfil[];
+  apresentacoesGenero?: EntidadeApresentacaoGenero[];
 
   @OneToMany(
-    (): ObjectType<EntidadeApresentacao> => EntidadeApresentacao,
-    (apresentacao: EntidadeApresentacao): EntidadePerfil => apresentacao.perfil,
+    (): ObjectType<EntidadeApresentacaoEspecialidade> => EntidadeApresentacaoEspecialidade,
+    (apresentacao: EntidadeApresentacaoEspecialidade): EntidadePerfil => apresentacao.musico,
   )
-  apresentacoes?: EntidadeApresentacao[];
+  apresentacoesEspecialidade?: EntidadeApresentacaoEspecialidade[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeEvento> => EntidadeEvento,
+    (evento: EntidadeEvento): EntidadePerfil => evento.contratante,
+  )
+  eventos?: EntidadeEvento[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeConfirmacaoPresenca> => EntidadeConfirmacaoPresenca,
+    (confirmacaoPresenca: EntidadeConfirmacaoPresenca): EntidadePerfil => confirmacaoPresenca.musico,
+  )
+  confirmacoesPresencaMusico?: EntidadeConfirmacaoPresenca[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeConfirmacaoPresenca> => EntidadeConfirmacaoPresenca,
+    (confirmacaoPresenca: EntidadeConfirmacaoPresenca): EntidadePerfil => confirmacaoPresenca.contratante,
+  )
+  confirmacoesPresencaContratante?: EntidadeConfirmacaoPresenca[];
 
   @OneToMany(
     (): ObjectType<EntidadeAvaliacao> => EntidadeAvaliacao,
-    (avaliacao: EntidadeAvaliacao): EntidadePerfil => avaliacao.perfil,
+    (avaliacao: EntidadeAvaliacao): EntidadePerfil => avaliacao.musico,
   )
   avaliacoes?: EntidadeAvaliacao[];
 
-  avaliacaoMedia?: number;
-
-  @OneToMany(
-    (): ObjectType<EntidadeServico> => EntidadeServico,
-    (servico: EntidadeServico): EntidadePerfil => servico.contratante,
-  )
-  servicos?: EntidadeServico[];
-
   countServicos?: number;
+
+  avaliacaoMedia?: number;
 }

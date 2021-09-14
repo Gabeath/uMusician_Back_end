@@ -10,10 +10,7 @@ export class RepositoryGeneroMusical implements IRepositoryGeneroMusical {
 
   async selectAll(): Promise<EntidadeGeneroMusical[]> {
     return this.repositoryGeneroMusical.find({
-      order: {
-        popularidade: 'ASC',
-        nome: 'ASC',
-      },
+      order: { nome: 'ASC' },
     });
   }
 }

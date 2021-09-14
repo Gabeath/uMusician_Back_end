@@ -1,126 +1,164 @@
+import { Between, In } from 'typeorm';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { inject, injectable } from 'inversify';
+import { DateTime } from 'luxon';
 import EntidadeServico from '@core/entities/servico';
-import { IRepositoryApresentacao } from '@core/repositories/interfaces/apresentacao';
-import { IRepositoryEndereco } from '@core/repositories/interfaces/endereco';
-import {
-  IRepositoryGeneroMusicalPerfil
-} from '@core/repositories/interfaces/genero-musical-perfil';
+import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
+import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
-import { In } from 'typeorm';
 import { SituaçãoServiço } from '@core/models';
 import TYPES from '@core/types';
 
 @injectable()
 export class ServiceServico implements IServiceServico {
   private repositoryServico: IRepositoryServico;
-  private repositoryApresentacao: IRepositoryApresentacao;
-  private repositoryEndereco: IRepositoryEndereco;
-  private repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil;
+  private repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade;
+  private repositoryEvento: IRepositoryEvento;
   private repositoryPerfil: IRepositoryPerfil;
 
   constructor(
   @inject(TYPES.RepositoryServico) repositoryServico: IRepositoryServico,
-    @inject(TYPES.RepositoryApresentacao) repositoryApresentacao: IRepositoryApresentacao,
-    @inject(TYPES.RepositoryEndereco) repositoryEndereco: IRepositoryEndereco,
-    @inject(TYPES.RepositoryGeneroMusicalPerfil)
-    repositoryGeneroMusicalPerfil: IRepositoryGeneroMusicalPerfil,
+    @inject(TYPES.RepositoryApresentacaoEspecialidade)
+    repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade,
+    @inject(TYPES.RepositoryEvento) repositoryEvento: IRepositoryEvento,
     @inject(TYPES.RepositoryPerfil) repositoryPerfil: IRepositoryPerfil,
   ) {
     this.repositoryServico = repositoryServico;
-    this.repositoryApresentacao = repositoryApresentacao;
-    this.repositoryEndereco = repositoryEndereco;
-    this.repositoryGeneroMusicalPerfil = repositoryGeneroMusicalPerfil;
+    this.repositoryApresentacaoEspecialidade = repositoryApresentacaoEspecialidade;
+    this.repositoryEvento = repositoryEvento;
     this.repositoryPerfil = repositoryPerfil;
   }
 
-  async create(idContratante: string, servico: EntidadeServico): Promise<EntidadeServico> {
-    const contratante = await this.repositoryPerfil.selectById(idContratante);
+  async getDetalhesServico(id: string): Promise<EntidadeServico> {
+    const servico = await this.repositoryServico.selectCompleteById(id);
 
-    if (!contratante) {
-      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
+
+    const musico = await this.repositoryPerfil
+      .selectById(servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
+
+    servico.musico = musico;
+    servico.musico.usuario.senha = undefined;
+    servico.evento.contratante.usuario.senha = undefined;
+
+    return this.repositoryServico.selectCompleteById(id);
+  }
+
+  async countServicosConcluidos(idMusico: string): Promise<number> {
+    const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
+      .selectByIdMusicoWithEspecialidadeServico(idMusico);
+
+    const listaIdServico: string[] = [];
+    apresentacoesEspecialidade.forEach((apresentacao) => {
+      apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
+    });
+
+    const servicos = await this.repositoryServico.selectAllByWhere({
+      id: In(listaIdServico),
+      situacao: SituaçãoServiço.CONCLUÍDO,
+      deletedAt: null,
+    });
+
+    return servicos.length;
+  }
+
+  async getServicosMusico(idMusico: string, situacoesDosServicos: SituaçãoServiço[]): Promise<EntidadeServico[]> {
+    const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
+      .selectByIdMusicoWithEspecialidadeServico(idMusico);
+
+    const listaIdServico: string[] = [];
+    apresentacoesEspecialidade.forEach((apresentacao) => {
+      apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
+    });
+
+    const servicos = await this.repositoryServico.selectServicosMusico(listaIdServico, situacoesDosServicos);
+
+    for (let i = 0; i < servicos.length; i += 1) {
+      servicos[i].evento.contratante.usuario.senha = undefined;
     }
 
-    const apresentacao = await this.repositoryApresentacao.selectById(servico.idApresentacao);
+    return servicos;
+  }
 
-    if (!apresentacao) {
-      throw new BusinessError(ErrorCodes.APRESENTACAO_NAO_ENCONTRADA);
-    }
+  async responderSolicitacaoServico(idServico: string, resposta: SituaçãoServiço, idMusico: string): Promise<void> {
+    const servico = await this.repositoryServico.selectByIdWithEvento(idServico);
 
-    const generoMusicalPerfil = await this.repositoryGeneroMusicalPerfil
-      .selectById(servico.idGeneroMusical);
-
-    if (!generoMusicalPerfil) {
-      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_NAO_ENCONTRADO);
-    }
-
-    if (apresentacao.idPerfil !== generoMusicalPerfil.idPerfil) {
+    if (!servico || (resposta !== SituaçãoServiço.ACEITO && resposta !== SituaçãoServiço.REJEITADO)) {
       throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
     }
 
-    const servicoToSave: EntidadeServico = {
-      situacao: SituaçãoServiço.PENDENTE,
-      nome: servico.nome,
-      dataInicio: servico.dataInicio,
-      dataTermino: servico.dataTermino,
-      valor: servico.valor,
-      idApresentacao: apresentacao.id,
-      idContratante: contratante.id,
-      idGeneroMusical: generoMusicalPerfil.id,
-      createdBy: contratante.id,
-    };
-
-    const servicoSaved = await this.repositoryServico.create(servicoToSave);
-
-    const enderecoSaved = await this.repositoryEndereco.create({
-      idServico: servicoSaved.id,
-      cep: servico.endereco.cep,
-      rua: servico.endereco.rua,
-      bairro: servico.endereco.bairro,
-      cidade: servico.endereco.cidade,
-      estado: servico.endereco.estado,
-      numero: servico.endereco.numero,
-      pais: servico.endereco.pais,
-      complemento: servico.endereco.complemento,
-      createdBy: contratante.id,
-    });
-
-    servicoSaved.endereco = enderecoSaved;
-
-    return servicoSaved;
-  }
-
-  async getServicosContratante(idContratante: string): Promise<EntidadeServico[]> {
-    const contratante = await this.repositoryPerfil.selectById(idContratante);
-
-    if (!contratante) {
-      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    if (resposta === SituaçãoServiço.ACEITO) {
+      const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
+        .selectByIdMusicoWithEspecialidadeServico(idMusico);
+  
+      const listaIdServico: string[] = [];
+      apresentacoesEspecialidade.forEach((apresentacao) => {
+        apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
+      });
+  
+      const servicos = await this.repositoryServico.selectAllByWhere({
+        id: In(listaIdServico),
+        situacao: SituaçãoServiço.ACEITO,
+        deletedAt: null,
+      });
+  
+      const evento = await this.repositoryEvento.selectOneByOptions({
+        where: [
+          {
+            id: In(servicos.map(o => o.idEvento)),
+            dataInicio: Between(servico.evento.dataInicio, servico.evento.dataTermino),
+            deletedAt: null,
+          },
+          {
+            id: In(servicos.map(o => o.idEvento)),
+            dataTermino: Between(servico.evento.dataInicio, servico.evento.dataTermino),
+            deletedAt: null,
+          },
+        ]
+      });
+  
+      if (evento) {
+        throw new BusinessError(ErrorCodes.CONFLITO_HORARIO);
+      }
     }
 
-    return this.repositoryServico.selectServicosByWhere({
-      where: {
-        idContratante,
-        situacao: In([SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO]),
-      },
-      relations: [
-        'apresentacao',
-        'apresentacao.perfil',
-        'apresentacao.perfil.usuario',
-      ],
-      order: {
-        dataInicio: 'ASC'
-      }
+    await this.repositoryServico.updateById(servico.id, {
+      situacao: resposta,
+      updatedBy: idMusico,
     });
   }
 
-  async getDetalhesServico(id: string): Promise<EntidadeServico | null> {
-    const servico = await this.repositoryServico.selectById(id);
+  async musicoCancelarServico(idServico: string, idMusico: string): Promise<void> {
+    const servico = await this.repositoryServico.selectByIdWithEvento(idServico);
 
-    servico.apresentacao.perfil.usuario.senha = undefined;
-    servico.contratante.usuario.senha = undefined;
+    if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
 
-    return servico;
+    const dataServico = DateTime.fromJSDate(servico.evento.dataInicio as Date);
+    if (dataServico.diffNow('day').days <= 2) {
+      throw new BusinessError(ErrorCodes.LIMITE_CANCELAMENTO_ESTOURADO);
+    }
+
+    await this.repositoryServico.updateById(servico.id, {
+      situacao: SituaçãoServiço.CANCELADO,
+      updatedBy: idMusico,
+    });
+  }
+
+  async contratanteCancelarServico(idServico: string, idContratante: string): Promise<void> {
+    const servico = await this.repositoryServico.selectByIdWithEvento(idServico);
+
+    if (!servico) { throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS); }
+
+    const dataServico = DateTime.fromJSDate(servico.evento.dataInicio as Date);
+    if (dataServico.diffNow('day').days <= 1) {
+      throw new BusinessError(ErrorCodes.LIMITE_CANCELAMENTO_ESTOURADO);
+    }
+
+    await this.repositoryServico.updateById(servico.id, {
+      situacao: SituaçãoServiço.CANCELADO,
+      updatedBy: idContratante,
+    });
   }
 }

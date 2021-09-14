@@ -10,7 +10,7 @@ export class Apresentacao1617393035414 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'apresentacao',
+        name: 'apresentacao-especialidade',
         columns: [
           {
             name: 'id',
@@ -25,7 +25,7 @@ export class Apresentacao1617393035414 implements MigrationInterface {
             name: 'valorHora',
             type: 'float',
           }, {
-            name: 'idPerfil',
+            name: 'idMusico',
             type: 'uuid',
           }, {
             name: 'idEspecialidade',
@@ -58,7 +58,7 @@ export class Apresentacao1617393035414 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idPerfil'],
+            columnNames: ['idMusico'],
             referencedColumnNames: ['id'],
             referencedTableName: 'perfil',
           }),

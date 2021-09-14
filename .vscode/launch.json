@@ -28,7 +28,12 @@
         "PORT": "4546",
         "CLOUDINARY_CLOUD_NAME": "umusician",
         "CLOUDINARY_API_KEY": "455298595282338",
-        "CLOUDINARY_API_SECRET": "2Gmyor2gwoj1pXmMsYVxVqDKr70"
+        "CLOUDINARY_API_SECRET": "2Gmyor2gwoj1pXmMsYVxVqDKr70",
+        "REDIS_HOST": "redis-10044.c257.us-east-1-3.ec2.cloud.redislabs.com",
+        "REDIS_PORT": "10044",
+        "REDIS_PASS": "8u2NGIQ9DMVDwpKzne9OlMFZG0PlL3wn",
+        "MAIL_USER": "umusicianapp@hotmail.com",
+        "MAIL_PASS": "Tcc1234-5"
       }
     },
   ]

@@ -8,15 +8,23 @@ import { injectable } from 'inversify';
 export class RepositoryAvaliacao implements IRepositoryAvaliacao {
   private repositoryAvaliacao: Repository<EntidadeAvaliacao> = getRepository(EntidadeAvaliacao);
 
-  async selectAvaliacoesPaginated(idPerfil: string, searchParameter: SearchParameterBase):
+  async create(avaliacao: EntidadeAvaliacao): Promise<EntidadeAvaliacao> {
+    return this.repositoryAvaliacao.save(avaliacao);
+  }
+
+  async selectByIdServico(idServico: string): Promise<EntidadeAvaliacao> {
+    return this.repositoryAvaliacao.findOne({ where: { idServico } });
+  }
+
+  async selectAvaliacoesPaginated(idMusico: string, searchParameter: SearchParameterBase):
   Promise<Pagination<EntidadeAvaliacao>> {
     const [rows, count] = await this.repositoryAvaliacao.findAndCount({
-      where: { idPerfil },
-      skip: searchParameter.offset,
-      take: searchParameter.limit,
-      order: {
+      where: { idMusico },
+      ...(searchParameter.limit && { take: searchParameter.limit }),
+      ...(searchParameter.orderBy && { order: {
         [searchParameter.orderBy]: searchParameter.isDESC ? 'DESC' : 'ASC',
-      },
+      }, }),
+      skip: searchParameter.offset,
     });
 
     return {
@@ -25,13 +33,25 @@ export class RepositoryAvaliacao implements IRepositoryAvaliacao {
     };
   }
 
-  async selectMediaAvaliacoesMusico(idPerfil: string): Promise<{ media: number }> {
+  async selectMediaAvaliacoesMusico(idMusico: string): Promise<number> {
     const media: { media: string } = await this.repositoryAvaliacao
       .createQueryBuilder('avaliacao')
       .select('AVG(avaliacao.pontuacao)', 'media')
-      .where('avaliacao.idPerfil = :idPerfil', { idPerfil })
+      .where('avaliacao.idMusico = :idMusico', { idMusico })
       .getRawOne();
 
-    return { media: parseFloat(media.media) || 0 };
+    return parseFloat(media.media) || 0;
+  }
+
+  async selectMediasAvaliacoesMusico(pontuacao: number): Promise<{ media: number, idMusico: string }[]> {
+    const resposta: { media: string, idMusico: string }[] = await this.repositoryAvaliacao
+      .createQueryBuilder('avaliacao')
+      .select('AVG(avaliacao.pontuacao)', 'media')
+      .addSelect('avaliacao.idMusico', 'idMusico')
+      .groupBy('avaliacao.idMusico')
+      .having('AVG(avaliacao.pontuacao) >= :pontuacao', { pontuacao })
+      .getRawMany();
+
+    return resposta.map(o => ({ media: parseFloat(o.media), idMusico: o.idMusico }));
   }
 }

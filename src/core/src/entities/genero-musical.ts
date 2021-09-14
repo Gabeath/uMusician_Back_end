@@ -5,7 +5,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import Base from './base';
-import EntidadeGeneroMusicalPerfil from './genero-musical-perfil';
+import EntidadeApresentacaoGenero from './apresentacao-genero';
 
 @Entity('genero-musical')
 export default class EntidadeGeneroMusical extends Base {
@@ -19,8 +19,9 @@ export default class EntidadeGeneroMusical extends Base {
   public iconeUrl?: string;
 
   @OneToMany(
-    (): ObjectType<EntidadeGeneroMusicalPerfil> => EntidadeGeneroMusicalPerfil,
-    (perfil: EntidadeGeneroMusicalPerfil): EntidadeGeneroMusical => perfil.generoMusical,
+    (): ObjectType<EntidadeApresentacaoGenero> => EntidadeApresentacaoGenero,
+    (apresentacaoGenero: EntidadeApresentacaoGenero): EntidadeGeneroMusical =>
+      apresentacaoGenero.generoMusical,
   )
-  perfis?: EntidadeGeneroMusicalPerfil[];
+  apresentacoesGenero?: EntidadeApresentacaoGenero[];
 }

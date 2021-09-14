@@ -4,6 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   ObjectType,
+  OneToOne,
 } from 'typeorm';
 import Base from './base';
 import EntidadePerfil from './perfil';
@@ -18,23 +19,22 @@ export default class EntidadeAvaliacao extends Base {
   public comentario?: string;
 
   @Column({ type: 'uuid' })
-  public idPerfil!: string;
-
-  @Column({ type: 'uuid' })
   public idServico!: string;
+
+  @OneToOne(
+    (): ObjectType<EntidadeServico> => EntidadeServico,
+    (servico: EntidadeServico): EntidadeAvaliacao => servico.avaliacao,
+  )
+  @JoinColumn({ name: 'idServico', referencedColumnName: 'id' })
+  public servico?: EntidadeServico;
+  
+  @Column({ type: 'uuid' })
+  public idMusico?: string;
 
   @ManyToOne(
     (): ObjectType<EntidadePerfil> => EntidadePerfil,
     (perfil: EntidadePerfil): EntidadeAvaliacao[] => perfil.avaliacoes,
   )
-  @JoinColumn({ name: 'idPerfil', referencedColumnName: 'id' })
-  public perfil?: EntidadePerfil;
-
-  @ManyToOne(
-    (): ObjectType<EntidadeServico> => EntidadeServico,
-    (servico: EntidadeServico): EntidadeAvaliacao[] => servico.avaliacoes,
-  )
-  @JoinColumn({ name: 'idServico', referencedColumnName: 'id' })
-  public servico?: EntidadeServico;
-
+  @JoinColumn({ name: 'idMusico', referencedColumnName: 'id' })
+  public musico?: EntidadePerfil;
 }

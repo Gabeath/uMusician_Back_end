@@ -5,12 +5,12 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class Avaliacao1617393457656 implements MigrationInterface {
+export class Endereco1628293235418 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'avaliacao',
+        name: 'endereco',
         columns: [
           {
             name: 'id',
@@ -19,17 +19,33 @@ export class Avaliacao1617393457656 implements MigrationInterface {
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           }, {
-            name: 'pontuacao',
-            type: 'int4',
+            name: 'idEvento',
+            type: 'uuid',
           }, {
-            name: 'comentario',
+            name: 'cep',
             type: 'varchar',
           }, {
-            name: 'idPerfil',
-            type: 'uuid',
+            name: 'pais',
+            type: 'varchar',
           }, {
-            name: 'idServico',
-            type: 'uuid',
+            name: 'estado',
+            type: 'varchar',
+          }, {
+            name: 'cidade',
+            type: 'varchar',
+          }, {
+            name: 'bairro',
+            type: 'varchar',
+          }, {
+            name: 'rua',
+            type: 'varchar',
+          }, {
+            name: 'numero',
+            type: 'varchar',
+          }, {
+            name: 'complemento',
+            type: 'varchar',
+            isNullable: true,
           }, {
             name: 'createdBy',
             type: 'varchar',
@@ -58,14 +74,9 @@ export class Avaliacao1617393457656 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idPerfil'],
+            columnNames: ['idEvento'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'perfil',
-          }),
-          new TableForeignKey({
-            columnNames: ['idServico'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'servico',
+            referencedTableName: 'evento',
           }),
         ],
       })
@@ -73,7 +84,7 @@ export class Avaliacao1617393457656 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('avaliacao');
+    await queryRunner.dropTable('endereco');
   }
 
 }
