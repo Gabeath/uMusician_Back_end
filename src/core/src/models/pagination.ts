@@ -1,3 +1,5 @@
+import { SituaçãoServiço } from '.';
+
 export interface Pagination<T> {
   rows: T[];
   count: number;
@@ -21,4 +23,9 @@ export interface IMusicoSearchParameter extends SearchParameterBase {
   pontuacaoAvaliacao?: number;
   listaIdMusico?: string[];
   listaIdUsuario?: string[];
+}
+
+export interface IServicoSearchParameter extends SearchParameterBase {
+  listaIdServico?: string[];
+  situacoesDosServicos: SituaçãoServiço[];
 }

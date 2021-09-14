@@ -2,8 +2,8 @@ import { FindConditions, In, Repository, getRepository } from 'typeorm';
 import { DateTime } from 'luxon';
 import EntidadeServico from '@core/entities/servico';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
+import { IServicoSearchParameter } from '@core/models';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { SituaçãoServiço } from '@core/models';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -53,20 +53,32 @@ export class RepositoryServico implements IRepositoryServico {
     });
   }
 
-  async selectServicosMusico(listaIdServico: string[], situacoesDosServicos: SituaçãoServiço[]):
+  async selectServicosMusico(searchParameter: IServicoSearchParameter):
   Promise<EntidadeServico[]> {
-    return this.repositoryServico.find({
-      where: {
-        id: In(listaIdServico),
-        situacao: In(situacoesDosServicos),
+    return this.repositoryServico
+      .createQueryBuilder('servico')
+      .leftJoinAndSelect('servico.evento', 'evento')
+      .leftJoinAndSelect('evento.contratante', 'contratante')
+      .leftJoinAndSelect('contratante.usuario', 'usuario')
+      .where({
+        id: In(searchParameter.listaIdServico),
+        situacao: In(searchParameter.situacoesDosServicos),
         deletedAt: null,
-      },
-      relations: [
-        'evento',
-        'evento.contratante',
-        'evento.contratante.usuario',
-      ]
-    });
+      })
+      .orderBy(`${searchParameter.orderBy || 'servico.createdAt'}`, searchParameter.isDESC ? 'DESC' : 'ASC')
+      .getMany();
+    // return this.repositoryServico.find({
+    //   where: {
+    //     id: In(listaIdServico),
+    //     situacao: In(situacoesDosServicos),
+    //     deletedAt: null,
+    //   },
+    //   relations: [
+    //     'evento',
+    //     'evento.contratante',
+    //     'evento.contratante.usuario',
+    //   ],
+    // });
   }
 
   async updateById(id: string, servico: QueryDeepPartialEntity<EntidadeServico>): Promise<void> {

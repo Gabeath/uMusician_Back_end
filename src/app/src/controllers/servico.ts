@@ -29,24 +29,25 @@ export class ControllerServico extends BaseHttpController implements interfaces.
 
   @httpGet('/musico/pendentes', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async getServicosPendentesMusico(req: Request): Promise<EntidadeServico[]> {
-    const situacoes = [
-      SituaçãoServiço.PENDENTE,
-      SituaçãoServiço.ACEITO
-    ] as SituaçãoServiço[];
-
-    return this.serviceServico.getServicosMusico(req.session.profileID, situacoes);
+    return this.serviceServico.getServicosMusico(req.session.profileID, {
+      situacoesDosServicos: [ SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO ],
+      orderBy: 'evento.dataInicio',
+      isDESC: false,
+    });
   }
 
   @httpGet('/musico/concluidos', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async getServicosConcluidosMusico(req: Request): Promise<EntidadeServico[]> {
-    const situacoes = [
-      SituaçãoServiço.CONCLUÍDO,
-      SituaçãoServiço.CANCELADO,
-      SituaçãoServiço.EXPIRADO,
-      SituaçãoServiço.REJEITADO
-    ] as SituaçãoServiço[];
-
-    return this.serviceServico.getServicosMusico(req.session.profileID, situacoes);
+    return this.serviceServico.getServicosMusico(req.session.profileID, {
+      situacoesDosServicos: [
+        SituaçãoServiço.CONCLUÍDO,
+        SituaçãoServiço.CANCELADO,
+        SituaçãoServiço.EXPIRADO,
+        SituaçãoServiço.REJEITADO,
+      ],
+      orderBy: 'servico.updatedAt',
+      isDESC: true,
+    });
   }
 
   @httpGet('/:id', autenticado)
