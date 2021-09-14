@@ -1,7 +1,7 @@
 import { FindConditions, FindOneOptions, Repository, getRepository } from 'typeorm';
 import EntidadeEvento from '@core/entities/evento';
+import { IEventoSearchParameter } from '@core/models';
 import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
-import { SituaçãoServiço } from '@core/models';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -38,7 +38,7 @@ export class RepositoryEvento implements IRepositoryEvento {
     });
   }
 
-  async selectEventosContratante(idContratante: string, situacoesDosServicos: SituaçãoServiço[]):
+  async selectEventosContratante(idContratante: string, searchParameter: IEventoSearchParameter):
   Promise<EntidadeEvento[]> {
     return this.repositoryEvento
       .createQueryBuilder('evento')
@@ -50,8 +50,9 @@ export class RepositoryEvento implements IRepositoryEvento {
         deletedAt: null,
       })
       .andWhere('servicos.situacao IN(:...situacoes)',
-        { situacoes: situacoesDosServicos })
+        { situacoes: searchParameter.situacoesDosServicos })
       .andWhere('servicos.deletedAt IS NULL')
+      .orderBy(`evento.${searchParameter.orderBy || 'createdAt'}`, searchParameter.isDESC ? 'DESC' : 'ASC')
       .getMany();
   }
 }

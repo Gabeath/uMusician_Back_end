@@ -1,4 +1,5 @@
 import BusinessError, { ErrorCodes } from '@core/errors/business';
+import { IEventoSearchParameter, SituaçãoServiço } from '@core/models';
 import { inject, injectable } from 'inversify';
 import EntidadeEvento from '@core/entities/evento';
 import EntidadeServico from '@core/entities/servico';
@@ -9,7 +10,6 @@ import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-s
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceEvento } from './interfaces/evento';
-import { SituaçãoServiço } from '@core/models';
 import TYPES from '@core/types';
 
 @injectable()
@@ -124,7 +124,7 @@ export class ServiceEvento implements IServiceEvento {
     };
   }
 
-  async getEventosByIdContratante(idContratante: string, situacoesDosServicos: SituaçãoServiço[]):
+  async getEventosByIdContratante(idContratante: string, searchParameter: IEventoSearchParameter):
   Promise<EntidadeEvento[]> {
     const contratante = await this.repositoryPerfil.selectById(idContratante);
 
@@ -132,7 +132,7 @@ export class ServiceEvento implements IServiceEvento {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    const eventos = await this.repositoryEvento.selectEventosContratante(contratante.id, situacoesDosServicos);
+    const eventos = await this.repositoryEvento.selectEventosContratante(contratante.id, searchParameter);
 
     const listaIdMusico: string[] = [];
     eventos.forEach((evento) => {

@@ -67,18 +67,6 @@ export class RepositoryServico implements IRepositoryServico {
       })
       .orderBy(`${searchParameter.orderBy || 'servico.createdAt'}`, searchParameter.isDESC ? 'DESC' : 'ASC')
       .getMany();
-    // return this.repositoryServico.find({
-    //   where: {
-    //     id: In(listaIdServico),
-    //     situacao: In(situacoesDosServicos),
-    //     deletedAt: null,
-    //   },
-    //   relations: [
-    //     'evento',
-    //     'evento.contratante',
-    //     'evento.contratante.usuario',
-    //   ],
-    // });
   }
 
   async updateById(id: string, servico: QueryDeepPartialEntity<EntidadeServico>): Promise<void> {

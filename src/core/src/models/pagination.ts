@@ -29,3 +29,7 @@ export interface IServicoSearchParameter extends SearchParameterBase {
   listaIdServico?: string[];
   situacoesDosServicos: SituaçãoServiço[];
 }
+
+export interface IEventoSearchParameter extends SearchParameterBase {
+  situacoesDosServicos: SituaçãoServiço[];
+}

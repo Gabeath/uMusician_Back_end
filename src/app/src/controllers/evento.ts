@@ -51,24 +51,25 @@ export class ControllerEvento extends BaseHttpController implements interfaces.C
 
   @httpGet('/contratante', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
   private async getEventosByIdContratante(req: Request): Promise<EntidadeEvento[]> {
-    const situacoes = [
-      SituaçãoServiço.PENDENTE,
-      SituaçãoServiço.ACEITO
-    ] as SituaçãoServiço[];
-
-    return this.serviceEvento.getEventosByIdContratante(req.session.profileID, situacoes);
+    return this.serviceEvento.getEventosByIdContratante(req.session.profileID, {
+      situacoesDosServicos: [ SituaçãoServiço.PENDENTE, SituaçãoServiço.ACEITO ],
+      orderBy: 'dataInicio',
+      isDESC: false,
+    });
   }
 
   @httpGet('/contratante/concluidos', autenticado, isPerfilPermitido(CategoriaPerfil.CONTRATANTE))
   private async getEventosConcluidosByIdContratante(req: Request): Promise<EntidadeEvento[]> {
-    const situacoes = [
-      SituaçãoServiço.CONCLUÍDO,
-      SituaçãoServiço.CANCELADO,
-      SituaçãoServiço.EXPIRADO,
-      SituaçãoServiço.REJEITADO
-    ] as SituaçãoServiço[];
-
-    return this.serviceEvento.getEventosByIdContratante(req.session.profileID, situacoes);
+    return this.serviceEvento.getEventosByIdContratante(req.session.profileID, {
+      situacoesDosServicos: [
+        SituaçãoServiço.CONCLUÍDO,
+        SituaçãoServiço.CANCELADO,
+        SituaçãoServiço.EXPIRADO,
+        SituaçãoServiço.REJEITADO,
+      ],
+      orderBy: 'updatedAt',
+      isDESC: true,
+    });
   }
 
   @httpGet('/:id', autenticado)
