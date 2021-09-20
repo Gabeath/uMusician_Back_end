@@ -9,6 +9,7 @@ import {
 } from 'inversify-express-utils';
 import { IMusicoSearchParameter, Pagination } from '@core/models/pagination';
 import { CategoriaPerfil } from '@core/models';
+import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
 import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
@@ -71,6 +72,14 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
   @httpPost('/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async addApresentacaoGenero(req: Request): Promise<EntidadeApresentacaoGenero> {
     return this.servicePerfil.addApresentacaoGenero(req.body as EntidadeApresentacaoGenero, req.session.profileID);
+  }
+
+  @httpPost('/especialidade', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async addApresentacaoEspecialidade(req: Request): Promise<EntidadeApresentacaoEspecialidade> {
+    return this.servicePerfil.addApresentacaoEspecialidade(
+      req.body as EntidadeApresentacaoEspecialidade,
+      req.session.profileID,
+    );
   }
 
   @httpDelete('/:idApresentacaoGenero/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))

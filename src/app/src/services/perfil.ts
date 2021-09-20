@@ -3,6 +3,7 @@ import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { CategoriaPerfil, IMusicoSearchParameter, Pagination } from '@core/models';
 import { inject, injectable } from 'inversify';
 import { DateTime } from 'luxon';
+import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
 import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
@@ -176,5 +177,33 @@ export class ServicePerfil implements IServicePerfil {
       deletedBy: musico.id,
       deletedAt: DateTime.local().toISO(),
     });
+  }
+
+  async addApresentacaoEspecialidade(apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade, idMusico: string):
+  Promise<EntidadeApresentacaoEspecialidade> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+
+    const existe = await this.repositoryApresentacaoEspecialidade.selectByWhere({
+      idMusico: musico.id,
+      idEspecialidade: apresentacaoEspecialidade.idEspecialidade,
+    });
+
+    if (existe) {
+      throw new BusinessError(ErrorCodes.ESPECIALIDADE_JA_CADASTRADA);
+    }
+
+    const apresentacaoEspecialidadeSaved = await this.repositoryApresentacaoEspecialidade.create([{
+      idMusico: musico.id,
+      idEspecialidade: apresentacaoEspecialidade.idEspecialidade,
+      ano: apresentacaoEspecialidade.ano,
+      valorHora: apresentacaoEspecialidade.valorHora,
+      createdBy: musico.id,
+    }]);
+
+    return apresentacaoEspecialidadeSaved[0];
   }
 }

@@ -1,4 +1,5 @@
 import { IMusicoSearchParameter, Pagination } from '@core/models/pagination';
+import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
 import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 
@@ -16,4 +17,7 @@ export interface IServicePerfil {
     idMusico: string,
   ): Promise<void>;
   deleteApresentacaoGenero(idApresentacaoGenero: string, idMusico: string): Promise<void>;
+
+  addApresentacaoEspecialidade(apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade, idMusico: string):
+  Promise<EntidadeApresentacaoEspecialidade>;
 }
