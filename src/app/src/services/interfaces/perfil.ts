@@ -20,4 +20,9 @@ export interface IServicePerfil {
 
   addApresentacaoEspecialidade(apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade, idMusico: string):
   Promise<EntidadeApresentacaoEspecialidade>;
+  updateApresentacaoEspecialidade(
+    idApresentacaoEspecialidade: string,
+    apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade,
+    idMusico: string,
+  ): Promise<void>;
 }

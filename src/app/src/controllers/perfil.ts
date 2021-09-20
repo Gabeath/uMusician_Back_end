@@ -63,6 +63,15 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
     );
   }
 
+  @httpPut('/:idApresentacaoEspecialidade/especialidade', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async updateApresentacaoEspecialidade(req: Request): Promise<void> {
+    await this.servicePerfil.updateApresentacaoEspecialidade(
+      req.params.idApresentacaoEspecialidade,
+      req.body as EntidadeApresentacaoEspecialidade,
+      req.session.profileID,
+    );
+  }
+
   @httpPut('/biografia', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async updateBiografiaById(req: Request): Promise<void> {
     const biografia = req.body.biografia as string;

@@ -20,6 +20,7 @@ export const ErrorCodes = {
   CONFLITO_HORARIO: 'Não é possível aceitar dois eventos que preencham o mesmo horário',
   DADOS_LOGIN_INVALIDOS: 'Dados de login inválidos',
   ESPECIALIDADE_JA_CADASTRADA: 'Especialidade já cadastrada',
+  ESPECIALIDADE_NAO_ENCONTRADA: 'Especialidade não encontrada',
   EVENTO_NAO_ENCONTRADO: 'Evento não encontrado',
   EVENTO_NAO_INICIADO: 'O evento deste serviço ainda não foi iniciado',
   GENERO_MUSICAL_JA_CADASTRADO: 'Gênero musical já cadastrado',

@@ -206,4 +206,27 @@ export class ServicePerfil implements IServicePerfil {
 
     return apresentacaoEspecialidadeSaved[0];
   }
+
+  async updateApresentacaoEspecialidade(
+    idApresentacaoEspecialidade: string,
+    apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade,
+    idMusico: string,
+  ): Promise<void> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+    const apresentacaoEspecialidadeSaved = await this.repositoryApresentacaoEspecialidade
+      .selectById(idApresentacaoEspecialidade);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+    if (!apresentacaoEspecialidadeSaved) {
+      throw new BusinessError(ErrorCodes.ESPECIALIDADE_NAO_ENCONTRADA);
+    }
+    
+    await this.repositoryApresentacaoEspecialidade.updateById(apresentacaoEspecialidadeSaved.id, {
+      ano: apresentacaoEspecialidade.ano,
+      valorHora: apresentacaoEspecialidade.valorHora,
+      updatedBy: musico.id,
+    });
+  }
 }
