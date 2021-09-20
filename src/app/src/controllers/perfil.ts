@@ -95,4 +95,12 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
   private async deleteApresentacaoGenero(req: Request): Promise<void> {
     await this.servicePerfil.deleteApresentacaoGenero(req.params.idApresentacaoGenero, req.session.profileID);
   }
+
+  @httpDelete('/:idApresentacaoEspecialidade/especialidade', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async deleteApresentacaoEspecialidade(req: Request): Promise<void> {
+    await this.servicePerfil.deleteApresentacaoEspecialidade(
+      req.params.idApresentacaoEspecialidade,
+      req.session.profileID,
+    );
+  }
 }

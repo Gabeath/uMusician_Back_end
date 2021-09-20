@@ -229,4 +229,23 @@ export class ServicePerfil implements IServicePerfil {
       updatedBy: musico.id,
     });
   }
+
+  async deleteApresentacaoEspecialidade(idApresentacaoEspecialidade: string, idMusico: string): Promise<void> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+    const apresentacaoEspecialidade = await this.repositoryApresentacaoEspecialidade
+      .selectById(idApresentacaoEspecialidade);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+    if (!apresentacaoEspecialidade) {
+      throw new BusinessError(ErrorCodes.ESPECIALIDADE_NAO_ENCONTRADA);
+    }
+    
+    await this.repositoryApresentacaoEspecialidade.updateById(apresentacaoEspecialidade.id, {
+      updatedBy: musico.id,
+      deletedBy: musico.id,
+      deletedAt: DateTime.local().toISO(),
+    });
+  }
 }

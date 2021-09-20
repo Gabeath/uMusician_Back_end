@@ -25,4 +25,5 @@ export interface IServicePerfil {
     apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade,
     idMusico: string,
   ): Promise<void>;
+  deleteApresentacaoEspecialidade(idApresentacaoEspecialidade: string, idMusico: string): Promise<void>;
 }
