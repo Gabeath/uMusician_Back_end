@@ -7,6 +7,12 @@ export interface IServicePerfil {
   Promise<Pagination<EntidadePerfil>>;
   getById(id: string): Promise<EntidadePerfil>;
   updateBiografiaById(id: string, biografia: string): Promise<void>;
+  
   addApresentacaoGenero(apresentacaoGenero: EntidadeApresentacaoGenero, idMusico: string):
   Promise<EntidadeApresentacaoGenero>;
+  updateApresentacaoGenero(
+    idApresentacaoGenero: string,
+    apresentacaoGenero: EntidadeApresentacaoGenero,
+    idMusico: string,
+  ): Promise<void>;
 }
