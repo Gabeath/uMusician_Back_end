@@ -2,6 +2,7 @@ import { Between, In } from 'typeorm';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { CategoriaPerfil, IMusicoSearchParameter, Pagination } from '@core/models';
 import { inject, injectable } from 'inversify';
+import { DateTime } from 'luxon';
 import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
@@ -156,6 +157,24 @@ export class ServicePerfil implements IServicePerfil {
     await this.repositoryApresentacaoGenero.updateById(apresentacaoGeneroSaved.id, {
       ano: apresentacaoGenero.ano,
       updatedBy: musico.id,
+    });
+  }
+
+  async deleteApresentacaoGenero(idApresentacaoGenero: string, idMusico: string): Promise<void> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+    const apresentacaoGenero = await this.repositoryApresentacaoGenero.selectById(idApresentacaoGenero);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+    if (!apresentacaoGenero) {
+      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_NAO_ENCONTRADO);
+    }
+    
+    await this.repositoryApresentacaoGenero.updateById(apresentacaoGenero.id, {
+      updatedBy: musico.id,
+      deletedBy: musico.id,
+      deletedAt: DateTime.local().toISO(),
     });
   }
 }

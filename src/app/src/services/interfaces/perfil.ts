@@ -7,7 +7,7 @@ export interface IServicePerfil {
   Promise<Pagination<EntidadePerfil>>;
   getById(id: string): Promise<EntidadePerfil>;
   updateBiografiaById(id: string, biografia: string): Promise<void>;
-  
+
   addApresentacaoGenero(apresentacaoGenero: EntidadeApresentacaoGenero, idMusico: string):
   Promise<EntidadeApresentacaoGenero>;
   updateApresentacaoGenero(
@@ -15,4 +15,5 @@ export interface IServicePerfil {
     apresentacaoGenero: EntidadeApresentacaoGenero,
     idMusico: string,
   ): Promise<void>;
+  deleteApresentacaoGenero(idApresentacaoGenero: string, idMusico: string): Promise<void>;
 }

@@ -1,6 +1,7 @@
 import {
   BaseHttpController,
   controller,
+  httpDelete,
   httpGet,
   httpPost,
   httpPut,
@@ -70,5 +71,10 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
   @httpPost('/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async addApresentacaoGenero(req: Request): Promise<EntidadeApresentacaoGenero> {
     return this.servicePerfil.addApresentacaoGenero(req.body as EntidadeApresentacaoGenero, req.session.profileID);
+  }
+
+  @httpDelete('/:idApresentacaoGenero/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async deleteApresentacaoGenero(req: Request): Promise<void> {
+    await this.servicePerfil.deleteApresentacaoGenero(req.params.idApresentacaoGenero, req.session.profileID);
   }
 }
