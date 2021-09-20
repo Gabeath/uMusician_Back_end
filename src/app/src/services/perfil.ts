@@ -2,6 +2,7 @@ import { Between, In } from 'typeorm';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { CategoriaPerfil, IMusicoSearchParameter, Pagination } from '@core/models';
 import { inject, injectable } from 'inversify';
+import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
@@ -108,5 +109,32 @@ export class ServicePerfil implements IServicePerfil {
       biografia,
       updatedBy: musico.id,
     });
+  }
+
+  async addApresentacaoGenero(apresentacaoGenero: EntidadeApresentacaoGenero, idMusico: string):
+  Promise<EntidadeApresentacaoGenero> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+
+    const existe = await this.repositoryApresentacaoGenero.selectByWhere({
+      idMusico: musico.id,
+      idGeneroMusical: apresentacaoGenero.idGeneroMusical,
+    });
+
+    if (existe) {
+      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_JA_CADASTRADO);
+    }
+
+    const apresentacaoGeneroSaved = await this.repositoryApresentacaoGenero.create([{
+      idMusico: musico.id,
+      idGeneroMusical: apresentacaoGenero.idGeneroMusical,
+      ano: apresentacaoGenero.ano,
+      createdBy: musico.id,
+    }]);
+
+    return apresentacaoGeneroSaved[0];
   }
 }

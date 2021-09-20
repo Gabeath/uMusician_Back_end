@@ -21,6 +21,7 @@ export const ErrorCodes = {
   DADOS_LOGIN_INVALIDOS: 'Dados de login inválidos',
   EVENTO_NAO_ENCONTRADO: 'Evento não encontrado',
   EVENTO_NAO_INICIADO: 'O evento deste serviço ainda não foi iniciado',
+  GENERO_MUSICAL_JA_CADASTRADO: 'Gênero musical já cadastrado',
   GENERO_MUSICAL_NAO_ENCONTRADO: 'Gênero musical não encontrado',
   LIMITE_CANCELAMENTO_ESTOURADO: 'Já passou o tempo limite para você cancelar esse serviço',
   PERFIL_NAO_ENCONTRADO: 'Perfil não encontrado',

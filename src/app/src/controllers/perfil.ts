@@ -2,11 +2,13 @@ import {
   BaseHttpController,
   controller,
   httpGet,
+  httpPost,
   httpPut,
   interfaces
 } from 'inversify-express-utils';
 import { IMusicoSearchParameter, Pagination } from '@core/models/pagination';
 import { CategoriaPerfil } from '@core/models';
+import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import { Request } from 'express';
@@ -54,5 +56,10 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
   private async updateBiografiaById(req: Request): Promise<void> {
     const biografia = req.body.biografia as string;
     await this.servicePerfil.updateBiografiaById(req.session.profileID, biografia);
+  }
+
+  @httpPost('/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async addApresentacaoGenero(req: Request): Promise<EntidadeApresentacaoGenero> {
+    return this.servicePerfil.addApresentacaoGenero(req.body as EntidadeApresentacaoGenero, req.session.profileID);
   }
 }
