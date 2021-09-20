@@ -2,6 +2,9 @@ import { Between, In } from 'typeorm';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { CategoriaPerfil, IMusicoSearchParameter, Pagination } from '@core/models';
 import { inject, injectable } from 'inversify';
+import { DateTime } from 'luxon';
+import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
+import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
@@ -107,6 +110,142 @@ export class ServicePerfil implements IServicePerfil {
     await this.repositoryPerfil.updateById(musico.id, {
       biografia,
       updatedBy: musico.id,
+    });
+  }
+
+  async addApresentacaoGenero(apresentacaoGenero: EntidadeApresentacaoGenero, idMusico: string):
+  Promise<EntidadeApresentacaoGenero> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+
+    const existe = await this.repositoryApresentacaoGenero.selectByWhere({
+      idMusico: musico.id,
+      idGeneroMusical: apresentacaoGenero.idGeneroMusical,
+    });
+
+    if (existe) {
+      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_JA_CADASTRADO);
+    }
+
+    const apresentacaoGeneroSaved = await this.repositoryApresentacaoGenero.create([{
+      idMusico: musico.id,
+      idGeneroMusical: apresentacaoGenero.idGeneroMusical,
+      ano: apresentacaoGenero.ano,
+      createdBy: musico.id,
+    }]);
+
+    return apresentacaoGeneroSaved[0];
+  }
+
+  async updateApresentacaoGenero(
+    idApresentacaoGenero: string,
+    apresentacaoGenero: EntidadeApresentacaoGenero,
+    idMusico: string,
+  ): Promise<void> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+    const apresentacaoGeneroSaved = await this.repositoryApresentacaoGenero.selectById(idApresentacaoGenero);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+    if (!apresentacaoGeneroSaved) {
+      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_NAO_ENCONTRADO);
+    }
+    
+    await this.repositoryApresentacaoGenero.updateById(apresentacaoGeneroSaved.id, {
+      ano: apresentacaoGenero.ano,
+      updatedBy: musico.id,
+    });
+  }
+
+  async deleteApresentacaoGenero(idApresentacaoGenero: string, idMusico: string): Promise<void> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+    const apresentacaoGenero = await this.repositoryApresentacaoGenero.selectById(idApresentacaoGenero);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+    if (!apresentacaoGenero) {
+      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_NAO_ENCONTRADO);
+    }
+    
+    await this.repositoryApresentacaoGenero.updateById(apresentacaoGenero.id, {
+      updatedBy: musico.id,
+      deletedBy: musico.id,
+      deletedAt: DateTime.local().toISO(),
+    });
+  }
+
+  async addApresentacaoEspecialidade(apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade, idMusico: string):
+  Promise<EntidadeApresentacaoEspecialidade> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+
+    const existe = await this.repositoryApresentacaoEspecialidade.selectByWhere({
+      idMusico: musico.id,
+      idEspecialidade: apresentacaoEspecialidade.idEspecialidade,
+    });
+
+    if (existe) {
+      throw new BusinessError(ErrorCodes.ESPECIALIDADE_JA_CADASTRADA);
+    }
+
+    const apresentacaoEspecialidadeSaved = await this.repositoryApresentacaoEspecialidade.create([{
+      idMusico: musico.id,
+      idEspecialidade: apresentacaoEspecialidade.idEspecialidade,
+      ano: apresentacaoEspecialidade.ano,
+      valorHora: apresentacaoEspecialidade.valorHora,
+      createdBy: musico.id,
+    }]);
+
+    return apresentacaoEspecialidadeSaved[0];
+  }
+
+  async updateApresentacaoEspecialidade(
+    idApresentacaoEspecialidade: string,
+    apresentacaoEspecialidade: EntidadeApresentacaoEspecialidade,
+    idMusico: string,
+  ): Promise<void> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+    const apresentacaoEspecialidadeSaved = await this.repositoryApresentacaoEspecialidade
+      .selectById(idApresentacaoEspecialidade);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+    if (!apresentacaoEspecialidadeSaved) {
+      throw new BusinessError(ErrorCodes.ESPECIALIDADE_NAO_ENCONTRADA);
+    }
+    
+    await this.repositoryApresentacaoEspecialidade.updateById(apresentacaoEspecialidadeSaved.id, {
+      ano: apresentacaoEspecialidade.ano,
+      valorHora: apresentacaoEspecialidade.valorHora,
+      updatedBy: musico.id,
+    });
+  }
+
+  async deleteApresentacaoEspecialidade(idApresentacaoEspecialidade: string, idMusico: string): Promise<void> {
+    const musico = await this.repositoryPerfil.selectById(idMusico);
+    const apresentacaoEspecialidade = await this.repositoryApresentacaoEspecialidade
+      .selectById(idApresentacaoEspecialidade);
+
+    if (!musico) {
+      throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
+    }
+    if (!apresentacaoEspecialidade) {
+      throw new BusinessError(ErrorCodes.ESPECIALIDADE_NAO_ENCONTRADA);
+    }
+    
+    await this.repositoryApresentacaoEspecialidade.updateById(apresentacaoEspecialidade.id, {
+      updatedBy: musico.id,
+      deletedBy: musico.id,
+      deletedAt: DateTime.local().toISO(),
     });
   }
 }
