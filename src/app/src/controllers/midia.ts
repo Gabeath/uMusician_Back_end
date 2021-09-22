@@ -18,6 +18,8 @@ import { compressImage } from '@app/utils/comprimirImagem';
 import { inject } from 'inversify';
 import isPerfilPermitido from '@app/middlewares/perfil';
 import reqFormData from '@app/middlewares/reqFormData';
+import generateThumbnail from '@app/utils/thumbnail';
+import path from 'path';
 
 @controller('/midia', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
 export class MidiaController extends BaseHttpController implements interfaces.Controller {
@@ -33,8 +35,9 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
     const ano = req.body.ano as string;
     const titulo = req.body.titulo as string;
     const tipo = parseInt(req.body.tipo as string, 10);
-    const thumbnailUrl = req.body.thumbnailUrl as string;
+    
     let pastaDestino = '';
+    let thumbUrl = '';
 
     try {
 
@@ -45,8 +48,13 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
         const newFileName = await compressImage(req.file);
         req.file.filename = newFileName;
       }
-      else if (tipo === TipoMídia.VÍDEO)
+      else if (tipo === TipoMídia.VÍDEO){
         pastaDestino = 'videos';
+        const videoPath = path.resolve(__dirname, '..', '..', '..', '..', 'temp', req.file.filename);
+        generateThumbnail(videoPath);
+        const { url } = await uparArquivoNaNuvem('thumbnail.jpeg', `portfolio/${pastaDestino}`);
+        thumbUrl = url;
+      }
       else if (tipo === TipoMídia.ÁUDIO)
         pastaDestino = 'audios';
       else
@@ -59,13 +67,16 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
         titulo,
         tipo,
         url,
-        thumbnailUrl,
         idMusico: req.session.profileID,
+        thumbnailUrl: thumbUrl !== '' ? thumbUrl : null
       };
+
+      excluirArquivoTemporario('thumb.jpeg');
 
       return await this.serviceMidia.createMidia(midia);
     } catch (error) {
       excluirArquivoTemporario(req.file.filename);
+      excluirArquivoTemporario('thumbnail.jpeg');
     
       if (error instanceof BusinessError)
         throw error;
