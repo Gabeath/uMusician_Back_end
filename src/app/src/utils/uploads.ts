@@ -47,7 +47,8 @@ const excluirArquivoDaNuvem = async(urlArquivo: string) : Promise<boolean> =>{
 
 const excluirArquivoTemporario = (nomeArquivo:string) : void =>{
   fs.unlink(path.resolve(__dirname, '..', '..', '..', '..', 'temp', nomeArquivo), (err) => {
-    console.log(err);
+    if(err)
+      console.log(err);
   });
 };
 

@@ -6,7 +6,7 @@ import path from 'path';
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-async function generateThumbnail(videoPath: string): Promise<void>{
+async function generateThumbnail(videoPath: string, thumbnailName: string): Promise<void>{
   const timeScreenShot = await getVideoDuration(videoPath) / 2;
 
   return new Promise((resolve, reject) => {
@@ -15,7 +15,7 @@ async function generateThumbnail(videoPath: string): Promise<void>{
       .takeScreenshots({
         count: 1,
         timemarks: [ timeScreenShot.toString() ],
-        filename: 'thumbnail.jpeg'
+        filename: thumbnailName
       }, destinationFolder);
     video.on('end', () => {
       resolve();
