@@ -15,11 +15,12 @@ import { IServiceMidia } from '@app/services/interfaces/midia';
 import TYPES from '@core/types';
 import autenticado from '@app/middlewares/autenticado';
 import { compressImage } from '@app/utils/comprimirImagem';
+import generateThumbnail from '@app/utils/thumbnail';
 import { inject } from 'inversify';
 import isPerfilPermitido from '@app/middlewares/perfil';
-import reqFormData from '@app/middlewares/reqFormData';
-import generateThumbnail from '@app/utils/thumbnail';
 import path from 'path';
+import reqFormData from '@app/middlewares/reqFormData';
+
 
 @controller('/midia', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
 export class MidiaController extends BaseHttpController implements interfaces.Controller {
@@ -51,7 +52,7 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
       else if (tipo === TipoMídia.VÍDEO){
         pastaDestino = 'videos';
         const videoPath = path.resolve(__dirname, '..', '..', '..', '..', 'temp', req.file.filename);
-        generateThumbnail(videoPath);
+        await generateThumbnail(videoPath);
         const { url } = await uparArquivoNaNuvem('thumbnail.jpeg', `portfolio/${pastaDestino}`);
         thumbUrl = url;
       }
@@ -70,8 +71,6 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
         idMusico: req.session.profileID,
         thumbnailUrl: thumbUrl !== '' ? thumbUrl : null
       };
-
-      excluirArquivoTemporario('thumb.jpeg');
 
       return await this.serviceMidia.createMidia(midia);
     } catch (error) {
