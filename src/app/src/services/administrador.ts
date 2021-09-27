@@ -42,6 +42,15 @@ export class ServiceAdmin implements IServiceAdmin {
     if (!admin || admin.senha !== senhaCriptografada) { throw new BusinessError(ErrorCodes.DADOS_LOGIN_INVALIDOS); }
 
     admin.senha = undefined;
+
+    return admin;
+  }
+
+  async buscarAdminById(id: string): Promise<EntidadeAdmin> {
+    const admin = await this.repositoryAdmin.selectById(id);
+
+    admin.senha = undefined;
+
     return admin;
   }
 }
