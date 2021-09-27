@@ -23,6 +23,7 @@ import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
+import { IServiceAdmin } from '@app/services/interfaces/administrador';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
 import { IServiceConfirmacaoPresenca } from '@app/services/interfaces/confirmacao-presenca';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
@@ -49,6 +50,7 @@ import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
 import { RepositoryUsuario } from '@core/repositories/usuario';
+import { ServiceAdmin } from '@app/services/administrador';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
 import { ServiceConfirmacaoPresenca } from '@app/services/confirmacao-presenca';
 import { ServiceEspecialidade } from '@app/services/especialidade';
@@ -107,6 +109,8 @@ export class Server {
   configDependencies(): void {
     container.bind<IRepositoryAdmin>(TYPES.RepositoryAdmin)
       .to(RepositoryAdmin);
+    container.bind<IServiceAdmin>(TYPES.ServiceAdmin)
+      .to(ServiceAdmin);
 
     container.bind<IRepositoryApresentacaoEspecialidade>(TYPES.RepositoryApresentacaoEspecialidade)
       .to(RepositoryApresentacaoEspecialidade);

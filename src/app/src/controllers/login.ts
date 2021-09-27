@@ -6,13 +6,13 @@ import {
 } from 'inversify-express-utils';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { Request, Response } from 'express';
+import { destroyCache, getCache, setCache } from '@app/utils/operacoesRedis';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import TYPES from '@core/types';
-import {generateJWT} from '../utils/tokens';
+import crypto from 'crypto';
+import { generateJWT } from '../utils/tokens';
 import { inject } from 'inversify';
-import { destroyCache, getCache, setCache } from '@app/utils/operacoesRedis';
 import { sendResetPasswordMail } from '@app/utils/envioDeEmail';
-import crypto from 'crypto'
 
 @controller('/login')
 export class LoginController extends BaseHttpController implements interfaces.Controller {
