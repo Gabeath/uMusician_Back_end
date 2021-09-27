@@ -40,6 +40,8 @@ export class ServiceAdmin implements IServiceAdmin {
     const senhaCriptografada = cryptToken(senha);
 
     if (!admin || admin.senha !== senhaCriptografada) { throw new BusinessError(ErrorCodes.DADOS_LOGIN_INVALIDOS); }
+
+    admin.senha = undefined;
     return admin;
   }
 }

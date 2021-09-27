@@ -7,6 +7,7 @@ import {
 import BusinessError, { ErrorCodes } from '@core/errors/business';
 import { Request, Response } from 'express';
 import { destroyCache, getCache, setCache } from '@app/utils/operacoesRedis';
+import { IServiceAdmin } from '@app/services/interfaces/administrador';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import TYPES from '@core/types';
 import crypto from 'crypto';
@@ -16,9 +17,16 @@ import { sendResetPasswordMail } from '@app/utils/envioDeEmail';
 
 @controller('/login')
 export class LoginController extends BaseHttpController implements interfaces.Controller {
+  private serviceAdmin: IServiceAdmin;
   private serviceUsuario: IServiceUsuario;
-  constructor(@inject(TYPES.ServiceUsuario) serviceUsuario: IServiceUsuario, ) {
+
+  constructor(
+  @inject(TYPES.ServiceAdmin) serviceAdmin: IServiceAdmin,
+    @inject(TYPES.ServiceUsuario) serviceUsuario: IServiceUsuario,
+  ) {
     super();
+
+    this.serviceAdmin = serviceAdmin;
     this.serviceUsuario = serviceUsuario;
   }
 
@@ -50,6 +58,32 @@ export class LoginController extends BaseHttpController implements interfaces.Co
       usuario.senha = undefined;
 
       return res.json(usuario);
+    } catch (err) {
+      return res.status(400).json({
+        'message': err.message as string,
+      });
+    }
+  }
+
+  @httpPost('/admin')
+  private async loginAdmin(req: Request, res: Response): Promise<Response>{
+    const {
+      email,
+      senha,
+    } = req.body as {
+      email: string,
+      senha: string,
+    };
+
+    if(!email || !senha) { throw new BusinessError(ErrorCodes.ARGUMENTOS_AUSENTES); }
+    
+    try {
+      const admin = await this.serviceAdmin.buscarAdmin(email, senha);
+      const token = generateJWT({ userID: admin.id });
+
+      res.setHeader('authorization', 'Bearer '+ token);
+
+      return res.json(admin);
     } catch (err) {
       return res.status(400).json({
         'message': err.message as string,
