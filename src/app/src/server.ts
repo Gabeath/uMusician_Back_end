@@ -8,6 +8,7 @@ import { NextFunction, Request, Response } from 'express';
 import BusinessError from '@core/errors/business';
 import { Container } from 'inversify';
 import ForbiddenError from '@core/errors/forbidden';
+import { IRepositoryAdmin } from '@core/repositories/interfaces/administrador';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
@@ -33,6 +34,7 @@ import { IServiceServico } from './services/interfaces/servico';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import IntegrationError from '@core/errors/integration';
 import { InversifyExpressServer } from 'inversify-express-utils';
+import { RepositoryAdmin } from '@core/repositories/administrador';
 import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresentacao-especialidade';
 import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
@@ -103,6 +105,9 @@ export class Server {
   }
 
   configDependencies(): void {
+    container.bind<IRepositoryAdmin>(TYPES.RepositoryAdmin)
+      .to(RepositoryAdmin);
+
     container.bind<IRepositoryApresentacaoEspecialidade>(TYPES.RepositoryApresentacaoEspecialidade)
       .to(RepositoryApresentacaoEspecialidade);
 
