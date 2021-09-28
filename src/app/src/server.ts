@@ -8,6 +8,7 @@ import { NextFunction, Request, Response } from 'express';
 import BusinessError from '@core/errors/business';
 import { Container } from 'inversify';
 import ForbiddenError from '@core/errors/forbidden';
+import { IRepositoryAdmin } from '@core/repositories/interfaces/administrador';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
@@ -22,6 +23,7 @@ import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
+import { IServiceAdmin } from '@app/services/interfaces/administrador';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
 import { IServiceConfirmacaoPresenca } from '@app/services/interfaces/confirmacao-presenca';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
@@ -33,6 +35,7 @@ import { IServiceServico } from './services/interfaces/servico';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import IntegrationError from '@core/errors/integration';
 import { InversifyExpressServer } from 'inversify-express-utils';
+import { RepositoryAdmin } from '@core/repositories/administrador';
 import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresentacao-especialidade';
 import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
@@ -47,6 +50,7 @@ import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
 import { RepositoryUsuario } from '@core/repositories/usuario';
+import { ServiceAdmin } from '@app/services/administrador';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
 import { ServiceConfirmacaoPresenca } from '@app/services/confirmacao-presenca';
 import { ServiceEspecialidade } from '@app/services/especialidade';
@@ -103,6 +107,11 @@ export class Server {
   }
 
   configDependencies(): void {
+    container.bind<IRepositoryAdmin>(TYPES.RepositoryAdmin)
+      .to(RepositoryAdmin);
+    container.bind<IServiceAdmin>(TYPES.ServiceAdmin)
+      .to(ServiceAdmin);
+
     container.bind<IRepositoryApresentacaoEspecialidade>(TYPES.RepositoryApresentacaoEspecialidade)
       .to(RepositoryApresentacaoEspecialidade);
 

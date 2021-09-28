@@ -1,4 +1,5 @@
 const TYPES = {
+  RepositoryAdmin: 'RepositoryAdmin',
   RepositoryApresentacaoEspecialidade: 'RepositoryApresentacaoEspecialidade',
   RepositoryAvaliacao: 'RepositoryAvaliacao',
   RepositoryConfirmacaoPresenca: 'RepositoryConfirmacaoPresenca',
@@ -14,6 +15,7 @@ const TYPES = {
   RepositoryServico: 'RepositoryServico',
   RepositoryUsuario: 'RepositoryUsuario',
 
+  ServiceAdmin: 'ServiceAdmin',
   ServiceAvaliacao: 'ServiceAvaliacao',
   ServiceConfirmacaoPresenca: 'ServiceConfirmacaoPresenca',
   ServiceEspecialidade: 'ServiceEspecialidade',
