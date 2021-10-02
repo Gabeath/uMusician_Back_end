@@ -13,4 +13,8 @@ export class RepositoryEspecialidade implements IRepositoryEspecialidade {
       order: { nome: 'ASC' },
     });
   }
+
+  async selectById(id: string): Promise<EntidadeEspecialidade> {
+    return this.repositoryEspecialidade.findOne({ where: { id } });
+  }
 }

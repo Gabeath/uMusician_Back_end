@@ -13,4 +13,8 @@ export class RepositoryGeneroMusical implements IRepositoryGeneroMusical {
       order: { nome: 'ASC' },
     });
   }
+
+  async selectById(id: string): Promise<EntidadeGeneroMusical> {
+    return this.repositoryGeneroMusical.findOne({ where: { id } });
+  }
 }
