@@ -180,7 +180,9 @@ export class Server {
       app.use(helmet());
 
       // enable CORS - Cross Origin Resource Sharing
-      app.use(cors());
+      app.use(cors({
+        exposedHeaders: ['Authorization']
+      }));
 
       app.use((req: Request, res: Response, next: NextFunction): void => {
         req.headers['X-Request-ID'] = v4();
