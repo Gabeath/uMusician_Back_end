@@ -8,6 +8,8 @@ import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
+import { IRepositoryEspecialidade } from '@core/repositories/interfaces/especialidade';
+import { IRepositoryGeneroMusical } from '@core/repositories/interfaces/genero-musical';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IServiceAvaliacao } from './interfaces/avaliacao';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
@@ -19,6 +21,8 @@ export class ServicePerfil implements IServicePerfil {
   private repositoryPerfil: IRepositoryPerfil;
   private repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade;
   private repositoryApresentacaoGenero: IRepositoryApresentacaoGenero;
+  private repositoryEspecialidade: IRepositoryEspecialidade;
+  private repositoryGeneroMusical: IRepositoryGeneroMusical;
   private serviceAvaliacao: IServiceAvaliacao;
   private serviceServico: IServiceServico;
 
@@ -27,12 +31,16 @@ export class ServicePerfil implements IServicePerfil {
     @inject(TYPES.RepositoryApresentacaoEspecialidade)
     repositoryApresentacaoEspecialidade: IRepositoryApresentacaoEspecialidade,
     @inject(TYPES.RepositoryApresentacaoGenero) repositoryApresentacaoGenero: IRepositoryApresentacaoGenero,
+    @inject(TYPES.RepositoryEspecialidade) repositoryEspecialidade: IRepositoryEspecialidade,
+    @inject(TYPES.RepositoryGeneroMusical) repositoryGeneroMusical: IRepositoryGeneroMusical,
     @inject(TYPES.ServiceAvaliacao) serviceAvaliacao: IServiceAvaliacao,
     @inject(TYPES.ServiceServico) serviceServico: IServiceServico,
   ) {
     this.repositoryPerfil = repositoryPerfil;
     this.repositoryApresentacaoEspecialidade = repositoryApresentacaoEspecialidade;
     this.repositoryApresentacaoGenero = repositoryApresentacaoGenero;
+    this.repositoryEspecialidade = repositoryEspecialidade;
+    this.repositoryGeneroMusical = repositoryGeneroMusical;
     this.serviceAvaliacao = serviceAvaliacao;
     this.serviceServico = serviceServico;
   }
@@ -137,7 +145,12 @@ export class ServicePerfil implements IServicePerfil {
       createdBy: musico.id,
     }]);
 
-    return apresentacaoGeneroSaved[0];
+    const generoMusical = await this.repositoryGeneroMusical.selectById(apresentacaoGenero.idGeneroMusical);
+
+    return {
+      ...apresentacaoGeneroSaved[0],
+      generoMusical,
+    };
   }
 
   async updateApresentacaoGenero(
@@ -204,7 +217,12 @@ export class ServicePerfil implements IServicePerfil {
       createdBy: musico.id,
     }]);
 
-    return apresentacaoEspecialidadeSaved[0];
+    const especialidade = await this.repositoryEspecialidade.selectById(apresentacaoEspecialidade.idEspecialidade);
+
+    return {
+      ...apresentacaoEspecialidadeSaved[0],
+      especialidade,
+    };
   }
 
   async updateApresentacaoEspecialidade(
