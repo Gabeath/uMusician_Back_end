@@ -98,7 +98,7 @@ export class ServiceUsuario implements IServiceUsuario {
     return usuarioSaved;
   }
 
-  async buscarUsuario(email: string, senha: string, tipoPerfil: number): Promise<EntidadeUsuario>{
+  async buscarUsuario(email: string, senha: string, tipoPerfil: number): Promise<EntidadeUsuario> {
     const usuario = await this.repositoryUsuario.selectByEmail(email);
     const senhaCriptografada = cryptToken(senha);
 

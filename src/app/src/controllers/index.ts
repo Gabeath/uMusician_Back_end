@@ -1,3 +1,4 @@
+export * from '@app/controllers/administrador';
 export * from '@app/controllers/avaliacao';
 export * from '@app/controllers/confirmacao-presenca';
 export * from '@app/controllers/especialidade';
