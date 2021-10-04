@@ -22,6 +22,7 @@ import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-s
 import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
+import { IRepositorySolicitacao } from '@core/repositories/interfaces/solicitacao';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAdmin } from '@app/services/interfaces/administrador';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
@@ -49,6 +50,7 @@ import { RepositoryGeneroServico } from '@core/repositories/genero-servico';
 import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
+import { RepositorySolicitacao } from '@core/repositories/solicitacao';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceAdmin } from '@app/services/administrador';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
@@ -166,6 +168,9 @@ export class Server {
       .to(RepositoryServico);
     container.bind<IServiceServico>(TYPES.ServiceServico)
       .to(ServiceServico);
+
+    container.bind<IRepositorySolicitacao>(TYPES.RepositorySolicitacao)
+      .to(RepositorySolicitacao);
         
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
       .to(RepositoryUsuario);

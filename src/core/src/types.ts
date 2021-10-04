@@ -13,6 +13,7 @@ const TYPES = {
   RepositoryMidia: 'RepositoryMidia',
   RepositoryPerfil: 'RepositoryPerfil',
   RepositoryServico: 'RepositoryServico',
+  RepositorySolicitacao: 'RepositorySolicitacao',
   RepositoryUsuario: 'RepositoryUsuario',
 
   ServiceAdmin: 'ServiceAdmin',
