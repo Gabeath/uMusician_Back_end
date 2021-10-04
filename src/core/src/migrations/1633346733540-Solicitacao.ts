@@ -31,11 +31,11 @@ export class Solicitacao1633346733540 implements MigrationInterface {
             type: 'int4',
             isNullable: true,
           }, {
-            name: 'dataNascimento',
+            name: 'dataInclusao',
             type: 'date',
             isNullable: true,
           }, {
-            name: 'idUsuario',
+            name: 'idSolicitante',
             type: 'uuid',
             isNullable: true,
           }, {
@@ -66,7 +66,7 @@ export class Solicitacao1633346733540 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
-            columnNames: ['idUsuario'],
+            columnNames: ['idSolicitante'],
             referencedColumnNames: ['id'],
             referencedTableName: 'usuario',
           }),
