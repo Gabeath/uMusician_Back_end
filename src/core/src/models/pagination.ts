@@ -1,4 +1,4 @@
-import { SituaçãoServiço } from '.';
+import { SituaçãoServiço, SituaçãoSolicitacao } from '.';
 
 export interface Pagination<T> {
   rows: T[];
@@ -32,4 +32,8 @@ export interface IServicoSearchParameter extends SearchParameterBase {
 
 export interface IEventoSearchParameter extends SearchParameterBase {
   situacoesDosServicos: SituaçãoServiço[];
+}
+
+export interface ISolicitacaoSearchParameter extends SearchParameterBase {
+  situacoesDasSolicitacoes: SituaçãoSolicitacao[];
 }

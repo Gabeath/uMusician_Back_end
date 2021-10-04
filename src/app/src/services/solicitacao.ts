@@ -1,5 +1,5 @@
 import BusinessError, { ErrorCodes } from  '@core/errors/business';
-import { SituaçãoSolicitacao, TipoSolicitacao } from '@core/models';
+import { Pagination, SearchParameterBase, SituaçãoSolicitacao, TipoSolicitacao } from '@core/models';
 import { inject, injectable } from 'inversify';
 import { DateTime } from 'luxon';
 import EntidadeSolicitacao from '@core/entities/solicitacao';
@@ -28,6 +28,15 @@ export class ServiceSolicitacao implements IServiceSolicitacao {
       situacao: SituaçãoSolicitacao.PENDENTE,
       idSolicitante,
       dataInclusao: DateTime.local().toFormat('yyyy-LL-dd'),
+    });
+  }
+
+  async getSolicitacoesPendentes(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeSolicitacao>> {
+    return this.repositorySolicitacao.selectBySearchParameter({
+      ...searchParameter,
+      situacoesDasSolicitacoes: [ SituaçãoSolicitacao.PENDENTE ],
+      orderBy: 'dataInclusao',
+      isDESC: false,
     });
   }
 }
