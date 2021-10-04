@@ -6,6 +6,7 @@ import {
 } from 'typeorm';
 import Base from './base';
 import EntidadePerfil from './perfil';
+import EntidadeSolicitacao from './solicitacao';
 
 @Entity('usuario')
 export default class EntidadeUsuario extends Base {
@@ -35,4 +36,10 @@ export default class EntidadeUsuario extends Base {
     (perfil: EntidadePerfil): EntidadeUsuario => perfil.usuario,
   )
   perfis?: EntidadePerfil[];
+
+  @OneToMany(
+    (): ObjectType<EntidadeSolicitacao> => EntidadeSolicitacao,
+    (solicitacao: EntidadeSolicitacao): EntidadeUsuario => solicitacao.usuario,
+  )
+  solicitacoes?: EntidadeSolicitacao[];
 }

@@ -22,6 +22,7 @@ import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-s
 import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
+import { IRepositorySolicitacao } from '@core/repositories/interfaces/solicitacao';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
 import { IServiceAdmin } from '@app/services/interfaces/administrador';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
@@ -32,6 +33,7 @@ import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { IServiceMidia } from '@app/services/interfaces/midia';
 import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceServico } from './services/interfaces/servico';
+import { IServiceSolicitacao } from './services/interfaces/solicitacao';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import IntegrationError from '@core/errors/integration';
 import { InversifyExpressServer } from 'inversify-express-utils';
@@ -49,6 +51,7 @@ import { RepositoryGeneroServico } from '@core/repositories/genero-servico';
 import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
+import { RepositorySolicitacao } from '@core/repositories/solicitacao';
 import { RepositoryUsuario } from '@core/repositories/usuario';
 import { ServiceAdmin } from '@app/services/administrador';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
@@ -59,6 +62,7 @@ import { ServiceGeneroMusical } from '@app/services/generoMusical';
 import { ServiceMidia } from '@app/services/midia';
 import { ServicePerfil } from './services/perfil';
 import { ServiceServico } from './services/servico';
+import { ServiceSolicitacao } from './services/solicitacao';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
 import UnauthorizedError from '@core/errors/unauthorized';
@@ -166,6 +170,11 @@ export class Server {
       .to(RepositoryServico);
     container.bind<IServiceServico>(TYPES.ServiceServico)
       .to(ServiceServico);
+
+    container.bind<IRepositorySolicitacao>(TYPES.RepositorySolicitacao)
+      .to(RepositorySolicitacao);
+    container.bind<IServiceSolicitacao>(TYPES.ServiceSolicitacao)
+      .to(ServiceSolicitacao);
         
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
       .to(RepositoryUsuario);
