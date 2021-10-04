@@ -33,6 +33,7 @@ import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { IServiceMidia } from '@app/services/interfaces/midia';
 import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceServico } from './services/interfaces/servico';
+import { IServiceSolicitacao } from './services/interfaces/solicitacao';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import IntegrationError from '@core/errors/integration';
 import { InversifyExpressServer } from 'inversify-express-utils';
@@ -61,6 +62,7 @@ import { ServiceGeneroMusical } from '@app/services/generoMusical';
 import { ServiceMidia } from '@app/services/midia';
 import { ServicePerfil } from './services/perfil';
 import { ServiceServico } from './services/servico';
+import { ServiceSolicitacao } from './services/solicitacao';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
 import UnauthorizedError from '@core/errors/unauthorized';
@@ -171,6 +173,8 @@ export class Server {
 
     container.bind<IRepositorySolicitacao>(TYPES.RepositorySolicitacao)
       .to(RepositorySolicitacao);
+    container.bind<IServiceSolicitacao>(TYPES.ServiceSolicitacao)
+      .to(ServiceSolicitacao);
         
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
       .to(RepositoryUsuario);

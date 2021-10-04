@@ -25,6 +25,7 @@ const TYPES = {
   ServiceMidia: 'ServiceMidia',
   ServicePerfil: 'ServicePerfil',
   ServiceServico: 'ServiceServico',
+  ServiceSolicitacao: 'ServiceSolicitacao',
   ServiceUsuario: 'ServiceUsuario',
 };
 
