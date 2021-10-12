@@ -8,7 +8,7 @@ import { injectable } from 'inversify';
 export class RepositorySolicitacao implements IRepositorySolicitacao {
   private repositorySolicitacao: Repository<EntidadeSolicitacao> = getRepository(EntidadeSolicitacao);
 
-  async create(solicitacao: EntidadeSolicitacao): Promise<EntidadeSolicitacao> {
+  async save(solicitacao: EntidadeSolicitacao): Promise<EntidadeSolicitacao> {
     return this.repositorySolicitacao.save(solicitacao);
   }
 

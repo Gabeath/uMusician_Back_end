@@ -1,7 +1,6 @@
 import BusinessError, { ErrorCodes } from  '@core/errors/business';
 import { Pagination, SearchParameterBase, SituaçãoSolicitacao, TipoSolicitacao } from '@core/models';
 import { inject, injectable } from 'inversify';
-import { DateTime } from 'luxon';
 import EntidadeSolicitacao from '@core/entities/solicitacao';
 import { IRepositorySolicitacao } from '@core/repositories/interfaces/solicitacao';
 import { IServiceSolicitacao } from '@app/services/interfaces/solicitacao';
@@ -22,12 +21,11 @@ export class ServiceSolicitacao implements IServiceSolicitacao {
       throw new BusinessError(ErrorCodes.ARGUMENTOS_INVALIDOS);
     }
 
-    return this.repositorySolicitacao.create({
+    return this.repositorySolicitacao.save({
       nome: solicitacao.nome,
       tipo: solicitacao.tipo,
       situacao: SituaçãoSolicitacao.PENDENTE,
-      idSolicitante,
-      dataInclusao: DateTime.local().toFormat('yyyy-LL-dd'),
+      idSolicitante
     });
   }
 

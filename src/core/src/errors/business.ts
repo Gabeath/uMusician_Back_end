@@ -32,5 +32,8 @@ export const ErrorCodes = {
   SERVICO_SEM_CONFIRMACAO_CRIADA: 'O músico deste serviço ainda não gerou sua confirmação',
   USUARIO_JA_CADASTRADO: 'Usuário já cadastrado',
   USUARIO_NAO_ENCONTRADO: 'Usuário não encontrado',
-  MIDIA_NAO_ENCONTRADA: 'Mídia não encontrada'
+  MIDIA_NAO_ENCONTRADA: 'Mídia não encontrada',
+  SOLICITACAO_NAO_ENCONTRADA: 'Solicitação não encontrada',
+  SOLICITACAO_NAO_PENDENTE: 'A solicitação informada não está pendente de aceite ou recusa',
+  SOLICITACAO_GENERO_INVALIDA: 'O tipo da solicitação informada não corresponde a um gênero musical'
 };
