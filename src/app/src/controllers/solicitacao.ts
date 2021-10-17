@@ -3,6 +3,7 @@ import {
   controller,
   httpGet,
   httpPost,
+  httpPut,
   interfaces,
 } from 'inversify-express-utils';
 import { Pagination, TipoSolicitacao } from '@core/models';
@@ -26,18 +27,23 @@ export class ControllerSolicitacao extends BaseHttpController implements interfa
     this.serviceSolicitacao = serviceSolicitacao;
   }
 
+  @httpGet('/pendentes', autenticado)
+  private async getSolicitacoesPendentes(req: Request): Promise<Pagination<EntidadeSolicitacao>> {
+    return this.serviceSolicitacao.getSolicitacoesPendentes({
+      ...controllerPaginationHelper(req.query),
+    });
+  }
+
+  @httpPut('/:id/rejeitar', autenticado)
+  private async rejeitarSolicitacao(req: Request): Promise<void> {
+    await this.serviceSolicitacao.rejeitarSolicitacao(req.params.id, req.session.userID);
+  }
+
   @httpPost('/', autenticado)
   private async criarAdmin(req: Request): Promise<EntidadeSolicitacao> {
     return this.serviceSolicitacao.criarSolicitacao({
       nome: req.body.nome as string,
       tipo: req.body.tipo as TipoSolicitacao,
     }, req.session.userID);
-  }
-
-  @httpGet('/pendentes', autenticado)
-  private async getSolicitacoesPendentes(req: Request): Promise<Pagination<EntidadeSolicitacao>> {
-    return this.serviceSolicitacao.getSolicitacoesPendentes({
-      ...controllerPaginationHelper(req.query),
-    });
   }
 }

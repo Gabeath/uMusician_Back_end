@@ -33,8 +33,19 @@ export class ServiceSolicitacao implements IServiceSolicitacao {
     return this.repositorySolicitacao.selectBySearchParameter({
       ...searchParameter,
       situacoesDasSolicitacoes: [ SituaçãoSolicitacao.PENDENTE ],
-      orderBy: 'dataInclusao',
+      orderBy: 'createdAt',
       isDESC: false,
+    });
+  }
+
+  async rejeitarSolicitacao(idSolicitacao: string, idAdmin: string): Promise<void> {
+    const solicitacao = await this.repositorySolicitacao.selectById(idSolicitacao);
+
+    if (!solicitacao) { throw new BusinessError(ErrorCodes.SOLICITACAO_NAO_ENCONTRADA); }
+
+    await this.repositorySolicitacao.updateById(solicitacao.id, {
+      situacao: SituaçãoSolicitacao.REJEITADA,
+      updatedBy: idAdmin,
     });
   }
 }

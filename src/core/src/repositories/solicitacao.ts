@@ -1,7 +1,9 @@
 import { ISolicitacaoSearchParameter, Pagination } from '@core/models';
 import { In, Repository, getRepository } from 'typeorm';
+import { DateTime } from 'luxon';
 import EntidadeSolicitacao from '@core/entities/solicitacao';
 import { IRepositorySolicitacao } from './interfaces/solicitacao';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -34,5 +36,11 @@ export class RepositorySolicitacao implements IRepositorySolicitacao {
       rows,
       count
     };
+  }
+
+  async updateById(id: string, solicitacao: QueryDeepPartialEntity<EntidadeSolicitacao>): Promise<void> {
+    solicitacao.updatedAt = DateTime.local().toISO();
+
+    await this.repositorySolicitacao.update(id, solicitacao);
   }
 }
