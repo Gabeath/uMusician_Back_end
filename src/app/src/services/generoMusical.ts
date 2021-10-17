@@ -1,5 +1,5 @@
 import BusinessError, { ErrorCodes } from '@core/errors/business';
-import { SituaçãoSolicitacao, TipoSolicitacao } from '@core/models';
+import { Pagination, SearchParameterBase, SituaçãoSolicitacao, TipoSolicitacao } from '@core/models';
 import { inject, injectable } from 'inversify';
 import { DateTime } from 'luxon';
 import EntidadeGeneroMusical from '@core/entities/genero-musical';
@@ -22,8 +22,12 @@ export class ServiceGeneroMusical implements IServiceGeneroMusical {
     this.repositorySolicitacao = repositorySolicitacao;
   }
 
-  async getAll(): Promise<EntidadeGeneroMusical[]> {
+  async getSelectable(): Promise<EntidadeGeneroMusical[]> {
     return this.repositoryGeneroMusical.selectAll();
+  }
+
+  async getAll(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeGeneroMusical>> {
+    return this.repositoryGeneroMusical.selectAllWithPagination(searchParameter);
   }
 
   async addGeneroMusical(nome: string, popularidade: number, idSolicitacao: string, filename: string):
