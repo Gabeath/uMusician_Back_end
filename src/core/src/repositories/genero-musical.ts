@@ -17,4 +17,8 @@ export class RepositoryGeneroMusical implements IRepositoryGeneroMusical {
   async selectById(id: string): Promise<EntidadeGeneroMusical> {
     return this.repositoryGeneroMusical.findOne({ where: { id } });
   }
+
+  async addGeneroMusical(genero: EntidadeGeneroMusical): Promise<EntidadeGeneroMusical> {
+    return this.repositoryGeneroMusical.save(genero);
+  }
 }
