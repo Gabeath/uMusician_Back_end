@@ -132,32 +132,7 @@ export class ServiceEvento implements IServiceEvento {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    const eventos = await this.repositoryEvento.selectEventosContratante(contratante.id, searchParameter);
-
-    const listaIdMusico: string[] = [];
-    eventos.forEach((evento) => {
-      const ids = evento.servicos.map(o => o.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
-      listaIdMusico.push(...ids);
-    });
-    
-    const musicos = await this.repositoryPerfil.selectAllByListaIdWithUsuario(listaIdMusico);
-
-    const eventosContratante: EntidadeEvento[] = [];
-    eventos.forEach((evento) => {
-      const servicos = evento.servicos.map((servico) => {
-        const musico = musicos.find(o => o.id === servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
-        musico.usuario.senha = undefined;
-        servico.musico = musico;
-        servico.especialidadesServico = undefined;
-        return servico;
-      });
-      evento.servicos = servicos;
-
-      eventosContratante.push(evento);
-    });
-    
-
-    return eventosContratante;
+    return this.repositoryEvento.selectEventosContratante(contratante.id, searchParameter);
   }
 
   async getDetalhesEvento(id: string): Promise<EntidadeEvento> {

@@ -28,6 +28,7 @@ export class RepositoryApresentacaoEspecialidade implements IRepositoryApresenta
     return this.repositoryApresentacaoEspecialidade.find({
       where: { idMusico },
       relations: ['especialidadesServico'],
+      withDeleted: true,
     });
   }
 
