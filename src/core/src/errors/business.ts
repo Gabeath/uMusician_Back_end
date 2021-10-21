@@ -35,5 +35,6 @@ export const ErrorCodes = {
   MIDIA_NAO_ENCONTRADA: 'Mídia não encontrada',
   SOLICITACAO_NAO_ENCONTRADA: 'Solicitação não encontrada',
   SOLICITACAO_NAO_PENDENTE: 'A solicitação informada não está pendente de aceite ou recusa',
-  SOLICITACAO_GENERO_INVALIDA: 'O tipo da solicitação informada não corresponde a um gênero musical'
+  SOLICITACAO_GENERO_INVALIDA: 'O tipo da solicitação informada não corresponde a um gênero musical',
+  SOLICITACAO_ESPECIALIDADE_INVALIDA: 'O tipo da solicitação informada não corresponde a uma especialidade'
 };

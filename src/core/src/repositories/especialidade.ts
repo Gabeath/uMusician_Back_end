@@ -17,4 +17,8 @@ export class RepositoryEspecialidade implements IRepositoryEspecialidade {
   async selectById(id: string): Promise<EntidadeEspecialidade> {
     return this.repositoryEspecialidade.findOne({ where: { id } });
   }
+
+  async addEspecialidade(especialidade: EntidadeEspecialidade): Promise<EntidadeEspecialidade> {
+    return this.repositoryEspecialidade.save(especialidade);
+  }
 }
