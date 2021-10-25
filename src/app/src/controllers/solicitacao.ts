@@ -35,6 +35,13 @@ export class ControllerSolicitacao extends BaseHttpController implements interfa
     });
   }
 
+  @httpGet('/concluidas', autenticado, admin)
+  private async getSolicitacoesConcluidas(req: Request): Promise<Pagination<EntidadeSolicitacao>> {
+    return this.serviceSolicitacao.getSolicitacoesConcluidas({
+      ...controllerPaginationHelper(req.query),
+    });
+  }
+
   @httpPut('/:id/rejeitar', autenticado, admin)
   private async rejeitarSolicitacao(req: Request): Promise<void> {
     await this.serviceSolicitacao.rejeitarSolicitacao(req.params.id, req.session.userID);

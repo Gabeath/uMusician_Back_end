@@ -38,6 +38,15 @@ export class ServiceSolicitacao implements IServiceSolicitacao {
     });
   }
 
+  async getSolicitacoesConcluidas(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeSolicitacao>> {
+    return this.repositorySolicitacao.selectBySearchParameter({
+      ...searchParameter,
+      situacoesDasSolicitacoes: [ SituaçãoSolicitacao.ACEITA, SituaçãoSolicitacao.REJEITADA ],
+      orderBy: 'createdAt',
+      isDESC: false,
+    });
+  }
+
   async rejeitarSolicitacao(idSolicitacao: string, idAdmin: string): Promise<void> {
     const solicitacao = await this.repositorySolicitacao.selectById(idSolicitacao);
 
