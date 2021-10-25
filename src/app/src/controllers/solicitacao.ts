@@ -11,6 +11,7 @@ import EntidadeSolicitacao from '@core/entities/solicitacao';
 import { IServiceSolicitacao } from '@app/services/interfaces/solicitacao';
 import { Request } from 'express';
 import TYPES from '@core/types';
+import admin from '@app/middlewares/admin';
 import autenticado from '@app/middlewares/autenticado';
 import { controllerPaginationHelper } from '@app/utils/pagination';
 import { inject } from 'inversify';
@@ -27,20 +28,20 @@ export class ControllerSolicitacao extends BaseHttpController implements interfa
     this.serviceSolicitacao = serviceSolicitacao;
   }
 
-  @httpGet('/pendentes', autenticado)
+  @httpGet('/pendentes', autenticado, admin)
   private async getSolicitacoesPendentes(req: Request): Promise<Pagination<EntidadeSolicitacao>> {
     return this.serviceSolicitacao.getSolicitacoesPendentes({
       ...controllerPaginationHelper(req.query),
     });
   }
 
-  @httpPut('/:id/rejeitar', autenticado)
+  @httpPut('/:id/rejeitar', autenticado, admin)
   private async rejeitarSolicitacao(req: Request): Promise<void> {
     await this.serviceSolicitacao.rejeitarSolicitacao(req.params.id, req.session.userID);
   }
 
-  @httpPost('/', autenticado)
-  private async criarAdmin(req: Request): Promise<EntidadeSolicitacao> {
+  @httpPost('/', autenticado, admin)
+  private async criarSolicitacao(req: Request): Promise<EntidadeSolicitacao> {
     return this.serviceSolicitacao.criarSolicitacao({
       nome: req.body.nome as string,
       tipo: req.body.tipo as TipoSolicitacao,

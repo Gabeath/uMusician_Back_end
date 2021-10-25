@@ -10,6 +10,7 @@ import EntidadeEspecialidade from '@core/entities/especialidade';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
 import {Request} from 'express';
 import TYPES from '@core/types';
+import admin from '@app/middlewares/admin';
 import autenticado from '@app/middlewares/autenticado';
 import { compressImage } from '@app/utils/comprimirImagem';
 import { inject } from 'inversify';
@@ -32,7 +33,7 @@ export class ControllerEspecialidade extends BaseHttpController implements inter
     return this.serviceEspecialidade.getAll();
   }
 
-  @httpPost('/', autenticado, reqFormData.single('imagem'))
+  @httpPost('/', autenticado, admin, reqFormData.single('imagem'))
   private async addEspecialidade(req: Request) : Promise<EntidadeEspecialidade>{
     const {nome, popularidade, classificacao, idSolicitacao} = req.body as 
     {nome: string, popularidade: number, classificacao: number, idSolicitacao: string};

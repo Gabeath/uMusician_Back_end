@@ -9,6 +9,7 @@ import { Request, Response } from 'express';
 import EntidadeAdmin from '@core/entities/administrador';
 import { IServiceAdmin } from '@app/services/interfaces/administrador';
 import TYPES from '@core/types';
+import admin from '@app/middlewares/admin';
 import autenticado from '@app/middlewares/autenticado';
 import { generateJWT } from '@app/utils/tokens';
 import { inject } from 'inversify';
@@ -41,7 +42,7 @@ export class ControllerAdmin extends BaseHttpController implements interfaces.Co
     return admin;
   }
 
-  @httpGet('/me', autenticado)
+  @httpGet('/me', autenticado, admin)
   private async buscarAdminById(req: Request): Promise<EntidadeAdmin> {
     return this.serviceAdmin.buscarAdminById(req.session.userID);
   }

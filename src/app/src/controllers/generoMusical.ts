@@ -11,6 +11,7 @@ import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { Pagination } from '@core/models';
 import { Request } from 'express';
 import TYPES from '@core/types';
+import admin from '@app/middlewares/admin';
 import autenticado from '@app/middlewares/autenticado';
 import { compressImage } from '@app/utils/comprimirImagem';
 import { controllerPaginationHelper } from '@app/utils/pagination';
@@ -41,7 +42,7 @@ export class ControllerGeneroMusical extends BaseHttpController implements inter
     });
   }
 
-  @httpPost('/', autenticado, reqFormData.single('imagem'))
+  @httpPost('/', autenticado, admin, reqFormData.single('imagem'))
   private async addGeneroMusical(req: Request) : Promise<EntidadeGeneroMusical>{
     const {nome, popularidade, idSolicitacao} = req.body as {nome: string, popularidade: number, idSolicitacao: string};
 

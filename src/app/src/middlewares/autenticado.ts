@@ -3,7 +3,7 @@ import UnauthorizedError from '@core/errors/unauthorized';
 import errorHandler from '@app/middlewares/error-handler';
 import { verifyToken } from '../utils/tokens';
 
-export default function autenticado (req: Request, res: Response, next: NextFunction): void {
+export default function autenticado(req: Request, res: Response, next: NextFunction): void {
   const { authorization } = req.headers;
 
   try {
