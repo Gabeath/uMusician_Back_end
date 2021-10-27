@@ -48,6 +48,11 @@ export class ServiceEspecialidade implements IServiceEspecialidade {
       await this.repositorySolicitacao.save(solicitacao);
     }
 
+    const existsByName = await this.repositoryEspecialidade.existsByName(nome);
+
+    if(existsByName)
+      throw new BusinessError(ErrorCodes.ESPECIALIDADE_JA_CADASTRADA);
+
     const {url} = await uparArquivoNaNuvem(filename, 'especialidades');
 
     const especialidade = {
