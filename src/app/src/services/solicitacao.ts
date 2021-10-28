@@ -32,6 +32,7 @@ export class ServiceSolicitacao implements IServiceSolicitacao {
   async getSolicitacoesPendentes(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeSolicitacao>> {
     return this.repositorySolicitacao.selectBySearchParameter({
       ...searchParameter,
+      limit: undefined,
       situacoesDasSolicitacoes: [ SituaçãoSolicitacao.PENDENTE ],
       orderBy: 'createdAt',
       isDESC: false,
@@ -41,6 +42,7 @@ export class ServiceSolicitacao implements IServiceSolicitacao {
   async getSolicitacoesConcluidas(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeSolicitacao>> {
     return this.repositorySolicitacao.selectBySearchParameter({
       ...searchParameter,
+      limit: undefined,
       situacoesDasSolicitacoes: [ SituaçãoSolicitacao.ACEITA, SituaçãoSolicitacao.REJEITADA ],
       orderBy: 'createdAt',
       isDESC: false,

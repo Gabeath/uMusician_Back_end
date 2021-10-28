@@ -27,7 +27,10 @@ export class ServiceGeneroMusical implements IServiceGeneroMusical {
   }
 
   async getAll(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeGeneroMusical>> {
-    return this.repositoryGeneroMusical.selectAllWithPagination(searchParameter);
+    return this.repositoryGeneroMusical.selectAllWithPagination({
+      ...searchParameter,
+      limit: undefined,
+    });
   }
 
   async addGeneroMusical(nome: string, popularidade: number, idSolicitacao: string, filename: string):
