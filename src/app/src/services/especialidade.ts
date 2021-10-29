@@ -1,5 +1,5 @@
 import BusinessError, { ErrorCodes } from '@core/errors/business';
-import { SituaçãoSolicitacao, TipoSolicitacao } from '@core/models';
+import { Pagination, SearchParameterBase, SituaçãoSolicitacao, TipoSolicitacao } from '@core/models';
 import { inject, injectable } from 'inversify';
 import { DateTime } from 'luxon';
 import EntidadeEspecialidade from '@core/entities/especialidade';
@@ -23,8 +23,15 @@ export class ServiceEspecialidade implements IServiceEspecialidade {
     this.repositorySolicitacao = repositorySolicitacao;
   }
 
-  async getAll(): Promise<EntidadeEspecialidade[]> {
+  async getSelectable(): Promise<EntidadeEspecialidade[]> {
     return this.repositoryEspecialidade.selectAll();
+  }
+
+  async getAll(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeEspecialidade>> {
+    return this.repositoryEspecialidade.selectAllWithPagination({
+      ...searchParameter,
+      limit: undefined,
+    });
   }
 
   async addEspecialidade(nome: string, popularidade: number, classificacao: number,
