@@ -20,7 +20,7 @@ export class RepositoryEspecialidade implements IRepositoryEspecialidade {
       ...(searchParameter.limit && { take: searchParameter.limit }),
       skip: searchParameter.offset,
       order: {
-        [searchParameter.orderBy]: searchParameter.isDESC,
+        [searchParameter.orderBy]: searchParameter.isDESC? 'DESC' : 'ASC',
       },
     });
 

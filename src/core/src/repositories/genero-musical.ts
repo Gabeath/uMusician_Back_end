@@ -20,7 +20,7 @@ export class RepositoryGeneroMusical implements IRepositoryGeneroMusical {
       ...(searchParameter.limit && { take: searchParameter.limit }),
       skip: searchParameter.offset,
       order: {
-        [searchParameter.orderBy]: searchParameter.isDESC,
+        [searchParameter.orderBy]: searchParameter.isDESC? 'DESC' : 'ASC',
       },
     });
 

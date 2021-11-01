@@ -30,6 +30,8 @@ export class ServiceGeneroMusical implements IServiceGeneroMusical {
     return this.repositoryGeneroMusical.selectAllWithPagination({
       ...searchParameter,
       limit: undefined,
+      orderBy: 'nome',
+      isDESC: false,
     });
   }
 

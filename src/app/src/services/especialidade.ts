@@ -31,6 +31,8 @@ export class ServiceEspecialidade implements IServiceEspecialidade {
     return this.repositoryEspecialidade.selectAllWithPagination({
       ...searchParameter,
       limit: undefined,
+      orderBy: 'nome',
+      isDESC: false,
     });
   }
 
