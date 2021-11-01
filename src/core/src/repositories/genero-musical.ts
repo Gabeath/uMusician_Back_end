@@ -37,4 +37,14 @@ export class RepositoryGeneroMusical implements IRepositoryGeneroMusical {
   async addGeneroMusical(genero: EntidadeGeneroMusical): Promise<EntidadeGeneroMusical> {
     return this.repositoryGeneroMusical.save(genero);
   }
+
+  async existsByName(name: string): Promise<boolean>{
+    const exists = await this.repositoryGeneroMusical.findOne({
+      where: {
+        nome: name
+      }
+    });
+
+    return !!exists;
+  }
 }

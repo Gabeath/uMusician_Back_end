@@ -37,4 +37,14 @@ export class RepositoryEspecialidade implements IRepositoryEspecialidade {
   async addEspecialidade(especialidade: EntidadeEspecialidade): Promise<EntidadeEspecialidade> {
     return this.repositoryEspecialidade.save(especialidade);
   }
+
+  async existsByName(name: string): Promise<boolean>{
+    const exists = await this.repositoryEspecialidade.findOne({
+      where: {
+        nome: name
+      }
+    });
+
+    return !!exists;
+  }
 }

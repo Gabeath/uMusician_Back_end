@@ -6,4 +6,5 @@ export interface IRepositoryEspecialidade {
   selectAllWithPagination(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeEspecialidade>>;
   selectById(id: string): Promise<EntidadeEspecialidade>;
   addEspecialidade(especialidade: EntidadeEspecialidade) : Promise<EntidadeEspecialidade>;
+  existsByName(name: string): Promise<boolean>;
 }

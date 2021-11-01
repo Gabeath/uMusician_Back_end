@@ -56,6 +56,11 @@ export class ServiceGeneroMusical implements IServiceGeneroMusical {
       await this.repositorySolicitacao.save(solicitacao);
     }
 
+    const existsByName = await this.repositoryGeneroMusical.existsByName(nome);
+
+    if(existsByName)
+      throw new BusinessError(ErrorCodes.GENERO_MUSICAL_JA_CADASTRADO);
+
     const {url} = await uparArquivoNaNuvem(filename, 'generos-musicais');
 
     const genero = {
