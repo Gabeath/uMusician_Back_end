@@ -1,12 +1,16 @@
 import {
   BaseHttpController,
   controller,
+  httpDelete,
   httpGet,
+  httpPost,
   httpPut,
   interfaces
 } from 'inversify-express-utils';
 import { IMusicoSearchParameter, Pagination } from '@core/models/pagination';
 import { CategoriaPerfil } from '@core/models';
+import EntidadeApresentacaoEspecialidade from '@core/entities/apresentacao-especialidade';
+import EntidadeApresentacaoGenero from '@core/entities/apresentacao-genero';
 import EntidadePerfil from '@core/entities/perfil';
 import { IServicePerfil } from '@app/services/interfaces/perfil';
 import { Request } from 'express';
@@ -50,9 +54,53 @@ export class ControllerPerfil extends BaseHttpController implements interfaces.C
     return this.servicePerfil.getById(req.params.id);
   }
 
+  @httpPut('/:idApresentacaoGenero/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async updateApresentacaoGenero(req: Request): Promise<void> {
+    await this.servicePerfil.updateApresentacaoGenero(
+      req.params.idApresentacaoGenero,
+      req.body as EntidadeApresentacaoGenero,
+      req.session.profileID,
+    );
+  }
+
+  @httpPut('/:idApresentacaoEspecialidade/especialidade', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async updateApresentacaoEspecialidade(req: Request): Promise<void> {
+    await this.servicePerfil.updateApresentacaoEspecialidade(
+      req.params.idApresentacaoEspecialidade,
+      req.body as EntidadeApresentacaoEspecialidade,
+      req.session.profileID,
+    );
+  }
+
   @httpPut('/biografia', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
   private async updateBiografiaById(req: Request): Promise<void> {
     const biografia = req.body.biografia as string;
     await this.servicePerfil.updateBiografiaById(req.session.profileID, biografia);
+  }
+
+  @httpPost('/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async addApresentacaoGenero(req: Request): Promise<EntidadeApresentacaoGenero> {
+    return this.servicePerfil.addApresentacaoGenero(req.body as EntidadeApresentacaoGenero, req.session.profileID);
+  }
+
+  @httpPost('/especialidade', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async addApresentacaoEspecialidade(req: Request): Promise<EntidadeApresentacaoEspecialidade> {
+    return this.servicePerfil.addApresentacaoEspecialidade(
+      req.body as EntidadeApresentacaoEspecialidade,
+      req.session.profileID,
+    );
+  }
+
+  @httpDelete('/:idApresentacaoGenero/genero-musical', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async deleteApresentacaoGenero(req: Request): Promise<void> {
+    await this.servicePerfil.deleteApresentacaoGenero(req.params.idApresentacaoGenero, req.session.profileID);
+  }
+
+  @httpDelete('/:idApresentacaoEspecialidade/especialidade', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
+  private async deleteApresentacaoEspecialidade(req: Request): Promise<void> {
+    await this.servicePerfil.deleteApresentacaoEspecialidade(
+      req.params.idApresentacaoEspecialidade,
+      req.session.profileID,
+    );
   }
 }

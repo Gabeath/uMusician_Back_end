@@ -15,9 +15,13 @@ import { IServiceMidia } from '@app/services/interfaces/midia';
 import TYPES from '@core/types';
 import autenticado from '@app/middlewares/autenticado';
 import { compressImage } from '@app/utils/comprimirImagem';
+import generateThumbnail from '@app/utils/thumbnail';
 import { inject } from 'inversify';
 import isPerfilPermitido from '@app/middlewares/perfil';
+import path from 'path';
 import reqFormData from '@app/middlewares/reqFormData';
+import {v4} from 'uuid';
+
 
 @controller('/midia', autenticado, isPerfilPermitido(CategoriaPerfil.MUSICO))
 export class MidiaController extends BaseHttpController implements interfaces.Controller {
@@ -33,8 +37,10 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
     const ano = req.body.ano as string;
     const titulo = req.body.titulo as string;
     const tipo = parseInt(req.body.tipo as string, 10);
-    const thumbnailUrl = req.body.thumbnailUrl as string;
+    const thumbnailName = v4() + 'thumbnail.jpeg';
+    
     let pastaDestino = '';
+    let thumbUrl = '';
 
     try {
 
@@ -45,8 +51,13 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
         const newFileName = await compressImage(req.file);
         req.file.filename = newFileName;
       }
-      else if (tipo === TipoMídia.VÍDEO)
+      else if (tipo === TipoMídia.VÍDEO){
         pastaDestino = 'videos';
+        const videoPath = path.resolve(__dirname, '..', '..', '..', '..', 'temp', req.file.filename);
+        await generateThumbnail(videoPath, thumbnailName);
+        const { url } = await uparArquivoNaNuvem(thumbnailName, `portfolio/${pastaDestino}`);
+        thumbUrl = url;
+      }
       else if (tipo === TipoMídia.ÁUDIO)
         pastaDestino = 'audios';
       else
@@ -59,13 +70,14 @@ export class MidiaController extends BaseHttpController implements interfaces.Co
         titulo,
         tipo,
         url,
-        thumbnailUrl,
         idMusico: req.session.profileID,
+        thumbnailUrl: thumbUrl !== '' ? thumbUrl : null
       };
 
       return await this.serviceMidia.createMidia(midia);
     } catch (error) {
       excluirArquivoTemporario(req.file.filename);
+      excluirArquivoTemporario(thumbnailName);
     
       if (error instanceof BusinessError)
         throw error;

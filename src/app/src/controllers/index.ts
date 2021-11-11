@@ -1,3 +1,4 @@
+export * from '@app/controllers/administrador';
 export * from '@app/controllers/avaliacao';
 export * from '@app/controllers/confirmacao-presenca';
 export * from '@app/controllers/especialidade';
@@ -8,4 +9,5 @@ export * from '@app/controllers/login';
 export * from '@app/controllers/midia';
 export * from '@app/controllers/perfil';
 export * from '@app/controllers/servico';
+export * from '@app/controllers/solicitacao';
 export * from '@app/controllers/usuario';

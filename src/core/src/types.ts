@@ -1,4 +1,5 @@
 const TYPES = {
+  RepositoryAdmin: 'RepositoryAdmin',
   RepositoryApresentacaoEspecialidade: 'RepositoryApresentacaoEspecialidade',
   RepositoryAvaliacao: 'RepositoryAvaliacao',
   RepositoryConfirmacaoPresenca: 'RepositoryConfirmacaoPresenca',
@@ -12,8 +13,10 @@ const TYPES = {
   RepositoryMidia: 'RepositoryMidia',
   RepositoryPerfil: 'RepositoryPerfil',
   RepositoryServico: 'RepositoryServico',
+  RepositorySolicitacao: 'RepositorySolicitacao',
   RepositoryUsuario: 'RepositoryUsuario',
 
+  ServiceAdmin: 'ServiceAdmin',
   ServiceAvaliacao: 'ServiceAvaliacao',
   ServiceConfirmacaoPresenca: 'ServiceConfirmacaoPresenca',
   ServiceEspecialidade: 'ServiceEspecialidade',
@@ -22,6 +25,7 @@ const TYPES = {
   ServiceMidia: 'ServiceMidia',
   ServicePerfil: 'ServicePerfil',
   ServiceServico: 'ServiceServico',
+  ServiceSolicitacao: 'ServiceSolicitacao',
   ServiceUsuario: 'ServiceUsuario',
 };
 

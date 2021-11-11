@@ -1,3 +1,4 @@
+import { Pagination, SearchParameterBase } from '@core/models';
 import { Repository, getRepository } from 'typeorm';
 import EntidadeEspecialidade from '@core/entities/especialidade';
 import { IRepositoryEspecialidade } from './interfaces/especialidade';
@@ -12,5 +13,38 @@ export class RepositoryEspecialidade implements IRepositoryEspecialidade {
     return this.repositoryEspecialidade.find({
       order: { nome: 'ASC' },
     });
+  }
+
+  async selectAllWithPagination(searchParameter: SearchParameterBase): Promise<Pagination<EntidadeEspecialidade>> {
+    const [ rows, count ] = await this.repositoryEspecialidade.findAndCount({
+      ...(searchParameter.limit && { take: searchParameter.limit }),
+      skip: searchParameter.offset,
+      order: {
+        [searchParameter.orderBy]: searchParameter.isDESC? 'DESC' : 'ASC',
+      },
+    });
+
+    return {
+      rows,
+      count,
+    };
+  }
+
+  async selectById(id: string): Promise<EntidadeEspecialidade> {
+    return this.repositoryEspecialidade.findOne({ where: { id } });
+  }
+
+  async addEspecialidade(especialidade: EntidadeEspecialidade): Promise<EntidadeEspecialidade> {
+    return this.repositoryEspecialidade.save(especialidade);
+  }
+
+  async existsByName(name: string): Promise<boolean>{
+    const exists = await this.repositoryEspecialidade.findOne({
+      where: {
+        nome: name
+      }
+    });
+
+    return !!exists;
   }
 }

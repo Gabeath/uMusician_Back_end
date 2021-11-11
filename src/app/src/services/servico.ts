@@ -1,5 +1,6 @@
 import { Between, In } from 'typeorm';
 import BusinessError, { ErrorCodes } from '@core/errors/business';
+import { IServicoSearchParameter, SituaçãoServiço } from '@core/models';
 import { inject, injectable } from 'inversify';
 import { DateTime } from 'luxon';
 import EntidadeServico from '@core/entities/servico';
@@ -8,7 +9,6 @@ import { IRepositoryEvento } from '@core/repositories/interfaces/evento';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceServico } from '@app/services/interfaces/servico';
-import { SituaçãoServiço } from '@core/models';
 import TYPES from '@core/types';
 
 @injectable()
@@ -64,7 +64,7 @@ export class ServiceServico implements IServiceServico {
     return servicos.length;
   }
 
-  async getServicosMusico(idMusico: string, situacoesDosServicos: SituaçãoServiço[]): Promise<EntidadeServico[]> {
+  async getServicosMusico(idMusico: string, searchParameter: IServicoSearchParameter): Promise<EntidadeServico[]> {
     const apresentacoesEspecialidade = await this.repositoryApresentacaoEspecialidade
       .selectByIdMusicoWithEspecialidadeServico(idMusico);
 
@@ -73,7 +73,10 @@ export class ServiceServico implements IServiceServico {
       apresentacao.especialidadesServico.forEach(servico => listaIdServico.push(servico.idServico));
     });
 
-    const servicos = await this.repositoryServico.selectServicosMusico(listaIdServico, situacoesDosServicos);
+    const servicos = await this.repositoryServico.selectServicosMusico({
+      ...searchParameter,
+      listaIdServico,
+    });
 
     for (let i = 0; i < servicos.length; i += 1) {
       servicos[i].evento.contratante.usuario.senha = undefined;

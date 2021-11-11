@@ -1,4 +1,5 @@
 import BusinessError, { ErrorCodes } from '@core/errors/business';
+import { IEventoSearchParameter, SituaçãoServiço } from '@core/models';
 import { inject, injectable } from 'inversify';
 import EntidadeEvento from '@core/entities/evento';
 import EntidadeServico from '@core/entities/servico';
@@ -9,7 +10,6 @@ import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-s
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
 import { IServiceEvento } from './interfaces/evento';
-import { SituaçãoServiço } from '@core/models';
 import TYPES from '@core/types';
 
 @injectable()
@@ -124,7 +124,7 @@ export class ServiceEvento implements IServiceEvento {
     };
   }
 
-  async getEventosByIdContratante(idContratante: string, situacoesDosServicos: SituaçãoServiço[]):
+  async getEventosByIdContratante(idContratante: string, searchParameter: IEventoSearchParameter):
   Promise<EntidadeEvento[]> {
     const contratante = await this.repositoryPerfil.selectById(idContratante);
 
@@ -132,32 +132,7 @@ export class ServiceEvento implements IServiceEvento {
       throw new BusinessError(ErrorCodes.PERFIL_NAO_ENCONTRADO);
     }
 
-    const eventos = await this.repositoryEvento.selectEventosContratante(contratante.id, situacoesDosServicos);
-
-    const listaIdMusico: string[] = [];
-    eventos.forEach((evento) => {
-      const ids = evento.servicos.map(o => o.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
-      listaIdMusico.push(...ids);
-    });
-    
-    const musicos = await this.repositoryPerfil.selectAllByListaIdWithUsuario(listaIdMusico);
-
-    const eventosContratante: EntidadeEvento[] = [];
-    eventos.forEach((evento) => {
-      const servicos = evento.servicos.map((servico) => {
-        const musico = musicos.find(o => o.id === servico.especialidadesServico[0].apresentacaoEspecialidade.idMusico);
-        musico.usuario.senha = undefined;
-        servico.musico = musico;
-        servico.especialidadesServico = undefined;
-        return servico;
-      });
-      evento.servicos = servicos;
-
-      eventosContratante.push(evento);
-    });
-    
-
-    return eventosContratante;
+    return this.repositoryEvento.selectEventosContratante(contratante.id, searchParameter);
   }
 
   async getDetalhesEvento(id: string): Promise<EntidadeEvento> {

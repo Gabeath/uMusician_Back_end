@@ -8,6 +8,7 @@ import { NextFunction, Request, Response } from 'express';
 import BusinessError from '@core/errors/business';
 import { Container } from 'inversify';
 import ForbiddenError from '@core/errors/forbidden';
+import { IRepositoryAdmin } from '@core/repositories/interfaces/administrador';
 import { IRepositoryApresentacaoEspecialidade } from '@core/repositories/interfaces/apresentacao-especialidade';
 import { IRepositoryApresentacaoGenero } from '@core/repositories/interfaces/apresentacao-genero';
 import { IRepositoryAvaliacao } from '@core/repositories/interfaces/avaliacao';
@@ -21,7 +22,9 @@ import { IRepositoryGeneroServico } from '@core/repositories/interfaces/genero-s
 import { IRepositoryMidia } from '@core/repositories/interfaces/midia';
 import { IRepositoryPerfil } from '@core/repositories/interfaces/perfil';
 import { IRepositoryServico } from '@core/repositories/interfaces/servico';
+import { IRepositorySolicitacao } from '@core/repositories/interfaces/solicitacao';
 import { IRepositoryUsuario } from '@core/repositories/interfaces/usuario';
+import { IServiceAdmin } from '@app/services/interfaces/administrador';
 import { IServiceAvaliacao } from '@app/services/interfaces/avaliacao';
 import { IServiceConfirmacaoPresenca } from '@app/services/interfaces/confirmacao-presenca';
 import { IServiceEspecialidade } from '@app/services/interfaces/especialidade';
@@ -30,9 +33,11 @@ import { IServiceGeneroMusical } from '@app/services/interfaces/generoMusical';
 import { IServiceMidia } from '@app/services/interfaces/midia';
 import { IServicePerfil } from './services/interfaces/perfil';
 import { IServiceServico } from './services/interfaces/servico';
+import { IServiceSolicitacao } from './services/interfaces/solicitacao';
 import { IServiceUsuario } from '@app/services/interfaces/usuario';
 import IntegrationError from '@core/errors/integration';
 import { InversifyExpressServer } from 'inversify-express-utils';
+import { RepositoryAdmin } from '@core/repositories/administrador';
 import { RepositoryApresentacaoEspecialidade } from '@core/repositories/apresentacao-especialidade';
 import { RepositoryApresentacaoGenero } from '@core/repositories/apresentacao-genero';
 import { RepositoryAvaliacao } from '@core/repositories/avaliacao';
@@ -46,7 +51,9 @@ import { RepositoryGeneroServico } from '@core/repositories/genero-servico';
 import { RepositoryMidia } from '@core/repositories/midia';
 import { RepositoryPerfil } from '@core/repositories/perfil';
 import { RepositoryServico } from '@core/repositories/servico';
+import { RepositorySolicitacao } from '@core/repositories/solicitacao';
 import { RepositoryUsuario } from '@core/repositories/usuario';
+import { ServiceAdmin } from '@app/services/administrador';
 import { ServiceAvaliacao } from '@app/services/avaliacao';
 import { ServiceConfirmacaoPresenca } from '@app/services/confirmacao-presenca';
 import { ServiceEspecialidade } from '@app/services/especialidade';
@@ -55,6 +62,7 @@ import { ServiceGeneroMusical } from '@app/services/generoMusical';
 import { ServiceMidia } from '@app/services/midia';
 import { ServicePerfil } from './services/perfil';
 import { ServiceServico } from './services/servico';
+import { ServiceSolicitacao } from './services/solicitacao';
 import { ServiceUsuario } from '@app/services/usuario';
 import TYPES from '@core/types';
 import UnauthorizedError from '@core/errors/unauthorized';
@@ -103,6 +111,11 @@ export class Server {
   }
 
   configDependencies(): void {
+    container.bind<IRepositoryAdmin>(TYPES.RepositoryAdmin)
+      .to(RepositoryAdmin);
+    container.bind<IServiceAdmin>(TYPES.ServiceAdmin)
+      .to(ServiceAdmin);
+
     container.bind<IRepositoryApresentacaoEspecialidade>(TYPES.RepositoryApresentacaoEspecialidade)
       .to(RepositoryApresentacaoEspecialidade);
 
@@ -157,6 +170,11 @@ export class Server {
       .to(RepositoryServico);
     container.bind<IServiceServico>(TYPES.ServiceServico)
       .to(ServiceServico);
+
+    container.bind<IRepositorySolicitacao>(TYPES.RepositorySolicitacao)
+      .to(RepositorySolicitacao);
+    container.bind<IServiceSolicitacao>(TYPES.ServiceSolicitacao)
+      .to(ServiceSolicitacao);
         
     container.bind<IRepositoryUsuario>(TYPES.RepositoryUsuario)
       .to(RepositoryUsuario);
@@ -180,7 +198,9 @@ export class Server {
       app.use(helmet());
 
       // enable CORS - Cross Origin Resource Sharing
-      app.use(cors());
+      app.use(cors({
+        exposedHeaders: ['Authorization']
+      }));
 
       app.use((req: Request, res: Response, next: NextFunction): void => {
         req.headers['X-Request-ID'] = v4();
