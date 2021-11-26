@@ -48,6 +48,7 @@ export class RepositoryEvento implements IRepositoryEvento {
     const eventos = await this.repositoryEvento
       .createQueryBuilder('evento')
       .leftJoinAndSelect('evento.servicos', 'servicos')
+      .leftJoinAndSelect('servicos.avaliacao', 'avaliacao')
       .leftJoinAndSelect('servicos.especialidadesServico', 'especialidadesServico')
       .where({
         idContratante,

@@ -58,6 +58,7 @@ export class RepositoryServico implements IRepositoryServico {
     return this.repositoryServico
       .createQueryBuilder('servico')
       .leftJoinAndSelect('servico.evento', 'evento')
+      .leftJoinAndSelect('servico.avaliacao', 'avaliacao')
       .leftJoinAndSelect('evento.contratante', 'contratante')
       .leftJoinAndSelect('contratante.usuario', 'usuario')
       .where({
