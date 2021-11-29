@@ -47,7 +47,7 @@ export class ControllerSolicitacao extends BaseHttpController implements interfa
     await this.serviceSolicitacao.rejeitarSolicitacao(req.params.id, req.session.userID);
   }
 
-  @httpPost('/', autenticado, admin)
+  @httpPost('/', autenticado)
   private async criarSolicitacao(req: Request): Promise<EntidadeSolicitacao> {
     return this.serviceSolicitacao.criarSolicitacao({
       nome: req.body.nome as string,
